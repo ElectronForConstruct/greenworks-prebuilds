@@ -1,0 +1,65 @@
+# https://github.com/prebuild/prebuild
+# https://github.com/greenheartgames/greenworks/blob/master/docs/build-instructions-nwjs.md
+# https://github.com/greenheartgames/greenworks/blob/master/docs/build-instructions-electron.md
+
+language: node_js
+
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10
+      env:
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+    
+    - os: linux
+
+env:
+  - CXX=g++-4.8
+
+branches:
+  only:
+    - master
+    - develop
+    - test
+
+notifications:
+  email: false
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.9
+
+cache:
+  directories:
+    - node_modules
+
+node_js:
+  - '10.15.2'
+
+before_install:
+  - eval "${MATRIX_EVAL}"
+
+  - git clone https://github.com/greenheartgames/greenworks greenworks 
+
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install p7zip; fi
+  -
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y p7zip-full; fi
+
+  - 7z x sdk.zip -p$ZIP_PASSWORD
+  - mv sdk greenworks/deps/steamworks_sdk
+  - ls greenworks
+  - ls greenworks/deps
+  - ls greenworks/deps/steamworks_sdk
+  - npm i -g npx
+  - npm install
+
+script:
+  - cd greenworks
+  - npm install
+  - mkdir prebuilds
+  - npx prebuild --all -u $GH_TOKEN --verbose
