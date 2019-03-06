@@ -24,7 +24,7 @@ matrix:
           - CXX_COMPILER='g++-7'
           - C_COMPILER='gcc-7'
 
-     - os: osx
+    - os: osx
         compiler: clang
         osx_image: xcode10
         env:
