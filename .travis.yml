@@ -100,4 +100,7 @@ script:
   - npm install
   - mkdir prebuilds
   - echo $BONJOUR
-  - npx prebuild --all -u $GH_TOKEN --verbose
+  - npx prebuild --all --verbose
+  - mv prebuilds ../prebuilds
+  - cd ..
+  - prebuild --upload-all -u $GH_TOKEN
