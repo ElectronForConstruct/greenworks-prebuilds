@@ -93,8 +93,6 @@ before_install:
   - ls greenworks/deps/steamworks_sdk
   - npm i -g npx
   - npm install
-  
-install: make get-deps
 
 script:
   - which gcc
