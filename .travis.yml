@@ -29,15 +29,15 @@ matrix:
       osx_image: xcode10
       env:
         - CXX_COMPILER='clang++'
-        - C_COMPILER='clang'      
+        - C_COMPILER='clang'
         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9 && MACOSX_DEPLOYMENT_TARGET=10.7"
 
-    - os: osx    
+    - os: osx
       compiler: gcc
       osx_image: xcode10
       env:
         - CXX_COMPILER='g++'
-        - C_COMPILER='gcc'      
+        - C_COMPILER='gcc'
         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9 && MACOSX_DEPLOYMENT_TARGET=10.7"
 
 branches:
@@ -61,8 +61,8 @@ node_js:
 
 before_install:
   - eval "${MATRIX_EVAL}"
-  
-  - git clone https://github.com/greenheartgames/greenworks greenworks 
+
+  - git clone https://github.com/greenheartgames/greenworks greenworks
 
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install p7zip; fi
@@ -85,10 +85,13 @@ script:
   - echo $CXX
   - echo $MACOSX_DEPLOYMENT_TARGET
 
+  - mkdir prebuilds
   - cd greenworks
   - npm install
   - mkdir prebuilds
-  - npx prebuild --all
-  - mv prebuilds ../prebuilds
+  # - npx prebuild --all
+  # - mv prebuilds ../prebuilds
   - cd ..
+  - node index.js
+  - mv greenworks/prebuilds prebuilds
   - npx prebuild --upload-all $GH_TOKEN

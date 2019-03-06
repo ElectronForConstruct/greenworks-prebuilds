@@ -8,8 +8,13 @@
       "url": "https://github.com/ElectronForConstruct/greenworks-prebuilds/blob/master/LICENSE"
     }
   ],
-  "repository" : {
-    "type" : "git",
+  "repository": {
+    "type": "git",
     "url": "git@github.com:ElectronForConstruct/greenworks-prebuilds.git"
+  },
+  "dependencies": {
+    "execa": "^1.0.0",
+    "node-abi": "^2.7.1",
+    "prebuild": "^8.2.0"
   }
 }
