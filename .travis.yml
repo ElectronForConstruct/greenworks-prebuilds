@@ -99,11 +99,8 @@ script:
   - cd greenworks
   - npm install
   - mkdir prebuilds
-  - echo $BONJOUR
 #  - npx prebuild --all --verbose
   - npx prebuild -t 1.4.10 -r electron
   - mv prebuilds ../prebuilds
   - cd ..
-  - echo $GH_TOKEN
-  - echo "${GH_TOKEN}"
-  - npx prebuild --upload-all -u "${GH_TOKEN}"
+  - npx prebuild --upload-all -u 9b4b8b5f9323dc74ead997fbeab1b3761b4c61fe
