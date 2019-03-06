@@ -14,16 +14,11 @@ const prebuildVersion = async ({ runtime, abi }) => {
       const { stdout } = await execa('npx', ['prebuild', '-r', runtime, '-t', abi ], {
         cwd: dir,
       });
-      console.log(stdout);
       resolve({
         error  : false,
-        message: {
-          runtime,
-          abi,
-        },
+        message: 'ok',
       });
     } catch (e) {
-      console.log(e);
       resolve({
         error  : true,
         message: e,
@@ -35,9 +30,8 @@ const prebuildVersion = async ({ runtime, abi }) => {
 const run = async () => {
   const supportedTargets  = nodeAbi.supportedTargets;
   const additionalTargets = nodeAbi.additionalTargets;
-  const futureTargets     = nodeAbi.futureTargets;
 
-  const everything = supportedTargets.concat(additionalTargets).concat(futureTargets);
+  const everything = supportedTargets.concat(additionalTargets);
 
   const pms = [];
   for (let i = 0; i < everything.length; i++) {
@@ -45,8 +39,8 @@ const run = async () => {
 
     const ret = await prebuildVersion(version);
 
-    if (ret.error) console.error(ret.error);
-    else console.log(ret.message);
+    if (ret.error) console.error(ret.message);
+    else console.log(`${version.rutime}@v${version.abi}: ${ret.message}`);
   }
 
 };

@@ -93,5 +93,5 @@ script:
   # - mv prebuilds ../prebuilds
   - cd ..
   - node index.js
-  - mv greenworks/prebuilds prebuilds
+  - cp greenworks/prebuilds/** prebuilds/
   - npx prebuild --upload-all $GH_TOKEN
