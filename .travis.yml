@@ -103,4 +103,4 @@ script:
   - npx prebuild --all --verbose
   - mv prebuilds ../prebuilds
   - cd ..
-  - prebuild --upload-all -u $GH_TOKEN
+  - npx prebuild --upload-all -u $GH_TOKEN
