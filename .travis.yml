@@ -100,6 +100,10 @@ script:
   - which g++
   - which g++-4.8
 
+  - sudo ln -s /usr/bin/g++ /usr/bin/g++-4.8
+
+  - which g++-4.8
+
   - cd greenworks
   - npm install
   - mkdir prebuilds
