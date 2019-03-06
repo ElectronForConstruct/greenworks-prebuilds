@@ -11,7 +11,7 @@ const prebuildVersion = async ({ runtime, abi }) => {
   return new Promise(async (resolve) => {
     try {
       console.log(`Building ${runtime}@v${abi}`);
-      const { stdout } = await execa('npx prebuild', [ '-r', runtime, '-t', abi ], {
+      const { stdout } = await execa('npx', ['prebuild', '-r', runtime, '-t', abi ], {
         cwd: dir,
       });
       console.log(stdout);
