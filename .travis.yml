@@ -4,11 +4,9 @@
 
 language: cpp
 
-matrix:
-  include:
-    - os: osx
-      osx_image: xcode10
-    - os: linux
+os
+  - osx
+  - linux
 
 compiler: 
   - clang
