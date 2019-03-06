@@ -2,26 +2,17 @@
 # https://github.com/greenheartgames/greenworks/blob/master/docs/build-instructions-nwjs.md
 # https://github.com/greenheartgames/greenworks/blob/master/docs/build-instructions-electron.md
 
-language: node_js
-
-os:
-  - linux
-  - osx
+language: cpp
 
 matrix:
   include:
     - os: osx
       osx_image: xcode10
-      env:
-        - CXX=g++-4.8
-        - MACOSX_DEPLOYMENT_TARGET=10.7
-        - CC=gcc-4.8
-    
     - os: linux
-      env:
-        - CXX=g++-4.8
-        - MACOSX_DEPLOYMENT_TARGET=10.7
-        - CC=gcc-4.8
+
+compiler: 
+  - clang
+  - gcc
 
 branches:
   only:
@@ -38,10 +29,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-
-cache:
-  directories:
-    - node_modules
+      - gcc-4.8
 
 node_js:
   - '10.15.2'
@@ -64,6 +52,10 @@ before_install:
   - npm install
 
 script:
+  - export CC=gcc-4.8
+  - export CXX=g++-4.8
+  - export MACOSX_DEPLOYMENT_TARGET=10.7
+
   - cd greenworks
   - npm install
   - mkdir prebuilds
