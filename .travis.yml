@@ -96,6 +96,10 @@ script:
   - export CXX=g++-4.8
   - export MACOSX_DEPLOYMENT_TARGET=10.7
 
+  - which gcc
+  - which g++
+  - which g++-4.8
+
   - cd greenworks
   - npm install
   - mkdir prebuilds
