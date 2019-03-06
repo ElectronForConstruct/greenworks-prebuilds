@@ -9,19 +9,6 @@ dist: trusty
 matrix:
   include:
     - os: linux
-      compiler: clang
-      addons: &clang38
-        apt:
-          packages:
-            - clang-3.8
-            - cmake3
-            - gfortran
-            - swig
-      env:
-        - CXX_COMPILER='clang++-3.8'
-        - C_COMPILER='clang-3.8'
-
-    - os: linux
       compiler: gcc
       addons: &gcc7
         apt:
@@ -37,15 +24,6 @@ matrix:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
 
-    - os: osx
-      compiler: clang
-      osx_image: xcode10
-      env:
-        - CXX_COMPILER='clang++'
-        - C_COMPILER='clang'      
-        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-        - MACOSX_DEPLOYMENT_TARGET=10.7
-
     - os: osx    
       compiler: gcc
       osx_image: xcode10
@@ -59,7 +37,6 @@ branches:
   only:
     - master
     - develop
-    - test
     - /^v.*$/
 
 notifications:
@@ -95,10 +72,6 @@ before_install:
   - npm install
 
 script:
-  - which gcc
-  - which g++
-  - which g++-4.8
-  
   - echo $CXX_COMPILER
   - echo $C_COMPILER
   - echo $CC
@@ -108,8 +81,7 @@ script:
   - cd greenworks
   - npm install
   - mkdir prebuilds
-#  - npx prebuild --all --verbose
-  - npx prebuild -t 1.4.10 -r electron
+  - npx prebuild --all
   - mv prebuilds ../prebuilds
   - cd ..
   - npx prebuild --upload-all $GH_TOKEN
