@@ -103,4 +103,4 @@ script:
   - npx prebuild -t 1.4.10 -r electron
   - mv prebuilds ../prebuilds
   - cd ..
-  - npx prebuild --upload-all -u 9b4b8b5f9323dc74ead997fbeab1b3761b4c61fe
+  - npx prebuild --upload-all $GH_TOKEN
