@@ -2,15 +2,52 @@
 # https://github.com/greenheartgames/greenworks/blob/master/docs/build-instructions-nwjs.md
 # https://github.com/greenheartgames/greenworks/blob/master/docs/build-instructions-electron.md
 
-language: cpp
+language: node_js
 
-os:
-  - osx
-  - linux
+dist: trusty
 
-compiler: 
-  - clang
-  - gcc
+matrix:
+  include:
+    - os: linux
+      compiler: clang
+      addons: &clang38
+        apt:
+          packages:
+            - clang-3.8
+            - cmake3
+            - gfortran
+            - swig
+      env:
+        - CXX_COMPILER='clang++-3.8'
+        - C_COMPILER='clang-3.8'
+
+    - os: linux
+      compiler: gcc
+      addons: &gcc7
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - cmake3
+            - g++-7
+            - gcc-7
+            - gfortran-7
+            - swig
+      env:
+        - CXX_COMPILER='g++-7'
+        - C_COMPILER='gcc-7'
+
+    - os: osx
+      compiler: clang
+      env:
+        - CXX_COMPILER='clang++'
+        - C_COMPILER='clang'
+
+    - os: osx    
+      compiler: gcc
+      env:
+        - CXX_COMPILER='g++'
+        - C_COMPILER='gcc'
 
 branches:
   only:
@@ -27,7 +64,6 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-      - gcc-4.8
 
 node_js:
   - '10.15.2'
