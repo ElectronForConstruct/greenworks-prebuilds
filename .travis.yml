@@ -58,6 +58,7 @@ branches:
     - master
     - develop
     - test
+    - /^v-.*$/
 
 notifications:
   email: false
