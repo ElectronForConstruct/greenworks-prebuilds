@@ -16,6 +16,7 @@ matrix:
 
 env:
   - CXX=g++-4.8
+  - MACOSX_DEPLOYMENT_TARGET=10.7
 
 branches:
   only:
@@ -42,6 +43,8 @@ node_js:
 
 before_install:
   - eval "${MATRIX_EVAL}"
+  - echo $MACOSX_DEPLOYMENT_TARGET
+  - eval "${MACOSX_DEPLOYMENT_TARGET}"
 
   - git clone https://github.com/greenheartgames/greenworks greenworks 
 
@@ -63,4 +66,5 @@ script:
   - cd greenworks
   - npm install
   - mkdir prebuilds
+  - echo $BONJOUR
   - npx prebuild --all -u $GH_TOKEN --verbose

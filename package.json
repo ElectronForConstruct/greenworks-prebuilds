@@ -1,5 +1,5 @@
 {
-  "name": "greenworks",
+  "name": "greenworks-prebuilds",
   "version": "0.15.0",
   "description": "Prebuild binaries for greenworks",
   "licenses": [
@@ -10,6 +10,6 @@
   ],
   "repository" : {
     "type" : "git",
-    "url": "https://github.com/ElectronForConstruct/greenworks-prebuilds.git"
+    "url": "git@github.com:ElectronForConstruct/greenworks-prebuilds.git"
   }
 }
