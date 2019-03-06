@@ -12,9 +12,10 @@ matrix:
     - os: linux
 
 env:
-  - CXX=g++-4.8
-  - MACOSX_DEPLOYMENT_TARGET=10.7
-  - CC=gcc-4.8
+  matrix:
+    - CXX=g++-4.8
+    - MACOSX_DEPLOYMENT_TARGET=10.7
+    - CC=gcc-4.8
 
 branches:
   only:
