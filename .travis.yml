@@ -8,15 +8,13 @@ matrix:
   include:
     - os: osx
       osx_image: xcode10
-      env:
-        - MATRIX_EVAL="CC=gcc-4.8 && CXX=g++-4.8"
-        - MACOSX_DEPLOYMENT_TARGET=10.7
     
     - os: linux
 
 env:
   - CXX=g++-4.8
   - MACOSX_DEPLOYMENT_TARGET=10.7
+  - CC=gcc-4.8
 
 branches:
   only:
@@ -42,10 +40,6 @@ node_js:
   - '10.15.2'
 
 before_install:
-  - eval "${MATRIX_EVAL}"
-  - echo $MACOSX_DEPLOYMENT_TARGET
-  - eval "${MACOSX_DEPLOYMENT_TARGET}"
-
   - git clone https://github.com/greenheartgames/greenworks greenworks 
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
