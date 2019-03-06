@@ -1,14 +1,24 @@
 const prebuild = require('prebuild');
 const nodeAbi  = require('node-abi');
 const execa    = require('execa');
+const fs       = require('fs');
 
-(async () => {
+let dir = 'C:\\Users\\armal\\Documents\\Projets\\ElectronForConstruct\\greenworks';
+
+if (fs.existsSync('greenworks')) {
+  dir = 'greenworks';
+}
+
+console.log(`Building in ${dir}`);
+
+const run = async () => {
 
   const prebuildVersion = async ({ runtime, abi }) =>
     new Promise(async (resolve) => {
       try {
+        console.log(`Building ${runtime}@v${abi}`);
         const { stdout } = await execa('npx prebuild', [ '-r', runtime, '-t', abi ], {
-          cwd: 'greenworks',
+          cwd: 'C:\\Users\\armal\\Documents\\Projets\\ElectronForConstruct\\greenworks',
         });
         console.log(stdout);
         resolve({
@@ -38,4 +48,8 @@ const execa    = require('execa');
     await prebuildVersion(version);
   }
 
-})();
+};
+
+run().then(() => {
+  console.log('done.');
+});
