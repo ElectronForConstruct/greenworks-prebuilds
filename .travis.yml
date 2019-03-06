@@ -30,8 +30,7 @@ matrix:
       env:
         - CXX_COMPILER='clang++'
         - C_COMPILER='clang'      
-        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-        - MACOSX_DEPLOYMENT_TARGET=10.7
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9 && MACOSX_DEPLOYMENT_TARGET=10.7"
 
     - os: osx    
       compiler: gcc
@@ -39,8 +38,7 @@ matrix:
       env:
         - CXX_COMPILER='g++'
         - C_COMPILER='gcc'      
-        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-        - MACOSX_DEPLOYMENT_TARGET=10.7
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9 && MACOSX_DEPLOYMENT_TARGET=10.7"
 
 branches:
   only:
@@ -90,10 +88,7 @@ script:
   - cd greenworks
   - npm install
   - mkdir prebuilds
-  # - npx prebuild --all
-  - npx prebuild -t 1.4.10 -r electron
-  - npx prebuild -t 0.26.6 -r node-webkit
-  - npx prebuild -t 0.26.6 -r node
+  - npx prebuild --all
   - mv prebuilds ../prebuilds
   - cd ..
   - npx prebuild --upload-all $GH_TOKEN
