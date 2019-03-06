@@ -39,15 +39,19 @@ matrix:
 
     - os: osx
       compiler: clang
+      osx_image: xcode8
       env:
         - CXX_COMPILER='clang++'
-        - C_COMPILER='clang'
+        - C_COMPILER='clang'      
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
     - os: osx    
       compiler: gcc
+      osx_image: xcode8
       env:
         - CXX_COMPILER='g++'
-        - C_COMPILER='gcc'
+        - C_COMPILER='gcc'      
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
 branches:
   only:
@@ -70,6 +74,8 @@ node_js:
 
 before_install:
   - git clone https://github.com/greenheartgames/greenworks greenworks 
+
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then eval "${MATRIX_EVAL}"; fi
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install p7zip; fi
