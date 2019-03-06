@@ -24,6 +24,15 @@ matrix:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
 
+     - os: osx
+        compiler: clang
+        osx_image: xcode10
+        env:
+          - CXX_COMPILER='clang++'
+          - C_COMPILER='clang'      
+          - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+          - MACOSX_DEPLOYMENT_TARGET=10.7
+
     - os: osx    
       compiler: gcc
       osx_image: xcode10
