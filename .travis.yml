@@ -4,18 +4,24 @@
 
 language: node_js
 
+os:
+  - linux
+  - osx
+
 matrix:
   include:
     - os: osx
       osx_image: xcode10
+      env:
+        - CXX=g++-4.8
+        - MACOSX_DEPLOYMENT_TARGET=10.7
+        - CC=gcc-4.8
     
     - os: linux
-
-env:
-  matrix:
-    - CXX=g++-4.8
-    - MACOSX_DEPLOYMENT_TARGET=10.7
-    - CC=gcc-4.8
+      env:
+        - CXX=g++-4.8
+        - MACOSX_DEPLOYMENT_TARGET=10.7
+        - CC=gcc-4.8
 
 branches:
   only:
