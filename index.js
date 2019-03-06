@@ -3,11 +3,7 @@ const nodeAbi  = require('node-abi');
 const execa    = require('execa');
 const fs       = require('fs');
 
-let dir = 'C:\\Users\\armal\\Documents\\Projets\\ElectronForConstruct\\greenworks';
-
-if (fs.existsSync('greenworks')) {
-  dir = 'greenworks';
-}
+const dir = 'greenworks';
 
 console.log(`Building in ${dir}`);
 
@@ -18,7 +14,7 @@ const run = async () => {
       try {
         console.log(`Building ${runtime}@v${abi}`);
         const { stdout } = await execa('npx prebuild', [ '-r', runtime, '-t', abi ], {
-          cwd: 'C:\\Users\\armal\\Documents\\Projets\\ElectronForConstruct\\greenworks',
+          cwd: dir,
         });
         console.log(stdout);
         resolve({
