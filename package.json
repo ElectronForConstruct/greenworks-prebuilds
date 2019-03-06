@@ -5,11 +5,11 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/ElectronForConstruct/greenworks/blob/master/LICENSE"
+      "url": "https://github.com/ElectronForConstruct/greenworks-prebuilds/blob/master/LICENSE"
     }
   ],
   "repository" : {
     "type" : "git",
-    "url": "https://github.com/ElectronForConstruct/greenworks"
+    "url": "https://github.com/ElectronForConstruct/greenworks-prebuilds.git"
   }
 }
