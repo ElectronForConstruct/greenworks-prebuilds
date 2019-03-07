@@ -4,7 +4,6 @@ environment:
 
 platform:
   - x64
-  - x86
 
 os: Visual Studio 2017
 
@@ -16,7 +15,9 @@ branches:
     - develop
     - /^v.*$/
 
-init:
+# init:
+install:
+  - ps: Install-Product node $env:nodejs_version $env:platform
   - git clone https://github.com/greenheartgames/greenworks greenworks
 
   - 7z x sdk.zip -p$ZIP_PASSWORD
@@ -27,8 +28,6 @@ init:
   - npm i -g npx
   - npm install
 
-install:
-  - ps: Install-Product node $env:nodejs_version $env:platform
   - mkdir prebuilds
   - cd greenworks
   - npm install
