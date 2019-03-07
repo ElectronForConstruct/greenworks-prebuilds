@@ -18,6 +18,8 @@ branches:
 # init:
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
+  - choco install winrar
+  - rar
   - git clone https://github.com/greenheartgames/greenworks greenworks
 
   - echo $env:ZIP_PASSWORD
