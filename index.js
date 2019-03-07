@@ -40,7 +40,7 @@ const run = async () => {
     const ret = await prebuildVersion(version);
 
     if (ret.error) console.error(ret.message);
-    else console.log(`${version.rutime}@v${version.abi}: ${ret.message}`);
+    else console.log(`${version.runtime}@v${version.abi}: ${ret.message}`);
   }
 
 };

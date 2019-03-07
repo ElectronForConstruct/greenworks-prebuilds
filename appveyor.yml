@@ -1,0 +1,41 @@
+environment:
+  matrix:
+    - nodejs_version: "10.0"
+
+platform:
+  - x64
+  - x86
+
+install:
+  - ps: Install-Product node $env:nodejs_version $env:platform
+
+os: Visual Studio 2017
+
+build: off
+
+branches:
+  only:
+    - master
+    - develop
+    - /^v.*$/
+
+init:
+  - git clone https://github.com/greenheartgames/greenworks greenworks
+
+  - 7z x sdk.zip -p$ZIP_PASSWORD
+  - mv sdk greenworks/deps/steamworks_sdk
+  - ls greenworks
+  - ls greenworks/deps
+  - ls greenworks/deps/steamworks_sdk
+  - npm i -g npx
+  - npm install
+
+install:
+  - mkdir prebuilds
+  - cd greenworks
+  - npm install
+  - mkdir prebuilds
+  - cd ..
+  - node index.js
+  - cp greenworks/prebuilds/** prebuilds/
+  - npx prebuild --upload-all $GH_TOKEN
