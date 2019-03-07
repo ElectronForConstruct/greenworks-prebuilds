@@ -18,8 +18,6 @@ branches:
 # init:
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
-  - choco install winrar
-  - rar
   - git clone https://github.com/greenheartgames/greenworks greenworks
 
   - 7z x sdk.zip -p%ZIP_PASSWORD%
