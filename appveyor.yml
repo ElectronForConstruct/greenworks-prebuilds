@@ -20,11 +20,7 @@ install:
   - ps: Install-Product node $env:nodejs_version $env:platform
   - git clone https://github.com/greenheartgames/greenworks greenworks
 
-  - echo "$(ZIP_PASSWORD)"
-  - echo "%ZIP_PASSWORD%"
-  - echo "$env:ZIP_PASSWORD"
-
-  - 7z x sdk.zip -p"$(ZIP_PASSWORD)"
+  - 7z x sdk.zip -p"%ZIP_PASSWORD%"
   - mv sdk greenworks/deps/steamworks_sdk
   - ls greenworks
   - ls greenworks/deps
