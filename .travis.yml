@@ -16,11 +16,8 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-7
             - gcc-7
-            - gfortran-7
-            - swig
       env:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
@@ -31,7 +28,7 @@ matrix:
       env:
         - CXX_COMPILER='clang++'
         - C_COMPILER='clang'
-        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9 && MACOSX_DEPLOYMENT_TARGET=10.7"
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && MACOSX_DEPLOYMENT_TARGET=10.7"
 
     - os: osx
       compiler: gcc
@@ -39,7 +36,7 @@ matrix:
       env:
         - CXX_COMPILER='g++'
         - C_COMPILER='gcc'
-        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9 && MACOSX_DEPLOYMENT_TARGET=10.7"
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && MACOSX_DEPLOYMENT_TARGET=10.7"
 
 branches:
   only:
