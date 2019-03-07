@@ -6,9 +6,6 @@ platform:
   - x64
   - x86
 
-install:
-  - ps: Install-Product node $env:nodejs_version $env:platform
-
 os: Visual Studio 2017
 
 build: off
@@ -31,6 +28,7 @@ init:
   - npm install
 
 install:
+  - ps: Install-Product node $env:nodejs_version $env:platform
   - mkdir prebuilds
   - cd greenworks
   - npm install
