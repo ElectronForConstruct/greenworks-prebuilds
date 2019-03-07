@@ -1,15 +1,20 @@
 {
-  "name": "greenworks",
-  "version": "0.15.0",
+  "name": "greenworks-prebuilds",
+  "version": "0.1.0",
   "description": "Prebuild binaries for greenworks",
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/ElectronForConstruct/greenworks/blob/master/LICENSE"
+      "url": "https://github.com/ElectronForConstruct/greenworks-prebuilds/blob/master/LICENSE"
     }
   ],
-  "repository" : {
-    "type" : "git",
-    "url": "https://github.com/ElectronForConstruct/greenworks"
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ElectronForConstruct/greenworks-prebuilds.git"
+  },
+  "dependencies": {
+    "execa": "^1.0.0",
+    "node-abi": "^2.7.1",
+    "prebuild": "^8.2.0"
   }
 }
