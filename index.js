@@ -1,7 +1,5 @@
-const prebuild = require('prebuild');
 const nodeAbi  = require('node-abi');
 const execa    = require('execa');
-const fs       = require('fs');
 
 const dir = 'greenworks';
 
@@ -33,7 +31,6 @@ const run = async () => {
 
   const everything = supportedTargets.concat(additionalTargets);
 
-  const pms = [];
   for (let i = 0; i < everything.length; i++) {
     let version = everything[ i ];
 
