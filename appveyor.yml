@@ -34,4 +34,4 @@ install:
   - cd ..
   - node index.js
   - cp -R greenworks/prebuilds/* prebuilds/
-  - if ["%APPVEYOR_REPO_TAG%"] == [true] npx prebuild --upload-all %GH_TOKEN%
+  - npx prebuild --upload-all %GH_TOKEN%
