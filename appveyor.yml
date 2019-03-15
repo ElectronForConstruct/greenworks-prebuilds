@@ -34,5 +34,5 @@ install:
   - mkdir prebuilds
   - cd ..
 #  - node index.js
-  - cp -R greenworks/prebuilds/* prebuilds/
+#  - cp -R greenworks/prebuilds/* prebuilds/
   - if ["%APPVEYOR_REPO_TAG%"] npx prebuild --upload-all %GH_TOKEN%
