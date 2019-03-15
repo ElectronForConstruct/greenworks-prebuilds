@@ -78,4 +78,4 @@ script:
   - cd ..
   - node index.js
   - cp -R greenworks/prebuilds/* prebuilds/
-  - if [[ "TRAVIS_TAG" != ""]]; then npx prebuild --upload-all $GH_TOKEN; fi
+  - if [[ "TRAVIS_TAG" != "" ]]; then npx prebuild --upload-all $GH_TOKEN; fi
