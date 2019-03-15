@@ -1,7 +1,3 @@
-# https://github.com/prebuild/prebuild
-# https://github.com/greenheartgames/greenworks/blob/master/docs/build-instructions-nwjs.md
-# https://github.com/greenheartgames/greenworks/blob/master/docs/build-instructions-electron.md
-
 language: node_js
 
 dist: xenial
@@ -21,14 +17,6 @@ matrix:
       env:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
-
-    - os: osx
-      compiler: clang
-      osx_image: xcode10
-      env:
-        - CXX_COMPILER='clang++'
-        - C_COMPILER='clang'
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && MACOSX_DEPLOYMENT_TARGET=10.7"
 
     - os: osx
       compiler: gcc
@@ -86,10 +74,7 @@ script:
   - mkdir prebuilds
   - cd greenworks
   - npm install
-  - mkdir prebuilds
-  # - npx prebuild --all
-  # - mv prebuilds ../prebuilds
   - cd ..
   - node index.js
-  - cp greenworks/prebuilds/** prebuilds/
+  - cp -R greenworks/prebuilds/* prebuilds/
   - npx prebuild --upload-all $GH_TOKEN

@@ -1,5 +1,5 @@
-const nodeAbi  = require('node-abi');
-const execa    = require('execa');
+const nodeAbi = require('node-abi');
+const execa   = require('execa');
 
 const dir = 'greenworks';
 
@@ -9,7 +9,7 @@ const prebuildVersion = async ({ runtime, abi }) => {
   return new Promise(async (resolve) => {
     try {
       console.log(`Building ${runtime}@v${abi}`);
-      const { stdout } = await execa('npx', ['prebuild', '-r', runtime, '-t', abi, '--strip' ], {
+      const { stdout } = await execa('npx', [ 'prebuild', '-r', runtime, '-t', abi, '--strip' ], {
         cwd: dir,
       });
       resolve({
@@ -22,7 +22,7 @@ const prebuildVersion = async ({ runtime, abi }) => {
         message: e,
       });
     }
-  })
+  });
 };
 
 const run = async () => {
@@ -34,12 +34,15 @@ const run = async () => {
   for (let i = 0; i < everything.length; i++) {
     let version = everything[ i ];
 
-    const ret = await prebuildVersion(version);
-
-    if (ret.error) console.error(ret.message);
-    else console.log(`${version.runtime}@v${version.abi}: ${ret.message}`);
+    try {
+      const ret = await prebuildVersion(version);
+      if (ret.error) console.error(ret.message);
+      else console.log(`${version.runtime}@v${version.abi}: ${ret.message}`);
+    } catch (e) {
+      console.log('There was an error building ' + version);
+      console.error(e);
+    }
   }
-
 };
 
 run().then(() => {
