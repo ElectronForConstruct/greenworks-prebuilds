@@ -48,7 +48,7 @@ const run = async () => {
   } */
   
   for (let i = 0; i < unofficialTargets.length; i++) {
-    let version = everything[ i ];
+    let version = unofficialTargets[ i ];
 
     try {
       const ret = await prebuildVersion(version);
