@@ -56,7 +56,7 @@ const run = async () => {
       else console.log(`${version.runtime}@v${version.abi}: ${ret.message}`);
     } catch (e) {
       console.log('There was an error building ' + version);
-      console.error(e);
+      // throw new Error(e);
     }
   }
 };
