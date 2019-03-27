@@ -29,12 +29,12 @@ const run = async () => {
   const supportedTargets  = nodeAbi.supportedTargets;
   const additionalTargets = nodeAbi.additionalTargets;
   const unofficialTargets = [
-	  {runtime: 'electron', abi: '5.0.0-beta.6', lts: false}
+	  {runtime: 'electron', abi: '5.0.0-beta.6'}
 	];
 
-  const everything = supportedTargets.concat(additionalTargets);
+  const everything = supportedTargets.concat(additionalTargets).concat(unofficialTargets);
 
-  /* for (let i = 0; i < everything.length; i++) {
+  for (let i = 0; i < everything.length; i++) {
     let version = everything[ i ];
 
     try {
@@ -43,20 +43,6 @@ const run = async () => {
       else console.log(`${version.runtime}@v${version.abi}: ${ret.message}`);
     } catch (e) {
       console.log('There was an error building ' + version);
-      console.error(e);
-    }
-  } */
-  
-  for (let i = 0; i < unofficialTargets.length; i++) {
-    let version = unofficialTargets[ i ];
-
-    try {
-      const ret = await prebuildVersion(version);
-      if (ret.error) console.error(ret.message);
-      else console.log(`${version.runtime}@v${version.abi}: ${ret.message}`);
-    } catch (e) {
-      console.log('There was an error building ' + version);
-      // throw new Error(e);
     }
   }
 };
