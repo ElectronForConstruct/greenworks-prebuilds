@@ -29,7 +29,7 @@ const run = async () => {
   const supportedTargets  = nodeAbi.supportedTargets;
   const additionalTargets = nodeAbi.additionalTargets;
   const unofficialTargets = [
-	  {runtime: 'electron', abi: '5.0.0-beta.6'}
+	  // {runtime: 'electron', abi: '5.0.0-beta.6'}
 	];
 
   const everything = supportedTargets.concat(additionalTargets).concat(unofficialTargets);
