@@ -42,7 +42,7 @@ addons:
       - g++-4.8
 
 node_js:
-  - '10.15.2'
+  - '12.0'
 
 before_install:
   - eval "${MATRIX_EVAL}"
