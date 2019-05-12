@@ -18,25 +18,19 @@ branches:
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
   - git clone https://github.com/greenheartgames/greenworks greenworks
-
   - 7z x sdk.zip -p"%ZIP_PASSWORD%"
   - mv sdk greenworks/deps/steamworks_sdk
-#  - npm i -g npx
   - npm install
-
-#  - mkdir prebuilds
   - cd greenworks
   - npm install
   - cd ..
   - node index.js
   - ls bin
-#  - cp -R greenworks/prebuilds/* prebuilds/
-#  - npx prebuild --upload-all %GH_TOKEN%
 
 deploy:
   provider: GitHub
-  auth_token: %GH_TOKEN%
+  auth_token: $(GH_TOKEN)
   artifact: 'bin\**\*.node'
   draft: true
   on:
-    APPVEYOR_REPO_TAG: true
+    - APPVEYOR_REPO_TAG: true
