@@ -58,11 +58,11 @@ const run = async () => {
           break;
 
         case 'node-webkit':
-          console.log('NW.js currently not supported');
+          console.log('NW.js is currently not supported');
           break;
 
         case 'node':
-          console.log('Node.js currently not supported');
+          console.log('Node.js is currently not supported');
           break;
 
         default:
@@ -75,6 +75,7 @@ const run = async () => {
     } catch (e) {
       console.log('There was an error building ', version);
     }
+    console.log();
   }
 };
 
