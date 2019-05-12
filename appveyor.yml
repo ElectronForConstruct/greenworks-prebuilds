@@ -35,9 +35,8 @@ install:
 
 deploy:
   provider: GitHub
-  auth_token:
-    secure: <your encrypted token> # your encrypted token from GitHub
-  artifact: 'bin\**\*.node'            # upload all NuGet packages to release assets
+  auth_token: %GH_TOKEN%
+  artifact: 'bin\**\*.node'
   draft: true
   on:
     APPVEYOR_REPO_TAG: true
