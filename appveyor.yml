@@ -33,4 +33,4 @@ deploy:
   artifact: 'bin\**\*.node'
   draft: true
   on:
-    - APPVEYOR_REPO_TAG: true
+    APPVEYOR_REPO_TAG: true
