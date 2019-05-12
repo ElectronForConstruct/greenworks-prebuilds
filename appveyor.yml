@@ -29,7 +29,8 @@ install:
 
 deploy:
   provider: GitHub
-  auth_token: "$(GH_TOKEN)"
+  auth_token:
+    secure: "31HmnEAJM952e/8Pz6DfHll5BUF6bwAFJ8odvkkUFTs/VCEJPXWa1cBv/ZW7QruC"
   artifacts:
     - path: '.\bin\**\*.node'
   force_update: true
