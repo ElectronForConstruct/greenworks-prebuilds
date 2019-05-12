@@ -19,12 +19,8 @@ matrix:
         - C_COMPILER='gcc-7'
 
     - os: osx
-      compiler: gcc
-      osx_image: xcode10
       env:
-        - CXX_COMPILER='g++'
-        - C_COMPILER='gcc'
-        - MACOSX_DEPLOYMENT_TARGET=10.7
+        - MACOSX_DEPLOYMENT_TARGET=10.9
 
 branches:
   only:
