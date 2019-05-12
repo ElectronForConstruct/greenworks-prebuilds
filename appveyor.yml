@@ -34,4 +34,4 @@ install:
   - cd ..
   - node index.js
   - cp -R greenworks/prebuilds/* prebuilds/
-  - npx prebuild --upload-all %GH_TOKEN%
+#  - npx prebuild --upload-all %GH_TOKEN%

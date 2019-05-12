@@ -1,6 +1,6 @@
 {
   "name": "greenworks-prebuilds",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Prebuild binaries for greenworks",
   "licenses": [
     {
@@ -13,7 +13,9 @@
     "url": "git@github.com:ElectronForConstruct/greenworks-prebuilds.git"
   },
   "dependencies": {
+    "electron-rebuild": "^1.8.4",
     "execa": "^1.0.0",
-    "node-abi": "^2.8.0"
+    "node-abi": "^2.8.0",
+    "shelljs": "^0.8.3"
   }
 }

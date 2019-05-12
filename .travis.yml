@@ -26,6 +26,8 @@ matrix:
         - C_COMPILER='gcc'
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && MACOSX_DEPLOYMENT_TARGET=10.7"
 
+    - os: windows
+
 branches:
   only:
     - develop
@@ -42,7 +44,7 @@ addons:
       - g++-4.8
 
 node_js:
-  - '12.0'
+  - '10.15.3'
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -60,7 +62,7 @@ before_install:
   - ls greenworks
   - ls greenworks/deps
   - ls greenworks/deps/steamworks_sdk
-  - npm i -g npx
+#  - npm i -g npx
   - npm install
 
 script:
@@ -71,10 +73,18 @@ script:
   - echo $MACOSX_DEPLOYMENT_TARGET
   - echo $TRAVIS_TAG
 
-  - mkdir prebuilds
+#  - mkdir prebuilds
   - cd greenworks
   - npm install
   - cd ..
   - node index.js
-  - cp -R greenworks/prebuilds/* prebuilds/
-  - npx prebuild --upload-all $GH_TOKEN
+
+deploy:
+  provider: releases
+  api_key: "$GH_TOKEN"
+  file_glob: true
+  file: bin/**/*
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
