@@ -78,6 +78,7 @@ script:
   - npm install
   - cd ..
   - node index.js
+  - ls bin
 
 deploy:
   provider: releases

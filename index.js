@@ -30,8 +30,8 @@ async function buildElectron(version) {
       buildPath      : path.resolve(greenworks),
       electronVersion: target,
     });
-    shelljs.cp(path.join(greenworks, 'build', 'Release', 'greenworks-win64.node'), path.join(bin, `greenworks-${os.platform()}-${os.arch()}-v${abi}.node`))
-    console.log('Done');
+    shelljs.cp(path.join(greenworks, 'build', 'Release', '*.node'), path.join(bin, `greenworks-${os.platform()}-${os.arch()}-v${abi}.node`))
+    console.log(`Done greenworks-${os.platform()}-${os.arch()}-v${abi}.node`);
   } catch (e) {
     console.log(e);
     throw e;
