@@ -29,7 +29,7 @@ install:
 
 deploy:
   provider: GitHub
-  auth_token: $(GH_TOKEN)
+  auth_token: "$(GH_TOKEN)"
   artifacts:
     - path: '.\bin\**\*.node'
   force_update: true
