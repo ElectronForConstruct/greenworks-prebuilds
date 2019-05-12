@@ -1,6 +1,6 @@
 environment:
   matrix:
-    - nodejs_version: "10.0"
+    - nodejs_version: "10.15.3"
 
 platform:
   - x64
@@ -21,17 +21,23 @@ install:
 
   - 7z x sdk.zip -p"%ZIP_PASSWORD%"
   - mv sdk greenworks/deps/steamworks_sdk
-  - ls greenworks
-  - ls greenworks/deps
-  - ls greenworks/deps/steamworks_sdk
-  - npm i -g npx
+#  - npm i -g npx
   - npm install
 
-  - mkdir prebuilds
+#  - mkdir prebuilds
   - cd greenworks
   - npm install
-  - mkdir prebuilds
   - cd ..
   - node index.js
-  - cp -R greenworks/prebuilds/* prebuilds/
+  - ls bin
+#  - cp -R greenworks/prebuilds/* prebuilds/
 #  - npx prebuild --upload-all %GH_TOKEN%
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: <your encrypted token> # your encrypted token from GitHub
+  artifact: 'bin\**\*.node'            # upload all NuGet packages to release assets
+  draft: true
+  on:
+    APPVEYOR_REPO_TAG: true

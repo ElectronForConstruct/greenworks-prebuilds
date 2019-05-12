@@ -59,9 +59,6 @@ before_install:
 
   - 7z x sdk.zip -p$ZIP_PASSWORD
   - mv sdk greenworks/deps/steamworks_sdk
-  - ls greenworks
-  - ls greenworks/deps
-  - ls greenworks/deps/steamworks_sdk
 #  - npm i -g npx
   - npm install
 
