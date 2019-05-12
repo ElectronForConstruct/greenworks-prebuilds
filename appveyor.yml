@@ -32,7 +32,7 @@ deploy:
   auth_token:
     secure: "31HmnEAJM952e/8Pz6DfHll5BUF6bwAFJ8odvkkUFTs/VCEJPXWa1cBv/ZW7QruC"
   artifacts:
-    - path: '.\bin\**\*.node'
+    - path: ".\bin\**\*.node"
   force_update: true
   draft: true
   on:
