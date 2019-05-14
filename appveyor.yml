@@ -1,11 +1,11 @@
 environment:
   matrix:
-    - nodejs_version: "8.16.0"
+    - nodejs_version: "8"
 
 platform:
   - x64
 
-os: Visual Studio 2017
+os: Visual Studio 2015
 
 build: off
 
@@ -16,7 +16,7 @@ branches:
 
 # init:
 install:
-  - ps: Install-Product node $env:nodejs_version $env:platform
+  - ps: Install-Product node $env:nodejs_version
   - git clone https://github.com/greenheartgames/greenworks greenworks
   - 7z x sdk.zip -p"%ZIP_PASSWORD%"
   - mv sdk greenworks/deps/steamworks_sdk
