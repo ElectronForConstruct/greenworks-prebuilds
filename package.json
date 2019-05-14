@@ -2,6 +2,9 @@
   "name": "greenworks-prebuilds",
   "version": "0.2.5",
   "description": "Prebuild binaries for greenworks",
+  "scripts": {
+    "start": "cross-env GITHUB_TOKEN=937e2133d1df3f5fa5109f81b361e83dd4673d6d node index.js"
+  },
   "licenses": [
     {
       "type": "MIT",
@@ -13,9 +16,11 @@
     "url": "git@github.com:ElectronForConstruct/greenworks-prebuilds.git"
   },
   "dependencies": {
+    "cross-env": "^5.2.0",
     "electron-rebuild": "^1.8.4",
     "execa": "^1.0.0",
-    "node-abi": "^2.8.0",
-    "shelljs": "^0.8.3"
+    "gh-got": "^8.1.0",
+    "ghreleases": "^3.0.2",
+    "node-abi": "^2.8.0"
   }
 }
