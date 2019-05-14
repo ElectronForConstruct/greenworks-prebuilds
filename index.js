@@ -10,7 +10,7 @@ const gh      = require('ghreleases');
 
 const greenworks = path.join(__dirname, 'greenworks');
 const auth       = {
-  token: process.env.GITHUB_TOKEN,
+  token: process.env.GH_TOKEN,
   user : 'armaldio',
 };
 

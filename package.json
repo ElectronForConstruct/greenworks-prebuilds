@@ -3,7 +3,7 @@
   "version": "0.2.5",
   "description": "Prebuild binaries for greenworks",
   "scripts": {
-    "start": "cross-env GITHUB_TOKEN=937e2133d1df3f5fa5109f81b361e83dd4673d6d node index.js"
+    "start": "node index.js"
   },
   "licenses": [
     {
