@@ -107,6 +107,8 @@ async function buildElectron(version, release) {
     const filePath        = path.join(greenworks, 'build', 'Release', name);
     const filePathRenamed = path.join(greenworks, 'build', 'Release', assetLabel);
 
+    console.log(fs.readdirSync(path.join(greenworks, 'build', 'Release')));
+
     fs.renameSync(filePath, filePathRenamed);
     const upload = await uploadAsset(filePathRenamed, release.id);
     console.log('Upload done');
