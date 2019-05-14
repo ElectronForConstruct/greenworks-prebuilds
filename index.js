@@ -96,7 +96,7 @@ async function buildElectron(version, release) {
         name += 'win';
         break;
       case 'darwin':
-        name += 'darwin';
+        name += 'osx';
         break;
       case 'linux':
         name += 'linux';
