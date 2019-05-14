@@ -96,7 +96,7 @@ async function buildElectron(version, release) {
         name += 'win';
         break;
       case 'darwin':
-        name += 'mac';
+        name += 'darwin';
         break;
       case 'linux':
         name += 'linux';
@@ -128,6 +128,9 @@ const run = async (release) => {
 
   for (let i = 0; i < everything.length; i++) {
     let version = everything[ i ];
+
+    if (version.abi < 64)
+      continue;
 
     console.log(`${version.runtime}@v${version.abi}: `);
     try {
