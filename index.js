@@ -100,6 +100,42 @@ const electronRebuild = async (target) => {
     });
 };
 
+const nodeRebuild = async (target) => {
+  const { stdout } = await execa(
+    path.resolve(
+      path.join(
+        __dirname, 'node_modules', '.bin', `node-gyp${os.platform() === 'win32' ? '.cmd' : ''}`,
+      ),
+    ),
+    [
+      'rebuild',
+      '--release',
+      `--target=${target}`,
+      '--arch=x64',
+      '--build-from-source',
+    ], {
+      cwd: greenworks,
+    });
+};
+
+const nwjsRebuild = async (target) => {
+  const { stdout } = await execa(
+    path.resolve(
+      path.join(
+        __dirname, 'node_modules', '.bin', `nw-gyp${os.platform() === 'win32' ? '.cmd' : ''}`,
+      ),
+    ),
+    [
+      'rebuild',
+      '--release',
+      `--target=${target}`,
+      '--arch=x64',
+      '--build-from-source',
+    ], {
+      cwd: greenworks,
+    });
+};
+
 function getBinaryName() {
   let name = 'greenworks-';
 
@@ -136,11 +172,11 @@ const build = async (version, release) => {
       break;
 
     case 'node-webkit':
-      console.log('NW.js is currently not supported');
+      await nwjsRebuild(target);
       return;
 
     case 'node':
-      console.log('Node.js is currently not supported');
+      await nodeRebuild(target);
       return;
 
     default:
