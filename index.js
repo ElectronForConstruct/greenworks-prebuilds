@@ -137,15 +137,15 @@ const build = async (version, release) => {
 
     case 'node-webkit':
       console.log('NW.js is currently not supported');
-      break;
+      return;
 
     case 'node':
       console.log('Node.js is currently not supported');
-      break;
+      return;
 
     default:
       console.log('Unsupported runtime, use one of electron, node-webkit, node');
-      break;
+      return;
   }
 
   console.log(`Done ${assetLabel}`);
