@@ -129,6 +129,8 @@ const buildElectron = async (version, release) => {
       break;
   }
 
+  console.log('arch', os.arch());
+
   name += os.arch().slice(1) + '.node';
   const filePath        = path.resolve(path.join(greenworks, 'build', 'Release', name));
 
