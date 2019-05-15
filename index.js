@@ -216,10 +216,17 @@ const run = async (release) => {
   ]);
 
   const electronTargets = getUnique(everything.filter(entry => entry.runtime === 'electron'), 'abi');
-  const nodeTargets     = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
-  const nwjsTargets     = getUnique(everything.filter(entry => entry.runtime === 'node-webkit'), 'abi');
+  const node = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
+  const nodeTargets     = [...node];
+  const nwjsTargets     = [...node].map(target => {
+    const newTarget = Object.assign({}, target);
+    newTarget.runtime = 'node-webkit';
+    return newTarget;
+  }); // same as node
 
   everything = electronTargets.concat(nodeTargets).concat(nwjsTargets);
+
+  console.log(everything);
 
   for (let i = 0; i < everything.length; i++) {
     let version = everything[ i ];
