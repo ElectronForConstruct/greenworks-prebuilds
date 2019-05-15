@@ -203,10 +203,11 @@ const build = async (version, release) => {
     const json = JSON.parse(e.body);
     if (json.errors && json.errors[ 0 ] && json.errors[ 0 ].code === 'already_exists')
       console.log('Asset already exists');
-    else{
+    else {
       console.log('travis_fold:start:error');
-      console.log(json);}
-      console.log('travis_fold:end:error');
+      console.log(json);
+    }
+    console.log('travis_fold:end:error');
   }
 };
 
@@ -216,10 +217,10 @@ const run = async (release) => {
   ]);
 
   const electronTargets = getUnique(everything.filter(entry => entry.runtime === 'electron'), 'abi');
-  const node = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
-  const nodeTargets     = [...node];
-  const nwjsTargets     = [...node].map(target => {
-    const newTarget = Object.assign({}, target);
+  const node            = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
+  const nodeTargets     = [ ...node ];
+  const nwjsTargets     = [ ...node ].map(target => {
+    const newTarget   = Object.assign({}, target);
     newTarget.runtime = 'node-webkit';
     return newTarget;
   }); // same as node
@@ -237,7 +238,11 @@ const run = async (release) => {
     console.log(`${version.runtime}@v${version.abi}: `);
     console.log('Building...');
 
-    await build(version, release);
+    try {
+      await build(version, release);
+    } catch (e) {
+      console.log('Unable to build for this version', e);
+    }
 
     console.log();
   }
