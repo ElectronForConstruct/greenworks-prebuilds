@@ -48,7 +48,7 @@ addons:
       - g++-4.8
 
 node_js:
-  - '8.16.0'
+  - '10.15.3'
 
 before_install:
   - git clone https://github.com/greenheartgames/greenworks greenworks
