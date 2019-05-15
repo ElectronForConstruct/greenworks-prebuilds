@@ -8,6 +8,7 @@ const got     = require('got');
 const pkg     = require('./package');
 const gh      = require('ghreleases');
 const shelljs = require('shelljs');
+const semver = require('semver');
 
 const greenworks = path.join(__dirname, 'greenworks');
 
@@ -45,6 +46,11 @@ const listReleases = async () => {
       resolve(list);
     });
   });
+};
+
+const getNWjsVersions = async () => {
+  const { body } = await got('https://nwjs.io/versions.json');
+  return JSON.parse(body);
 };
 
 const uploadAsset = async (filePath, assetLabel, release) => {
@@ -217,17 +223,32 @@ const run = async (release) => {
   ]);
 
   const electronTargets = getUnique(everything.filter(entry => entry.runtime === 'electron'), 'abi');
-  const node            = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
-  const nodeTargets     = [ ...node ];
-  const nwjsTargets     = [ ...node ].map(target => {
-    const newTarget   = Object.assign({}, target);
-    newTarget.runtime = 'node-webkit';
-    return newTarget;
-  }); // same as node
+  const nodeTargets     = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
+
+  let nwjs = await getNWjsVersions();
+  nwjs = nwjs.versions.map(v => {
+
+    const version = {
+      runtime: 'node-webkit',
+      target : v.version,
+      node   : v.components.node,
+    };
+
+    for (let i = 0; i < nodeTargets.length; i++) {
+      let nodeTarget = nodeTargets[ i ];
+
+      if (semver.major(nodeTarget.target) === semver.major(version.node)) {
+        version.abi = nodeTarget.abi;
+        break;
+      }
+    }
+
+    return version;
+  });
+
+  const nwjsTargets     = getUnique(nwjs.filter(entry => entry.runtime === 'node-webkit'), 'abi');
 
   everything = electronTargets.concat(nodeTargets).concat(nwjsTargets);
-
-  console.log(everything);
 
   for (let i = 0; i < everything.length; i++) {
     let version = everything[ i ];
