@@ -96,7 +96,8 @@ const electronRebuild = async (target) => {
     ),
     [
       'rebuild',
-      '--release',
+      // '--release',
+      '--build-from-source',
       `--target=${target}`,
       '--arch=x64',
       '--dist-url=https://atom.io/download/electron',
