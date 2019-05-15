@@ -8,7 +8,7 @@ const got     = require('got');
 const pkg     = require('./package');
 const gh      = require('ghreleases');
 const shelljs = require('shelljs');
-const semver = require('semver');
+const semver  = require('semver');
 
 const greenworks = path.join(__dirname, 'greenworks');
 
@@ -223,7 +223,7 @@ const run = async (release) => {
   const nodeTargets     = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
 
   let nwjs = await getNWjsVersions();
-  nwjs = nwjs.versions.map(v => {
+  nwjs     = nwjs.versions.map(v => {
 
     const version = {
       runtime: 'node-webkit',
@@ -240,12 +240,16 @@ const run = async (release) => {
       }
     }
 
+    if (!version.abi)
+      return null;
+
     return version;
   });
 
-  const nwjsTargets     = getUnique(nwjs.filter(entry => entry.runtime === 'node-webkit'), 'abi');
+  const nwjsTargets = getUnique(nwjs.filter(entry => entry && entry.runtime === 'node-webkit'), 'abi');
 
   everything = electronTargets.concat(nodeTargets).concat(nwjsTargets);
+
 
   for (let i = 0; i < everything.length; i++) {
     let version = everything[ i ];
