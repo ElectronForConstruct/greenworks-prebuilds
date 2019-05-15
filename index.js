@@ -131,7 +131,7 @@ const buildElectron = async (version, release) => {
 
   console.log('arch', os.arch());
 
-  name += os.arch().slice(1) + '.node';
+  name += os.arch().replace(/[ia|x]/, '') + '.node';
   const filePath        = path.resolve(path.join(greenworks, 'build', 'Release', name));
 
   if (!fs.existsSync(filePath))
