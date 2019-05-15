@@ -48,7 +48,7 @@ const listReleases = async () => {
 };
 
 const uploadAsset = async (filePath, assetLabel, release) => {
-  const stream   = fs.readFileSync(filePath);
+  const stream = fs.readFileSync(filePath);
 
   await got.post(`https://uploads.github.com/repos/ElectronForConstruct/greenworks-prebuilds/releases/${release.id}/assets?name=${assetLabel}`, {
     headers: {
@@ -100,21 +100,7 @@ const electronRebuild = async (target) => {
     });
 };
 
-const buildElectron = async (version, release) => {
-  const { target, abi } = version;
-
-  const assetLabel = `greenworksV${abi}-${os.platform()}.node`;
-
-  const assetExist = release.assets.find(asset => asset.name === assetLabel);
-  if (assetExist) {
-    console.log('Asset already exists, skipping');
-    return;
-  }
-
-  await electronRebuild(target);
-
-  console.log(`Done ${assetLabel}`);
-
+function getBinaryName() {
   let name = 'greenworks-';
 
   switch (os.platform()) {
@@ -130,12 +116,45 @@ const buildElectron = async (version, release) => {
   }
 
   name += '64.node';
-  const filePath        = path.resolve(path.join(greenworks, 'build', 'Release', name));
+  return path.resolve(path.join(greenworks, 'build', 'Release', name));
+}
 
-  if (!fs.existsSync(filePath))
-  {
-    console.log(`File ${filePath} not found!`);
+const build = async (version, release) => {
+  const { target, abi, runtime } = version;
+
+  const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}.node`;
+
+  const assetExist = release.assets.find(asset => asset.name === assetLabel);
+  if (assetExist) {
+    console.log('Asset already exists, skipping');
     return;
+  }
+
+  switch (version.runtime) {
+    case 'electron':
+      await electronRebuild(target);
+      break;
+
+    case 'node-webkit':
+      console.log('NW.js is currently not supported');
+      break;
+
+    case 'node':
+      console.log('Node.js is currently not supported');
+      break;
+
+    default:
+      console.log('Unsupported runtime, use one of electron, node-webkit, node');
+      break;
+  }
+
+  console.log(`Done ${assetLabel}`);
+
+  const filePath = getBinaryName();
+
+  if (!fs.existsSync(filePath)) {
+    console.log(`File ${filePath} not found!`);
+    return undefined;
   }
 
   // shelljs.mv(filePath, filePathRenamed);
@@ -172,23 +191,9 @@ const run = async (release) => {
 
     console.log(`${version.runtime}@v${version.abi}: `);
     console.log('Building...');
-    switch (version.runtime) {
-      case 'electron':
-        await buildElectron(version, release);
-        break;
 
-      case 'node-webkit':
-        console.log('NW.js is currently not supported');
-        break;
+    await build(version, release);
 
-      case 'node':
-        console.log('Node.js is currently not supported');
-        break;
-
-      default:
-        console.log('Unsupported runtime, use one of electron, node-webkit, node');
-        break;
-    }
     console.log();
   }
 };
