@@ -47,11 +47,10 @@ const listReleases = async () => {
   });
 };
 
-const uploadAsset = async (filePath, release) => {
-  const fileName = path.basename(filePath);
+const uploadAsset = async (filePath, assetLabel, release) => {
   const stream   = fs.readFileSync(filePath);
 
-  await got.post(`https://uploads.github.com/repos/ElectronForConstruct/greenworks-prebuilds/releases/${release.id}/assets?name=${fileName}`, {
+  await got.post(`https://uploads.github.com/repos/ElectronForConstruct/greenworks-prebuilds/releases/${release.id}/assets?name=${assetLabel}`, {
     headers: {
       'Authorization': `token ${process.env.GH_TOKEN}`,
       'Content-Type' : 'application/octet-stream',
@@ -132,15 +131,17 @@ const buildElectron = async (version, release) => {
 
   name += os.arch().slice(1) + '.node';
   const filePath        = path.resolve(path.join(greenworks, 'build', 'Release', name));
-  const filePathRenamed = path.resolve(path.join(greenworks, 'build', 'Release', assetLabel));
 
   if (!fs.existsSync(filePath))
+  {
+    console.log(`File ${filePath} not found!`);
     return;
+  }
 
-  shelljs.mv(filePath, filePathRenamed);
+  // shelljs.mv(filePath, filePathRenamed);
 
   try {
-    await uploadAsset(filePathRenamed, release);
+    await uploadAsset(filePath, assetLabel, release);
     console.log('Upload done');
   } catch (e) {
     console.log('Error while uploading asset:');
