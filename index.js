@@ -209,8 +209,8 @@ const build = async (version, release) => {
     else {
       console.log('travis_fold:start:error');
       console.log(json);
+      console.log('travis_fold:end:error');
     }
-    console.log('travis_fold:end:error');
   }
 };
 
@@ -259,7 +259,9 @@ const run = async (release) => {
     try {
       await build(version, release);
     } catch (e) {
+      console.log('travis_fold:start:error');
       console.log('Unable to build for this version', e.message);
+      console.log('travis_fold:end:error');
     }
 
     console.log();
