@@ -19,8 +19,11 @@
     "cross-env": "^5.2.0",
     "electron-rebuild": "^1.8.4",
     "execa": "^1.0.0",
-    "gh-got": "^8.1.0",
     "ghreleases": "^3.0.2",
-    "node-abi": "^2.8.0"
+    "got": "^9.6.0",
+    "node-abi": "^2.8.0",
+    "node-gyp": "^4.0.0",
+    "putasset": "^4.3.2",
+    "shelljs": "^0.8.3"
   }
 }
