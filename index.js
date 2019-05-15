@@ -100,7 +100,6 @@ const electronRebuild = async (target) => {
       `--target=${target}`,
       '--arch=x64',
       '--dist-url=https://atom.io/download/electron',
-      '--build-from-source',
     ], {
       cwd: greenworks,
     });
@@ -118,7 +117,6 @@ const nodeRebuild = async (target) => {
       '--release',
       `--target=${target}`,
       '--arch=x64',
-      '--build-from-source',
     ], {
       cwd: greenworks,
     });
@@ -136,7 +134,6 @@ const nwjsRebuild = async (target) => {
       '--release',
       `--target=${target}`,
       '--arch=x64',
-      '--build-from-source',
     ], {
       cwd: greenworks,
     });
@@ -262,7 +259,7 @@ const run = async (release) => {
     try {
       await build(version, release);
     } catch (e) {
-      console.log('Unable to build for this version', e);
+      console.log('Unable to build for this version', e.message);
     }
 
     console.log();
