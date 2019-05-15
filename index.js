@@ -173,11 +173,11 @@ const build = async (version, release) => {
 
     case 'node-webkit':
       await nwjsRebuild(target);
-      return;
+      break;
 
     case 'node':
       await nodeRebuild(target);
-      return;
+      break;
 
     default:
       console.log('Unsupported runtime, use one of electron, node-webkit, node');
@@ -203,8 +203,10 @@ const build = async (version, release) => {
     const json = JSON.parse(e.body);
     if (json.errors && json.errors[ 0 ] && json.errors[ 0 ].code === 'already_exists')
       console.log('Asset already exists');
-    else
-      console.log(json);
+    else{
+      console.log('travis_fold:start:error');
+      console.log(json);}
+      console.log('travis_fold:end:error');
   }
 };
 

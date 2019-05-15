@@ -1,11 +1,11 @@
 language: node_js
 
-dist: xenial
+dist: trusty
 
 matrix:
   include:
     - os: linux
-      dist: xenial
+      dist: trusty
       compiler: gcc
       addons: &gcc7
         apt:
