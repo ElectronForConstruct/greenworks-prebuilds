@@ -103,7 +103,7 @@ const electronRebuild = async (target) => {
 const buildElectron = async (version, release) => {
   const { target, abi } = version;
 
-  const assetLabel = `greenworks-${os.platform()}-${os.arch()}-v${abi}.node`;
+  const assetLabel = `greenworksV${abi}-${os.platform()}.node`;
 
   const assetExist = release.assets.find(asset => asset.name === assetLabel);
   if (assetExist) {
@@ -129,9 +129,7 @@ const buildElectron = async (version, release) => {
       break;
   }
 
-  console.log('arch', os.arch());
-
-  name += os.arch().replace(/[ia|x]/, '') + '.node';
+  name += '64.node';
   const filePath        = path.resolve(path.join(greenworks, 'build', 'Release', name));
 
   if (!fs.existsSync(filePath))
