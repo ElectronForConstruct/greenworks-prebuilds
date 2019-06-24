@@ -1,6 +1,6 @@
 {
   "name": "greenworks-prebuilds",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Prebuild binaries for greenworks",
   "scripts": {
     "start": "node index.js"
