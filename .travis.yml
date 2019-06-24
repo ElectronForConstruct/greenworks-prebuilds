@@ -34,6 +34,7 @@ matrix:
 
 branches:
   only:
+    - master
     - develop
     - /^v.*$/
 
