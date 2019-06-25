@@ -87,7 +87,7 @@ const getRelease = async () => {
   return newRelease;
 };
 
-const electronRebuild = async (target) => {
+const electronRebuild = async (target, arch, assetLabel, release) => {
   const { stdout } = await execa(
     path.resolve(
       path.join(
@@ -98,14 +98,16 @@ const electronRebuild = async (target) => {
       'rebuild',
       '--release',
       `--target=${target}`,
-      '--arch=x64',
+      '--arch=' + arch,
       '--dist-url=https://atom.io/download/electron',
     ], {
       cwd: greenworks,
     });
+
+    await extracted(assetLabel, release);
 };
 
-const nodeRebuild = async (target) => {
+const nodeRebuild = async (target, arch, assetLabel, release) => {
   const { stdout } = await execa(
     path.resolve(
       path.join(
@@ -116,13 +118,15 @@ const nodeRebuild = async (target) => {
       'rebuild',
       '--release',
       `--target=${target}`,
-      '--arch=x64',
+      '--arch=' + arch,
     ], {
       cwd: greenworks,
     });
+
+    await extracted(assetLabel, release);
 };
 
-const nwjsRebuild = async (target, arch) => {
+const nwjsRebuild = async (target, arch, assetLabel, release) => {
   const { stdout } = await execa(
     path.resolve(
       path.join(
@@ -137,9 +141,11 @@ const nwjsRebuild = async (target, arch) => {
     ], {
       cwd: greenworks,
     });
+
+    await extracted(assetLabel, release);
 };
 
-function getBinaryName() {
+function getBinaryName(arch) {
   let name = 'greenworks-';
 
   switch (os.platform()) {
@@ -154,40 +160,11 @@ function getBinaryName() {
       break;
   }
 
-  name += '64.node';
+  name += arch + '.node';
   return path.resolve(path.join(greenworks, 'build', 'Release', name));
 }
 
-const build = async (version, release) => {
-  const { target, abi, runtime } = version;
-
-  const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}.node`;
-
-  const assetExist = release.assets.find(asset => asset.name === assetLabel);
-  if (assetExist) {
-    console.log('Asset already exists, skipping');
-    return;
-  }
-
-  switch (version.runtime) {
-    case 'electron':
-      await electronRebuild(target);
-      break;
-
-    case 'node-webkit':
-      await nwjsRebuild(target, 'x64');
-      await nwjsRebuild(target, 'ia32');
-      break;
-
-    case 'node':
-      await nodeRebuild(target);
-      break;
-
-    default:
-      console.log('Unsupported runtime, use one of electron, node-webkit, node');
-      return;
-  }
-
+async function extracted(assetLabel, release) {
   console.log(`Done ${assetLabel}`);
 
   const filePath = getBinaryName();
@@ -211,6 +188,42 @@ const build = async (version, release) => {
       console.log('travis_fold:start:error');
       console.log(json);
       console.log('travis_fold:end:error');
+    }
+  }
+}
+
+const build = async (version, release) => {
+  const archs = ['ia32', 'x64'];
+
+  for (let i = 0; i < archs.length; i++) {
+    let arch = archs[ i ];
+
+    const { target, abi, runtime } = version;
+
+    const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`;
+
+    const assetExist = release.assets.find(asset => asset.name === assetLabel);
+    if (assetExist) {
+      console.log('Asset already exists, skipping');
+      return;
+    }
+
+    switch (version.runtime) {
+      case 'electron':
+        await electronRebuild(target, arch, assetLabel, release);
+        break;
+
+      case 'node-webkit':
+        await nwjsRebuild(target, arch, assetLabel, release);
+        break;
+
+      case 'node':
+        await nodeRebuild(target, arch, assetLabel, release);
+        break;
+
+      default:
+        console.log('Unsupported runtime, use one of electron, node-webkit, node');
+        return;
     }
   }
 };
