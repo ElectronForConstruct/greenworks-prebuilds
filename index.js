@@ -160,7 +160,7 @@ function getBinaryName(arch) {
       break;
   }
 
-  name += arch + '.node';
+  name += (arch === 'ia32' ? '32' : '64') + '.node';
   return path.resolve(path.join(greenworks, 'build', 'Release', name));
 }
 
@@ -168,8 +168,7 @@ async function upload(assetLabel, release, arch) {
   console.log(`Done ${assetLabel}`);
 
   const filePath = getBinaryName(arch);
-  const ls = shelljs.ls(path.dirname(filePath));
-  console.log(ls);
+  shelljs.ls(path.dirname(filePath));
 
   if (!fs.existsSync(filePath)) {
     console.log(`File ${filePath} not found!`);
