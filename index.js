@@ -206,7 +206,7 @@ const build = async (version, release) => {
     const assetExist = release.assets.find(asset => asset.name === assetLabel);
     if (assetExist) {
       console.log('Asset already exists, skipping');
-      return;
+      continue;
     }
 
     switch (version.runtime) {
