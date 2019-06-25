@@ -104,7 +104,7 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
       cwd: greenworks,
     });
 
-    await extracted(assetLabel, release);
+    await upload(assetLabel, release, arch);
 };
 
 const nodeRebuild = async (target, arch, assetLabel, release) => {
@@ -123,7 +123,7 @@ const nodeRebuild = async (target, arch, assetLabel, release) => {
       cwd: greenworks,
     });
 
-    await extracted(assetLabel, release);
+    await upload(assetLabel, release, arch);
 };
 
 const nwjsRebuild = async (target, arch, assetLabel, release) => {
@@ -142,7 +142,7 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
       cwd: greenworks,
     });
 
-    await extracted(assetLabel, release);
+    await upload(assetLabel, release, arch);
 };
 
 function getBinaryName(arch) {
@@ -164,10 +164,10 @@ function getBinaryName(arch) {
   return path.resolve(path.join(greenworks, 'build', 'Release', name));
 }
 
-async function extracted(assetLabel, release) {
+async function upload(assetLabel, release, arch) {
   console.log(`Done ${assetLabel}`);
 
-  const filePath = getBinaryName();
+  const filePath = getBinaryName(arch);
 
   if (!fs.existsSync(filePath)) {
     console.log(`File ${filePath} not found!`);
