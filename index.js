@@ -194,7 +194,7 @@ async function upload(assetLabel, release, arch) {
 }
 
 const build = async (version, release) => {
-  const archs = ['ia32', 'x64'];
+  const archs = ['x64', 'ia32'];
 
   for (let i = 0; i < archs.length; i++) {
     let arch = archs[ i ];
