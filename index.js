@@ -122,7 +122,7 @@ const nodeRebuild = async (target) => {
     });
 };
 
-const nwjsRebuild = async (target) => {
+const nwjsRebuild = async (target, arch) => {
   const { stdout } = await execa(
     path.resolve(
       path.join(
@@ -133,8 +133,7 @@ const nwjsRebuild = async (target) => {
       'rebuild',
       '--release',
       `--target=${target}`,
-      '--arch=x64',
-      '--arch=ia32',
+      '--arch=' + arch,
     ], {
       cwd: greenworks,
     });
@@ -176,7 +175,8 @@ const build = async (version, release) => {
       break;
 
     case 'node-webkit':
-      await nwjsRebuild(target);
+      await nwjsRebuild(target, 'x64');
+      await nwjsRebuild(target, 'ia32');
       break;
 
     case 'node':
