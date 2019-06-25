@@ -134,6 +134,7 @@ const nwjsRebuild = async (target) => {
       '--release',
       `--target=${target}`,
       '--arch=x64',
+      '--arch=ia32',
     ], {
       cwd: greenworks,
     });
