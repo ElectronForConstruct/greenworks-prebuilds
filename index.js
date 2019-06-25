@@ -168,7 +168,7 @@ async function upload(assetLabel, release, arch) {
   console.log(`Done ${assetLabel}`);
 
   const filePath = getBinaryName(arch);
-  const ls = shelljs.ls(filePath);
+  const ls = shelljs.ls(path.dirname(filePath));
   console.log(ls);
 
   if (!fs.existsSync(filePath)) {
