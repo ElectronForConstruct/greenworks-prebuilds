@@ -1,6 +1,6 @@
 {
   "name": "greenworks-prebuilds",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Prebuild binaries for greenworks",
   "scripts": {
     "start": "node index.js"
@@ -16,16 +16,18 @@
     "url": "git@github.com:ElectronForConstruct/greenworks-prebuilds.git"
   },
   "dependencies": {
+    "@electron/get": "^1.3.1",
     "cross-env": "^5.2.0",
     "electron-rebuild": "^1.8.4",
     "execa": "^1.0.0",
     "ghreleases": "^3.0.2",
     "got": "^9.6.0",
-    "node-abi": "^2.8.0",
+    "modules-abi": "^0.2.1",
     "node-gyp": "^4.0.0",
     "nw-gyp": "^3.6.3",
     "putasset": "^4.3.2",
     "semver": "^6.0.0",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.3",
+    "unzip": "^0.1.11"
   }
 }

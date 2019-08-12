@@ -1,4 +1,3 @@
-const nodeAbi = require('node-abi');
 const execa   = require('execa');
 const rebuild = require('electron-rebuild').default;
 const path    = require('path');
@@ -9,6 +8,9 @@ const pkg     = require('./package');
 const gh      = require('ghreleases');
 const shelljs = require('shelljs');
 const semver  = require('semver');
+const abis = require('modules-abi');
+
+const electronDownload = require('./electronDownloader');
 
 const greenworks = path.join(__dirname, 'greenworks');
 
@@ -67,7 +69,9 @@ const uploadAsset = async (filePath, assetLabel, release) => {
 
 const getRelease = async () => {
   const releases = await listReleases();
-  const release  = releases.find(release => release.draft && release.tag_name === `v${pkg.version}`);
+  const release  = releases.find(release => !release.draft && release.tag_name === `v${pkg.version}`);
+  release.assets = [];
+  console.log(release);
 
   if (release) {
     console.log('Release exist, skipping');
@@ -104,7 +108,10 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
       cwd: greenworks,
     });
 
-    await upload(assetLabel, release, arch);
+  // test if it's working
+  await electronDownload(target, arch);
+
+  await upload(assetLabel, release, arch);
 };
 
 const nodeRebuild = async (target, arch, assetLabel, release) => {
@@ -123,7 +130,7 @@ const nodeRebuild = async (target, arch, assetLabel, release) => {
       cwd: greenworks,
     });
 
-    await upload(assetLabel, release, arch);
+  await upload(assetLabel, release, arch);
 };
 
 const nwjsRebuild = async (target, arch, assetLabel, release) => {
@@ -142,7 +149,7 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
       cwd: greenworks,
     });
 
-    await upload(assetLabel, release, arch);
+  await upload(assetLabel, release, arch);
 };
 
 function getBinaryName(arch) {
@@ -193,13 +200,15 @@ async function upload(assetLabel, release, arch) {
   }
 }
 
-const build = async (version, release) => {
-  const archs = ['x64', 'ia32'];
+const build = async (module, release) => {
+  const archs = [ 'x64', 'ia32' ];
 
   for (let i = 0; i < archs.length; i++) {
     let arch = archs[ i ];
 
-    const { target, abi, runtime } = version;
+    const { version, abi, runtime } = module;
+
+    console.log(version, abi, runtime);
 
     const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`;
 
@@ -209,17 +218,17 @@ const build = async (version, release) => {
       continue;
     }
 
-    switch (version.runtime) {
+    switch (runtime) {
       case 'electron':
-        await electronRebuild(target, arch, assetLabel, release);
+        await electronRebuild(version, arch, assetLabel, release);
         break;
 
-      case 'node-webkit':
-        await nwjsRebuild(target, arch, assetLabel, release);
+      case 'nw.js':
+        await nwjsRebuild(version, arch, assetLabel, release);
         break;
 
       case 'node':
-        await nodeRebuild(target, arch, assetLabel, release);
+        await nodeRebuild(version, arch, assetLabel, release);
         break;
 
       default:
@@ -230,41 +239,13 @@ const build = async (version, release) => {
 };
 
 const run = async (release) => {
-  let everything = nodeAbi.supportedTargets.concat(nodeAbi.additionalTargets).concat([
-    // {runtime: 'electron', abi: '5.0.0-beta.6'}
-  ]);
+  let everything = await abis.getAll();
 
   const electronTargets = getUnique(everything.filter(entry => entry.runtime === 'electron'), 'abi');
   const nodeTargets     = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
-
-  let nwjs = await getNWjsVersions();
-  nwjs     = nwjs.versions.map(v => {
-
-    const version = {
-      runtime: 'node-webkit',
-      target : v.version,
-      node   : v.components.node,
-    };
-
-    for (let i = 0; i < nodeTargets.length; i++) {
-      let nodeTarget = nodeTargets[ i ];
-
-      if (semver.major(nodeTarget.target) === semver.major(version.node)) {
-        version.abi = nodeTarget.abi;
-        break;
-      }
-    }
-
-    if (!version.abi)
-      return null;
-
-    return version;
-  });
-
-  const nwjsTargets = getUnique(nwjs.filter(entry => entry && entry.runtime === 'node-webkit'), 'abi');
+  const nwjsTargets = getUnique(everything.filter(entry => entry && entry.runtime === 'nw.js'), 'abi');
 
   everything = electronTargets.concat(nodeTargets).concat(nwjsTargets);
-
 
   for (let i = 0; i < everything.length; i++) {
     let version = everything[ i ];
@@ -279,7 +260,7 @@ const run = async (release) => {
       await build(version, release);
     } catch (e) {
       console.log('travis_fold:start:error');
-      console.log('Unable to build for this version', e.message);
+      console.log('Unable to build for this version:', e.message);
       console.log('travis_fold:end:error');
     }
 
