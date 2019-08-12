@@ -69,7 +69,7 @@ const uploadAsset = async (filePath, assetLabel, release) => {
 
 const getRelease = async () => {
   const releases = await listReleases();
-  const release  = releases.find(release => !release.draft && release.tag_name === `v${pkg.version}`);
+  const release  = releases.find(release =>release.tag_name === `v${pkg.version}`);
 
   if (release) {
     console.log('Release exist, skipping');
