@@ -10,7 +10,7 @@ const shelljs = require('shelljs');
 const semver  = require('semver');
 const abis = require('modules-abi');
 
-const electronDownload = require('./electronDownloader');
+// const electronDownload = require('./electronDownloader');
 
 const greenworks = path.join(__dirname, 'greenworks');
 
@@ -109,7 +109,7 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
     });
 
   // test if it's working
-  await electronDownload(target, arch);
+  // await electronDownload(target, arch);
 
   await upload(assetLabel, release, arch);
 };
