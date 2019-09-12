@@ -26,10 +26,28 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Before install
+      env:
+        ZIP_PASSWORD: ${{ secrets.ZIP_PASSWORD }}
+      run: |
+        ls
+        git clone https://github.com/greenheartgames/greenworks greenworks
+        7z x sdk.zip -p${ZIP_PASSWORD}
+        mv sdk greenworks/deps/steamworks_sdk
+        npm install
+
+    - name: Greenworks install
+        run: |
+          ls
+          cd greenworks
+          npm install
+
     - name: npm install, build, and test
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CI: true
       run: |
+        ls
         npm install
         node index.js
