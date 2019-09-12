@@ -38,10 +38,10 @@ jobs:
         npm install
 
     - name: Greenworks install
-        run: |
-          ls
-          cd greenworks
-          npm install
+      run: |
+        ls
+        cd greenworks
+        npm install
 
     - name: npm install, build, and test
       env:
