@@ -53,7 +53,6 @@ node_js:
   - '10.15.3'
 
 before_install:
-  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 762E3157 # fix
   - git clone https://github.com/greenheartgames/greenworks greenworks
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install p7zip; fi
