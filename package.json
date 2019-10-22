@@ -23,7 +23,7 @@
     "ghreleases": "^3.0.2",
     "got": "^9.6.0",
     "modules-abi": "^0.2.1",
-    "node-gyp": "^4.0.0",
+    "node-gyp": "^6.0.0",
     "nw-gyp": "^3.6.3",
     "putasset": "^4.3.2",
     "semver": "^6.0.0",
