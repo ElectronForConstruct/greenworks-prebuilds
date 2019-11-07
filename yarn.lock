@@ -1105,12 +1105,18 @@ mkdirp@0.5, "mkdirp@>=0.5 0", mkdirp@^0.5.0:
   dependencies:
     minimist "0.0.8"
 
-modules-abi@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/modules-abi/-/modules-abi-0.2.1.tgz#6c3046910d8b7f912b748175c89a06dc884368c9"
-  integrity sha512-GaPBUoJWNjM4ZCuKYLAu+G5kdrDpR9z0ZIAVXqLeyBMSMCgZ3wNPDOBDpiLV3AYvv8B7EnoNPFHxQE6gw2xKwg==
+modules-abi@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/modules-abi/-/modules-abi-0.3.4.tgz#e840040f5fcc6fddcf310cad0f6edb51719870e5"
+  integrity sha512-CCIV4zo82ye/5cGaXe4uINIY824ihxT5VdBkaQS0DhF+knJOPqVj0yfJj1cps+ydw5SmRSUm15C2FK6di7iC5g==
   dependencies:
+    mri "^1.1.4"
     semver "^6.2.0"
+
+mri@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/mri/-/mri-1.1.4.tgz#7cb1dd1b9b40905f1fac053abe25b6720f44744a"
+  integrity sha512-6y7IjGPm8AzlvoUrwAaw1tLnUBudaS3752vcd8JtrpGGQn+rXIe63LFVHm/YMwtqAuh+LJPCFdlLYPWM1nYn6w==
 
 ms@2.0.0:
   version "2.0.0"
