@@ -174,6 +174,12 @@ function getBinaryName(arch) {
 async function upload(assetLabel, release, arch) {
   console.log(`Done ${assetLabel}`);
 
+  if (!process.env.TRAVIS_TAG && !process.env.APPVEYOR_REPO_TAG) {
+    console.log('Skipping uploading asset: not a tag');
+    return undefined;
+  }
+
+
   const filePath = getBinaryName(arch);
   shelljs.ls(path.dirname(filePath));
 
@@ -213,10 +219,10 @@ const build = async (module, release) => {
     const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`;
 
     const assetExist = release.assets.find(asset => asset.name === assetLabel);
-    if (assetExist) {
-      console.log('Asset already exists, skipping');
-      continue;
-    }
+    // if (assetExist) {
+    //   console.log('Asset already exists, skipping');
+    //   continue;
+    // }
 
     switch (runtime) {
       case 'electron':
