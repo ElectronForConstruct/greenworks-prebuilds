@@ -51,11 +51,6 @@ const listReleases = async () => {
     });
 };
 
-const getNWjsVersions = async () => {
-    const {body} = await got('https://nwjs.io/versions.json');
-    return JSON.parse(body);
-};
-
 const uploadAsset = async (filePath, assetLabel, release) => {
     const stream = fs.readFileSync(filePath);
 
@@ -92,10 +87,10 @@ const getRelease = async () => {
     return newRelease;
 };
 
-const getAddonPath = (arch) => {
-    const buildPath = path.join(process.cwd(), 'greenworks', 'build', 'Release');
+const getLibPath = (arch) => {
+    const libPath = path.join(process.cwd(), 'greenworks', 'lib');
     console.log('os', os.arch());
-    return buildPath;
+    return libPath;
 };
 
 const electronRebuild = async (target, arch, assetLabel, release) => {
@@ -115,12 +110,11 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
             cwd: greenworks,
         });
 
-    const addonPath = getAddonPath(arch);
-    console.log('addonPath', addonPath);
+    const libPath = getLibPath(arch);
 
     // test if it's working
     // await electronDownload(target, arch);
-    const out = await electronDownload(target, arch);
+    const out = await electronDownload(target, arch, libPath);
     console.log(out);
     if (out.stdout.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
         console.log('it\'s working!');

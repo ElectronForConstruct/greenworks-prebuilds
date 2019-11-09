@@ -6,25 +6,31 @@ const fs = require('fs');
 const shelljs = require('shelljs');
 const execa = require('execa');
 
-module.exports = (version, arch) => {
+// TODO mind the paths, it's a mess !
+module.exports = (version, arch, libPath) => {
+    const electronTemplatePath = path.join(__dirname, 'template', 'electron');
     return new Promise(async (resolve, reject) => {
 
         const execTemplate = async () => {
             try {
-                console.log('Execing')
+                console.log('Copying built files (libs)');
+                const libPathTemplate = path.join(electronTemplatePath, 'lib');
+                shelljs.mkdir(libPath);
+                shelljs.cp(libPath, libPathTemplate);
+
+                console.log('Exec-ing');
                 // TODO chmod electron on linux
                 const out = await execa(
                     path.join(extracted, `electron${process.platform === 'win32' ? '.exe' : ''}`),
-                    [path.join(__dirname, 'template', 'electron')],
+                    [electronTemplatePath],
                 );
-                console.log('out', out)
                 resolve(out);
             } catch (e) {
                 console.error(e);
                 reject(e);
                 process.exit(1);
             }
-        }
+        };
 
         console.log('version', version);
         const zipFilePath = await downloadArtifact({
@@ -34,11 +40,9 @@ module.exports = (version, arch) => {
             platform: os.platform(),
         });
 
-        console.log('zipFilePath', zipFilePath);
         const extracted = path.join(__dirname, 'zip', 'electron', version);
 
         if (!fs.existsSync(extracted)) {
-            shelljs.rm('-rf', extracted);
             shelljs.mkdir('-p', extracted);
             fs.createReadStream(zipFilePath)
                 .pipe(unzipper.Extract({ path: extracted }))
