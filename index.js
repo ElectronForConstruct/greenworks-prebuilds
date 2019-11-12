@@ -183,6 +183,9 @@ function getBinaryName(arch) {
 async function upload(assetLabel, release, arch) {
     console.log(`Done ${assetLabel}`);
 
+    console.log('process.env.TRAVIS_TAG', process.env.TRAVIS_TAG);
+    console.log('process.env.APPVEYOR_REPO_TAG', process.env.APPVEYOR_REPO_TAG);
+
     if (!process.env.TRAVIS_TAG && !process.env.APPVEYOR_REPO_TAG) {
         console.log('Skipping uploading asset: not a tag');
         return undefined;

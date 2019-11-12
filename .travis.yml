@@ -48,6 +48,11 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+      - xvfb
+
+install:
+  - export DISPLAY=':99.0'
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
 node_js:
   - '10.15.3'
