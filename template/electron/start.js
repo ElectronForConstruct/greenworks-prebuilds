@@ -17,7 +17,7 @@ app.on('ready', function () {
   mainWindow = new BrowserWindow({
     width         : 800,
     height        : 600,
-    show          : true,
+    show          : false,
     webPreferences: { nodeIntegration: true },
   });
   bootstrap();

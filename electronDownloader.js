@@ -9,20 +9,22 @@ const execa = require('execa');
 // TODO mind the paths, it's a mess !
 module.exports = (version, arch, libPath) => {
     const electronTemplatePath = path.join(__dirname, 'template', 'electron');
+
     return new Promise(async (resolve, reject) => {
 
-        const execTemplate = async () => {
+        const execTemplate = async (electronExtractedPath) => {
             try {
-                console.log('Copying built files (libs)');
-                const libPathTemplate = path.join(electronTemplatePath, 'lib');
+                const libPathTemplate = electronTemplatePath;
+                // const libPathTemplate = path.join(electronTemplatePath, 'lib');
                 shelljs.mkdir(libPath);
-                shelljs.cp(libPath, libPathTemplate);
+                console.log(`From ${libPath} to ${libPathTemplate}`);
+                shelljs.cp('-R', libPath, libPathTemplate);
 
                 console.log('Exec-ing');
                 // TODO chmod electron on linux
-                const out = await execa(
-                    path.join(extracted, `electron${process.platform === 'win32' ? '.exe' : ''}`),
-                    [electronTemplatePath],
+                const electronBinary = path.join(electronExtractedPath, `electron${process.platform === 'win32' ? '.exe' : ''}`);
+                shelljs.chmod('+x', electronBinary);
+                const out = await execa(electronBinary, [electronTemplatePath],
                 );
                 resolve(out);
             } catch (e) {
@@ -32,7 +34,6 @@ module.exports = (version, arch, libPath) => {
             }
         };
 
-        console.log('version', version);
         const zipFilePath = await downloadArtifact({
             version,
             arch,
@@ -40,18 +41,18 @@ module.exports = (version, arch, libPath) => {
             platform: os.platform(),
         });
 
-        const extracted = path.join(__dirname, 'zip', 'electron', version);
+        const electronExtractedPath = path.join(__dirname, 'zip', 'electron', version);
 
-        if (!fs.existsSync(extracted)) {
-            shelljs.mkdir('-p', extracted);
+        if (!fs.existsSync(electronExtractedPath)) {
+            shelljs.mkdir('-p', electronExtractedPath);
             fs.createReadStream(zipFilePath)
-                .pipe(unzipper.Extract({ path: extracted }))
+                .pipe(unzipper.Extract({ path: electronExtractedPath }))
                 .on('close', async () => {
-                    await execTemplate(extracted);
+                    await execTemplate(electronExtractedPath);
                 });
         } else {
-            console.log('Skip dowload')
-            await execTemplate(extracted);
+            console.log('Skip download');
+            await execTemplate(electronExtractedPath);
         }
     })
 };

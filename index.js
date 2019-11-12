@@ -105,24 +105,22 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
             '--release',
             `--target=${target}`,
             '--arch=' + arch,
-            '--dist-url=https://atom.io/download/electron',
+            '--dist-url=https://electronjs.org/headers',
+            // '--dist-url=https://atom.io/download/electron',
         ], {
             cwd: greenworks,
         });
 
     const libPath = getLibPath(arch);
 
-    // test if it's working
-    // await electronDownload(target, arch);
     const out = await electronDownload(target, arch, libPath);
-    console.log(out);
-    if (out.stdout.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
-        console.log('it\'s working!');
+    if (!out.stdout.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
+        console.log('Test failed!');
+        console.log(out);
     } else {
-        console.log('it failed!');
+        await upload(assetLabel, release, arch);
     }
 
-    await upload(assetLabel, release, arch);
 };
 
 const nodeRebuild = async (target, arch, assetLabel, release) => {

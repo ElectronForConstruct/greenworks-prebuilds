@@ -12,3 +12,5 @@ sdk/**
 bin/
 
 zip
+
+template/electron/lib/
