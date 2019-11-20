@@ -6,7 +6,6 @@ const fs = require('fs');
 const shelljs = require('shelljs');
 const execa = require('execa');
 
-// TODO mind the paths, it's a mess !
 module.exports = (version, arch, libPath) => {
     const electronTemplatePath = path.join(__dirname, 'template', 'electron');
 
@@ -21,7 +20,6 @@ module.exports = (version, arch, libPath) => {
                 shelljs.cp('-R', libPath, libPathTemplate);
 
                 console.log('Exec-ing');
-                // TODO chmod electron on linux
                 const electronBinary = path.join(electronExtractedPath, `electron${process.platform === 'win32' ? '.exe' : ''}`);
                 shelljs.chmod('+x', electronBinary);
                 const out = await execa(electronBinary, [electronTemplatePath],

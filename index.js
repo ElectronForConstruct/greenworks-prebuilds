@@ -152,7 +152,8 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
         [
             'rebuild',
             '--release',
-            `--target=${target}`,
+            // `--target=${target}`,
+            `--target=0.42.1`,
             '--arch=' + arch,
         ], {
             cwd: greenworks,
@@ -259,8 +260,8 @@ const build = async (module, release) => {
 const run = async (release) => {
     let everything = await abis.getAll();
 
-    const electronTargets = getUnique(everything.filter(entry => entry.runtime === 'electron'), 'abi');
-    const nodeTargets = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
+    const electronTargets = []; // getUnique(everything.filter(entry => entry.runtime === 'electron'), 'abi');
+    const nodeTargets = []; // getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
     const nwjsTargets = getUnique(everything.filter(entry => entry && entry.runtime === 'nw.js'), 'abi');
 
     everything = electronTargets.concat(nodeTargets).concat(nwjsTargets);
@@ -269,6 +270,9 @@ const run = async (release) => {
         let version = everything[i];
 
         if (version.abi < 57)
+            continue;
+
+        if (version.abi !== 78)
             continue;
 
         console.log(`${version.runtime}@v${version.abi}: `);

@@ -22,6 +22,7 @@
     "execa": "^1.0.0",
     "ghreleases": "^3.0.2",
     "got": "^9.6.0",
+    "install-nw": "^1.1.5",
     "modules-abi": "^0.2.1",
     "node-gyp": "^4.0.0",
     "nw-gyp": "^3.6.3",

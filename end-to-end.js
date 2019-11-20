@@ -1,6 +1,6 @@
-const electronDownload = require('./electronDownloader');
+const nwDownload = require('./nwjsDownloader');
 
-electronDownload('5.0.1', 'x64').then(out => {
+nwDownload('0.42.0', 'x64').then(out => {
     console.log(out);
     if (out.stdout.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
         console.log('it\'s working!');
