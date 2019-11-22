@@ -6,16 +6,55 @@ const shelljs = require('shelljs');
 const got = require('got');
 const execa = require('execa');
 
+ const execTemplate = async (extractedPath) => {
+    try {
+        const libPathTemplate = electronTemplatePath;
+        // const libPathTemplate = path.join(electronTemplatePath, 'lib');
+        shelljs.mkdir(libPath);
+        console.log(`From ${libPath} to ${libPathTemplate}`);
+        shelljs.cp('-R', libPath, libPathTemplate);
+
+        console.log('Exec-ing');
+        const binaryPath = path.join(extractedPath, `nw${process.platform === 'win32' ? '.exe' : ''}`);
+        shelljs.chmod('+x', binaryPath);
+        const out = await execa(binaryPath, [electronTemplatePath],
+        );
+        resolve(out);
+    } catch (e) {
+        console.error(e);
+        reject(e);
+        process.exit(1);
+    }
+};
+
 const download = async (version, arch, os) => {
-    const file = fs.createWriteStream(`nwjs-sdk-v${version}-${os}-${arch}.zip`);
-    const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${os}-${arch}.zip`;
-    const response = await got.stream(endpoint).on('downloadProgress', (progress) => {
-        console.log('Progress:', progress.percent * 100);
-    });
-    // console.log('reponse', response);
-    response.pipe(file);
-    response.on('exit', () => {
-        console.log('exit')
+    return new Promise(async (resolve, reject) => {
+        const nwjsExtractedPath = path.join(__dirname, 'zip', 'nwjs', version);
+
+        const file = fs.createWriteStream(`nwjs-sdk-v${version}-${os}-${arch}.zip`);
+        const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${os}-${arch}.zip`;
+        const response = await got.stream(endpoint).on('downloadProgress', (progress) => {
+            console.log('Progress:', progress.percent * 100);
+        });
+        // console.log('reponse', response);
+        response.pipe(file);
+        response.on('end', () => {
+            if (!fs.existsSync(nwjsExtractedPath)) {
+                shelljs.mkdir('-p', nwjsExtractedPath);
+                fs.createReadStream(zipFilePath)
+                    .pipe(unzipper.Extract({ path: nwjsExtractedPath }))
+                    .on('close', async () => {
+                        await execTemplate(nwjsExtractedPath);
+                        resolve();
+                    });
+            } else {
+                console.log('Skip download');
+                await execTemplate(nwjsExtractedPath);
+            }
+
+
+            resolve();
+        })
     })
 };
 
@@ -33,9 +72,9 @@ module.exports = async (version, arch, libPath) => {
     //             shelljs.cp('-R', libPath, libPathTemplate);
     //
     //             console.log('Exec-ing');
-    //             const electronBinary = path.join(electronExtractedPath, `electron${process.platform === 'win32' ? '.exe' : ''}`);
-    //             shelljs.chmod('+x', electronBinary);
-    //             const out = await execa(electronBinary, [electronTemplatePath],
+    //             const binaryPath = path.join(electronExtractedPath, `electron${process.platform === 'win32' ? '.exe' : ''}`);
+    //             shelljs.chmod('+x', binaryPath);
+    //             const out = await execa(binaryPath, [electronTemplatePath],
     //             );
     //             resolve(out);
     //         } catch (e) {
@@ -45,7 +84,7 @@ module.exports = async (version, arch, libPath) => {
     //         }
     //     };
     //
-    const file = await download('0.42.0', 'x64', 'win');
+    return download('0.42.0', 'x64', 'win');
     //     const zipFilePath = await downloadArtifact({
     //         version,
     //         arch,

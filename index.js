@@ -87,12 +87,6 @@ const getRelease = async () => {
     return newRelease;
 };
 
-const getLibPath = (arch) => {
-    const libPath = path.join(process.cwd(), 'greenworks', 'lib');
-    console.log('os', os.arch());
-    return libPath;
-};
-
 const electronRebuild = async (target, arch, assetLabel, release) => {
     const {stdout} = await execa(
         path.resolve(
