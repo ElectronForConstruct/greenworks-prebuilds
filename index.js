@@ -52,13 +52,14 @@ const listReleases = async () => {
     });
 };
 
-const deleteAsset = async (assetId) => {
-    const response = await got.delete(`https://api.github.com/repos/ElectronForConstruct/greenworks-prebuilds/releases/assets/${assetId}`, {
+const deleteAsset = async (url) => {
+    const response = await got.delete(url, {
         headers: {
             'Authorization': `token ${process.env.GH_TOKEN}`,
         },
     });
     console.log(response);
+    return response;
 };
 
 const uploadAsset = async (filePath, assetLabel, release) => {
@@ -198,8 +199,8 @@ async function upload(assetLabel, release, arch) {
     console.log('process.env.APPVEYOR_REPO_TAG', process.env.APPVEYOR_REPO_TAG);
 
     if (
-        (!process.env.TRAVIS_TAG || process.env.TRAVIS_TAG === undefined) &&
-        (!process.env.APPVEYOR_REPO_TAG || process.env.APPVEYOR_REPO_TAG === undefined)
+        (process.env.APPVEYOR && !process.env.TRAVIS_TAG) ||
+        (process.env.TRAVIS && !process.env.APPVEYOR_REPO_TAG)
     ) {
         console.log('Skipping asset: not a tag');
         return undefined;
@@ -214,14 +215,22 @@ async function upload(assetLabel, release, arch) {
         return undefined;
     }
 
-    // shelljs.mv(filePath, filePathRenamed);
-
     try {
         const assetExist = release.assets.find(asset => asset.name === assetLabel);
         if (assetExist) {
-            console.log('Asset already exists !\nDeleting', assetExist);
+            console.log('Asset already exists !\nDeleting');
             await deleteAsset(assetExist.url);
         }
+    } catch (e) {
+        console.log('Error while deleting asset:');
+        const json = JSON.parse(e.body);
+
+        console.log('travis_fold:start:error');
+        console.log(json);
+        console.log('travis_fold:end:error');
+    }
+
+    try {
         await uploadAsset(filePath, assetLabel, release);
         console.log('Upload done');
     } catch (e) {
