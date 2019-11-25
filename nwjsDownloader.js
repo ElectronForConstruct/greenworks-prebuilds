@@ -21,14 +21,15 @@ const download = async (version, arch, os) => {
 
         if (fs.existsSync(nwjsTempZip)) {
             console.log('zip already exist');
-            return resolve(nwjsTempZip)
+            return resolve(nwjsTempZip);
         }
 
         const file = fs.createWriteStream(nwjsTempZip);
         const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${assoc[os]}-${arch}.zip`;
-        const response = got.stream(endpoint).on('downloadProgress', (progress) => {
-            console.log('Progress:', progress.percent * 100);
-        });
+        const response = got.stream(endpoint);
+            // .on('downloadProgress', (progress) => {
+        //     console.log('Progress:', progress.percent * 100);
+        // });
         // console.log('response', response);
         response.pipe(file);
         response.on('end', () => {

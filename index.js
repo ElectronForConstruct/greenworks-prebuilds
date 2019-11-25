@@ -258,7 +258,11 @@ const build = async (module, release) => {
 };
 
 const run = async (release) => {
-    let everything = await abis.getAll();
+    let everything = await abis.getAll({
+        includeBeta: true,
+        includeNightly: true,
+        includeReleaseCandidates: true
+    });
 
     const electronTargets = getUnique(everything.filter(entry => entry.runtime === 'electron'), 'abi');
     const nodeTargets = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
