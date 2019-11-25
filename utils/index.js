@@ -19,7 +19,7 @@ const extractZip = async (from, to) => {
     });
 };
 
-const execTemplate = async (binary, libPath, templatePath, flags) => {
+const execTemplate = async (binary, libPath, templatePath, flags = []) => {
     if (!fs.existsSync(libPath)) {
         console.log(`Creating ${libPath}`);
         shelljs.mkdir(libPath);
