@@ -24,18 +24,22 @@ const download = async (version, arch, os) => {
             return resolve(nwjsTempZip);
         }
 
-        const file = fs.createWriteStream(nwjsTempZip);
-        const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${assoc[os]}-${arch}.zip`;
-        const response = got.stream(endpoint);
+        try {
+            const file = fs.createWriteStream(nwjsTempZip);
+            const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${assoc[os]}-${arch}.zip`;
+            const response = got.stream(endpoint);
             // .on('downloadProgress', (progress) => {
-        //     console.log('Progress:', progress.percent * 100);
-        // });
-        // console.log('response', response);
-        response.pipe(file);
-        response.on('end', () => {
-            console.log('resolving');
-            return resolve(nwjsTempZip);
-        });
+            //     console.log('Progress:', progress.percent * 100);
+            // });
+            // console.log('response', response);
+            response.pipe(file);
+            response.on('end', () => {
+                console.log('resolving');
+                return resolve(nwjsTempZip);
+            });
+        }catch (e) {
+            reject(e);
+        }
     });
 };
 

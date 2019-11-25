@@ -52,6 +52,15 @@ const listReleases = async () => {
     });
 };
 
+const deleteAsset = async (assetId) => {
+    const response = await got.delete(`https://api.github.com/repos/ElectronForConstruct/greenworks-prebuilds/releases/assets/${assetId}`, {
+        headers: {
+            'Authorization': `token ${process.env.GH_TOKEN}`,
+        },
+    });
+    console.log(response);
+};
+
 const uploadAsset = async (filePath, assetLabel, release) => {
     const stream = fs.readFileSync(filePath);
 
@@ -184,11 +193,15 @@ function getBinaryName(arch) {
 async function upload(assetLabel, release, arch) {
     console.log(`Done ${assetLabel}`);
 
+
     console.log('process.env.TRAVIS_TAG', process.env.TRAVIS_TAG);
     console.log('process.env.APPVEYOR_REPO_TAG', process.env.APPVEYOR_REPO_TAG);
 
-    if (!process.env.TRAVIS_TAG && !process.env.APPVEYOR_REPO_TAG) {
-        console.log('Skipping uploading asset: not a tag');
+    if (
+        (!process.env.TRAVIS_TAG || process.env.TRAVIS_TAG === undefined) &&
+        (!process.env.APPVEYOR_REPO_TAG || process.env.APPVEYOR_REPO_TAG === undefined)
+    ) {
+        console.log('Skipping asset: not a tag');
         return undefined;
     }
 
@@ -204,6 +217,11 @@ async function upload(assetLabel, release, arch) {
     // shelljs.mv(filePath, filePathRenamed);
 
     try {
+        const assetExist = release.assets.find(asset => asset.name === assetLabel);
+        if (assetExist) {
+            console.log('Asset already exists !\nDeleting', assetExist);
+            await deleteAsset(assetExist.url);
+        }
         await uploadAsset(filePath, assetLabel, release);
         console.log('Upload done');
     } catch (e) {
@@ -230,12 +248,6 @@ const build = async (module, release) => {
         console.log(version, abi, runtime);
 
         const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`;
-
-        const assetExist = release.assets.find(asset => asset.name === assetLabel);
-        // if (assetExist) {
-        //   console.log('Asset already exists, skipping');
-        //   continue;
-        // }
 
         switch (runtime) {
             case 'electron':
@@ -283,7 +295,7 @@ const run = async (release) => {
             await build(version, release);
         } catch (e) {
             console.log('travis_fold:start:error');
-            console.log('Unable to build for this version:', e.message);
+            console.log('Unable to build for this version:', e.stdout);
             console.log('travis_fold:end:error');
         }
 
