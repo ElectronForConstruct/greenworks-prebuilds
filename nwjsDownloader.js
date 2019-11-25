@@ -4,106 +4,74 @@ const path = require('path');
 const fs = require('fs');
 const shelljs = require('shelljs');
 const got = require('got');
-const execa = require('execa');
+const {getLibPath, extractZip, execTemplate} = require('./utils');
 
- const execTemplate = async (extractedPath) => {
-    try {
-        const libPathTemplate = electronTemplatePath;
-        // const libPathTemplate = path.join(electronTemplatePath, 'lib');
-        shelljs.mkdir(libPath);
-        console.log(`From ${libPath} to ${libPathTemplate}`);
-        shelljs.cp('-R', libPath, libPathTemplate);
-
-        console.log('Exec-ing');
-        const binaryPath = path.join(extractedPath, `nw${process.platform === 'win32' ? '.exe' : ''}`);
-        shelljs.chmod('+x', binaryPath);
-        const out = await execa(binaryPath, [electronTemplatePath],
-        );
-        resolve(out);
-    } catch (e) {
-        console.error(e);
-        reject(e);
-        process.exit(1);
-    }
-};
 
 const download = async (version, arch, os) => {
-    return new Promise(async (resolve, reject) => {
-        const nwjsExtractedPath = path.join(__dirname, 'zip', 'nwjs', version);
+    console.log(version, arch, os);
 
-        const file = fs.createWriteStream(`nwjs-sdk-v${version}-${os}-${arch}.zip`);
-        const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${os}-${arch}.zip`;
-        const response = await got.stream(endpoint).on('downloadProgress', (progress) => {
+    const assoc = {
+        win32: 'win',
+        darwin: 'osx',
+        linux: 'linux'
+    };
+
+    return new Promise(async (resolve, reject) => {
+        const nwjsTempZip = path.join(process.cwd(), `nwjs-sdk-v${version}-${assoc[os]}-${arch}.zip`);
+
+        if (fs.existsSync(nwjsTempZip)) {
+            console.log('zip already exist');
+            return resolve(nwjsTempZip)
+        }
+
+        const file = fs.createWriteStream(nwjsTempZip);
+        const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${assoc[os]}-${arch}.zip`;
+        const response = got.stream(endpoint).on('downloadProgress', (progress) => {
             console.log('Progress:', progress.percent * 100);
         });
-        // console.log('reponse', response);
+        // console.log('response', response);
         response.pipe(file);
         response.on('end', () => {
-            if (!fs.existsSync(nwjsExtractedPath)) {
-                shelljs.mkdir('-p', nwjsExtractedPath);
-                fs.createReadStream(zipFilePath)
-                    .pipe(unzipper.Extract({ path: nwjsExtractedPath }))
-                    .on('close', async () => {
-                        await execTemplate(nwjsExtractedPath);
-                        resolve();
-                    });
-            } else {
-                console.log('Skip download');
-                await execTemplate(nwjsExtractedPath);
-            }
-
-
-            resolve();
-        })
-    })
+            console.log('resolving');
+            return resolve(nwjsTempZip);
+        });
+    });
 };
 
-module.exports = async (version, arch, libPath) => {
-    // const electronTemplatePath = path.join(__dirname, 'template', 'nwjs');
-    //
-    // return new Promise(async (resolve, reject) => {
-    //
-    //     const execTemplate = async (electronExtractedPath) => {
-    //         try {
-    //             const libPathTemplate = electronTemplatePath;
-    //             // const libPathTemplate = path.join(electronTemplatePath, 'lib');
-    //             shelljs.mkdir(libPath);
-    //             console.log(`From ${libPath} to ${libPathTemplate}`);
-    //             shelljs.cp('-R', libPath, libPathTemplate);
-    //
-    //             console.log('Exec-ing');
-    //             const binaryPath = path.join(electronExtractedPath, `electron${process.platform === 'win32' ? '.exe' : ''}`);
-    //             shelljs.chmod('+x', binaryPath);
-    //             const out = await execa(binaryPath, [electronTemplatePath],
-    //             );
-    //             resolve(out);
-    //         } catch (e) {
-    //             console.error(e);
-    //             reject(e);
-    //             process.exit(1);
-    //         }
-    //     };
-    //
-    return download('0.42.0', 'x64', 'win');
-    //     const zipFilePath = await downloadArtifact({
-    //         version,
-    //         arch,
-    //         artifactName: 'electron',
-    //         platform: os.platform(),
-    //     });
-    //
-    //     const electronExtractedPath = path.join(__dirname, 'zip', 'electron', version);
-    //
-    //     if (!fs.existsSync(electronExtractedPath)) {
-    //         shelljs.mkdir('-p', electronExtractedPath);
-    //         fs.createReadStream(zipFilePath)
-    //             .pipe(unzipper.Extract({ path: electronExtractedPath }))
-    //             .on('close', async () => {
-    //                 await execTemplate(electronExtractedPath);
-    //             });
-    //     } else {
-    //         console.log('Skip download');
-    //         await execTemplate(electronExtractedPath);
-    //     }
-    // })
+module.exports = async (version, arch) => {
+    const assoc = {
+        win32: 'win',
+        darwin: 'osx',
+        linux: 'linux'
+    };
+
+    // Where is my template
+    const nwjsTemplatePath = path.join(__dirname, 'template', 'nwjs');
+    console.log('nwjsTemplatePath', nwjsTemplatePath);
+
+    // Where is extracted the runtime
+    const nwjsExtractedPath = path.join(__dirname, 'zip', 'nwjs', version);
+    console.log('nwjsExtractedPath', nwjsExtractedPath);
+
+    const nwjsBinary = path.join(nwjsExtractedPath, `nwjs-sdk-v${version}-${assoc[os.platform()]}-${arch}`, `nw${process.platform === 'win32' ? '.exe' : ''}`);
+    console.log('nwjsBinary', nwjsBinary);
+
+    if (!fs.existsSync(nwjsBinary)) {
+
+        // Download the zip binary
+        const zipFilePath = await download(version, arch, os.platform());
+
+        console.log('zipFilePath', zipFilePath);
+
+        // Extract it
+        await extractZip(zipFilePath, nwjsExtractedPath);
+
+        const nwjsExtractedRoot = path.join(nwjsExtractedPath, path.basename(zipFilePath, '.zip'));
+        console.log('nwjsExtractedRoot', nwjsExtractedRoot);
+    }
+
+    const libPath = getLibPath();
+
+    // Test it
+    return execTemplate(nwjsBinary, libPath, nwjsTemplatePath, ['--enable-logging=stderr']);
 };

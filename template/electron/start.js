@@ -10,7 +10,7 @@ var mainWindow = null;
 
 app.on('window-all-closed', function () {
   if (process.platform != 'darwin')
-    app.quit();
+    process.exit(0);
 });
 
 app.on('ready', function () {
@@ -27,5 +27,7 @@ app.on('ready', function () {
 
   mainWindow.on('closed', function () {
     mainWindow = null;
+
+    process.exit(0);
   });
 });

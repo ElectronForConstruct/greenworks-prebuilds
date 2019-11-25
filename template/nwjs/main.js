@@ -1,4 +1,5 @@
 const test = () => {
+  console.log('loading greenworks');
   let greenworks;
 
   try {

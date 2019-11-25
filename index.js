@@ -10,6 +10,7 @@ const shelljs = require('shelljs');
 const semver = require('semver');
 const abis = require('modules-abi');
 const electronDownload = require('./electronDownloader');
+const nwjsDownloader = require('./nwjsDownloader');
 
 // const electronDownload = require('./electronDownloader');
 
@@ -105,9 +106,7 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
             cwd: greenworks,
         });
 
-    const libPath = getLibPath(arch);
-
-    const out = await electronDownload(target, arch, libPath);
+    const out = await electronDownload(target, arch);
     if (!out.stdout.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
         console.log('Test failed!');
         console.log(out);
@@ -133,6 +132,7 @@ const nodeRebuild = async (target, arch, assetLabel, release) => {
             cwd: greenworks,
         });
 
+
     await upload(assetLabel, release, arch);
 };
 
@@ -153,7 +153,13 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
             cwd: greenworks,
         });
 
-    await upload(assetLabel, release, arch);
+    const out = await nwjsDownloader(target, arch);
+    if (!out.stderr.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
+        console.log('Test failed!');
+        console.log(out);
+    } else {
+        await upload(assetLabel, release, arch);
+    }
 };
 
 function getBinaryName(arch) {
