@@ -5,9 +5,9 @@ node_modules/
 
 build/
 
-greenworks/**
+greenworks/
 
-sdk/**
+sdk/
 
 bin/
 

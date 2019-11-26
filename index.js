@@ -156,8 +156,7 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
         [
             'rebuild',
             '--release',
-            // `--target=${target}`,
-            `--target=0.42.1`,
+            `--target=${target}`,
             '--arch=' + arch,
         ], {
             cwd: greenworks,
@@ -194,17 +193,16 @@ function getBinaryName(arch) {
 async function upload(assetLabel, release, arch) {
     console.log(`Done ${assetLabel}`);
 
+    // console.log('process.env.TRAVIS_TAG', process.env.TRAVIS_TAG);
+    // console.log('process.env.APPVEYOR_REPO_TAG', process.env.APPVEYOR_REPO_TAG);
 
-    console.log('process.env.TRAVIS_TAG', process.env.TRAVIS_TAG);
-    console.log('process.env.APPVEYOR_REPO_TAG', process.env.APPVEYOR_REPO_TAG);
-
-    if (
-        (process.env.APPVEYOR && !process.env.TRAVIS_TAG) ||
-        (process.env.TRAVIS && !process.env.APPVEYOR_REPO_TAG)
-    ) {
-        console.log('Skipping asset: not a tag');
-        return undefined;
-    }
+    // if (
+    //     (process.env.APPVEYOR && !process.env.TRAVIS_TAG) ||
+    //     (process.env.TRAVIS && !process.env.APPVEYOR_REPO_TAG)
+    // ) {
+    //     console.log('Skipping asset: not a tag');
+    //     return undefined;
+    // }
 
 
     const filePath = getBinaryName(arch);
