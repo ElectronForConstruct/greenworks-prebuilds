@@ -307,8 +307,9 @@ const run = async (release) => {
         if (version.abi < 57)
             continue;
 
+        console.log(version.runtime);
         /* -- Filtering -- */
-        if (version.runtime !== 'nwjs') {
+        if (version.runtime !== 'nw.js') {
             continue;
         }
 
