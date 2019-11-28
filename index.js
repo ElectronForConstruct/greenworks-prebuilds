@@ -226,7 +226,6 @@ async function upload(assetLabel, release, arch) {
 
     try {
         const assetExist = release.assets.find(asset => asset.name === assetLabel);
-        console.log('Assets found:', assetExist);
         if (assetExist) {
             console.log('Asset already exists !\nDeleting');
             await deleteAsset(assetExist.url);

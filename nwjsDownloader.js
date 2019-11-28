@@ -1,10 +1,9 @@
 const os = require('os');
-const unzipper = require('unzipper');
 const path = require('path');
 const fs = require('fs');
 const shelljs = require('shelljs');
 const got = require('got');
-const {getLibPath, extractZip, execTemplate} = require('./utils');
+const {getLibPath, extractArchive, execTemplate} = require('./utils');
 
 
 const download = async (version, arch, os) => {
@@ -43,7 +42,11 @@ const download = async (version, arch, os) => {
                 console.log('resolving');
                 return resolve(nwjsTempZip);
             });
-        }catch (e) {
+            response.on('error', (error) => {
+                console.log('crashing');
+                return reject(error);
+            });
+        } catch (e) {
             reject(e);
         }
     });
@@ -80,7 +83,7 @@ module.exports = async (version, arch) => {
         console.log('zipFilePath', zipFilePath);
 
         // Extract it
-        await extractZip(zipFilePath, nwjsExtractedPath);
+        await extractArchive(zipFilePath, nwjsExtractedPath);
 
         const nwjsExtractedRoot = path.join(nwjsExtractedPath, path.basename(zipFilePath, '.zip'));
         console.log('nwjsExtractedRoot', nwjsExtractedRoot);
