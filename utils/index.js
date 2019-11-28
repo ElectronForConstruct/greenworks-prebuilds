@@ -4,6 +4,7 @@ const unzipper = require('unzipper');
 const tar = require('tar');
 const execa = require('execa');
 const fs = require('fs');
+const os = require('os');
 
 const getLibPath = () => {
     return path.join(process.cwd(), 'greenworks', 'lib');
