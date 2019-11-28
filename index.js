@@ -58,7 +58,6 @@ const deleteAsset = async (url) => {
             'Authorization': `token ${process.env.GH_TOKEN}`,
         },
     });
-    console.log(response);
     return response;
 };
 
@@ -131,7 +130,7 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
     const out = await electronDownload(target, arch);
     if (!out.stdout.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
         console.log('Test failed!');
-        console.log(out);
+        console.log(out.stdout);
     } else {
         await upload(assetLabel, release, arch);
     }
@@ -177,7 +176,7 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
     const out = await nwjsDownloader(target, arch);
     if (!out.stderr.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
         console.log('Test failed!');
-        console.log(out);
+        console.log(out.stderr);
     } else {
         await upload(assetLabel, release, arch);
     }
@@ -307,6 +306,16 @@ const run = async (release) => {
 
         if (version.abi < 57)
             continue;
+
+        /* -- Filtering -- */
+        if (version.runtime !== 'nwjs') {
+            continue;
+        }
+
+        if (version.abi !== 77) {
+            continue;
+        }
+        /* -- Filtering -- */
 
         console.log(`${version.runtime}@v${version.abi}: `);
         console.log('Building...');

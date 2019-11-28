@@ -17,16 +17,22 @@ const download = async (version, arch, os) => {
     };
 
     return new Promise(async (resolve, reject) => {
-        const nwjsTempZip = path.join(process.cwd(), `nwjs-sdk-v${version}-${assoc[os]}-${arch}.zip`);
+        let extension = 'zip';
+        if (os === 'linux') {
+            extension = 'tar.gz'
+        }
+
+        const nwjsTempZip = path.join(process.cwd(), `nwjs-sdk-v${version}-${assoc[os]}-${arch}.${extension}`);
 
         if (fs.existsSync(nwjsTempZip)) {
-            console.log('zip already exist');
+            console.log(`${extension} already exist`);
             return resolve(nwjsTempZip);
         }
 
         try {
             const file = fs.createWriteStream(nwjsTempZip);
-            const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${assoc[os]}-${arch}.zip`;
+
+            const endpoint = `https://dl.nwjs.io/v${version}/nwjs-sdk-v${version}-${assoc[os]}-${arch}.${extension}`;
             const response = got.stream(endpoint);
             // .on('downloadProgress', (progress) => {
             //     console.log('Progress:', progress.percent * 100);
@@ -58,7 +64,12 @@ module.exports = async (version, arch) => {
     const nwjsExtractedPath = path.join(__dirname, 'zip', 'nwjs', version);
     console.log('nwjsExtractedPath', nwjsExtractedPath);
 
-    const nwjsBinary = path.join(nwjsExtractedPath, `nwjs-sdk-v${version}-${assoc[os.platform()]}-${arch}`, `nw${process.platform === 'win32' ? '.exe' : ''}`);
+    const nwjsFinalBinary = `nw${process.platform === 'win32' ? '.exe' : ''}`;
+    let nwjsInnerZipPath = `nwjs-sdk-v${version}-${assoc[os.platform()]}-${arch}`;
+    if (os.platform() === 'darwin') {
+        nwjsInnerZipPath = path.join(nwjsInnerZipPath, 'nwjs.app', 'Contents', 'MacOS')
+    }
+    const nwjsBinary = path.join(nwjsExtractedPath, nwjsInnerZipPath, nwjsFinalBinary);
     console.log('nwjsBinary', nwjsBinary);
 
     if (!fs.existsSync(nwjsBinary)) {
