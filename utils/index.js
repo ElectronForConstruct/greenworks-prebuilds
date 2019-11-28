@@ -47,7 +47,7 @@ const extractArchive = async (from, to) => {
 
 const execTemplate = async (binary, libPath, templatePath, flags = []) => {
     console.log('Content of binary path parent directory');
-    shelljs.ls(path.dirname(binary));
+    shelljs.ls('-R', path.dirname(binary));
 
     if (!fs.existsSync(libPath)) {
         console.log(`Creating ${libPath}`);

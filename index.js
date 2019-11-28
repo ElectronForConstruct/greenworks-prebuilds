@@ -263,7 +263,12 @@ const build = async (module, release) => {
 
         const {version, abi, runtime} = module;
 
-        console.log(`v${version}@${abi} - ${runtime} - ${arch}`);
+        console.log(`
+**************
+*
+*   v${version}@${abi} - ${runtime} - ${arch}
+*
+* -----------`);
 
         const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`;
 
@@ -284,6 +289,16 @@ const build = async (module, release) => {
                 console.log('Unsupported runtime, use one of electron, node-webkit, node');
                 return;
         }
+
+        console.log(`
+* -----------
+*
+*   v${version}@${abi} - ${runtime} - ${arch}
+*
+**************
+
+
+`);
     }
 };
 
@@ -307,13 +322,13 @@ const run = async (release) => {
             continue;
 
         /* -- Filtering -- */
-        if (version.runtime !== 'nw.js') {
-            continue;
-        }
-
-        if (version.abi !== 77) {
-            continue;
-        }
+        // if (version.runtime !== 'nw.js') {
+        //     continue;
+        // }
+        //
+        // if (version.abi !== 77) {
+        //     continue;
+        // }
         /* -- Filtering -- */
 
         console.log(`${version.runtime}@v${version.abi}: `);
