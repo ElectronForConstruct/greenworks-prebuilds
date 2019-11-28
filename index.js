@@ -87,7 +87,8 @@ const getRelease = async () => {
         branch = 'unknown';
     }
 
-    const release = releases.find(release => release.tag_name === `v${pkg.version}-${branch === 'master' ? '' : branch}`);
+    const tagName = `v${pkg.version}-${branch === 'master' ? '' : branch}`;
+    const release = releases.find(release => release.tag_name === tagName);
 
     if (release) {
         console.log('Release exist, skipping');
@@ -96,8 +97,8 @@ const getRelease = async () => {
 
     console.log('Release not found, creating...');
     const data = {
-        'tag_name': `v${pkg.version}`,
-        'name': `v${pkg.version}`,
+        'tag_name': tagName,
+        'name': tagName,
         'draft': true,
         'prerelease': false,
     };
