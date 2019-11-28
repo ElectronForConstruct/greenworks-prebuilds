@@ -47,9 +47,11 @@ const extractArchive = async (from, to) => {
 
 const execTemplate = async (binary, libPath, templatePath, flags = []) => {
     console.log('Content of binary path parent directory');
-    shelljs.ls('-R', path.dirname(binary)).forEach(function (file) {
-        console.log('file', file);
-    });
+    if (os.platform() === 'darwin') {
+        shelljs.ls('-R', path.dirname(binary)).forEach(function (file) {
+            console.log('file', file);
+        });
+    }
 
     if (!fs.existsSync(libPath)) {
         console.log(`Creating ${libPath}`);

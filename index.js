@@ -303,15 +303,11 @@ const build = async (module, release) => {
 };
 
 const run = async (release) => {
-    let everything = await abis.getAll({
-        includeBeta: true,
-        includeNightly: true,
-        includeReleaseCandidates: true
-    });
+    let everything = await abis.getAll();
 
     const electronTargets = getUnique(everything.filter(entry => entry.runtime === 'electron'), 'abi');
-    const nodeTargets = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
     const nwjsTargets = getUnique(everything.filter(entry => entry && entry.runtime === 'nw.js'), 'abi');
+    const nodeTargets = getUnique(everything.filter(entry => entry.runtime === 'node'), 'abi');
 
     everything = electronTargets.concat(nodeTargets).concat(nwjsTargets);
 
