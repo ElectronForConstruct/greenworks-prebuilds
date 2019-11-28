@@ -263,7 +263,7 @@ const build = async (module, release) => {
 
         const {version, abi, runtime} = module;
 
-        console.log(version, abi, runtime);
+        console.log(`v${version}@${abi} - ${runtime} - ${arch}`);
 
         const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`;
 
@@ -306,7 +306,6 @@ const run = async (release) => {
         if (version.abi < 57)
             continue;
 
-        console.log(version.runtime);
         /* -- Filtering -- */
         if (version.runtime !== 'nw.js') {
             continue;

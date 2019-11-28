@@ -33,14 +33,22 @@ const extractZip = async (from, to) => {
 
 const extractArchive = async (from, to) => {
     const type = path.extname(from);
-    if (type === '.tar.gz') {
+
+    console.log('archive of type', type);
+
+    if (type === '.tar.gz' || type === '.gz') {
         return extractTar(from, to);
     } else if (type === '.zip') {
         return extractZip(from, to);
+    } else {
+        console.log('File type not recognized!');
     }
 };
 
 const execTemplate = async (binary, libPath, templatePath, flags = []) => {
+    console.log('Content of binary path parent directory');
+    shelljs.ls(path.dirname(binary));
+
     if (!fs.existsSync(libPath)) {
         console.log(`Creating ${libPath}`);
         shelljs.mkdir(libPath);
