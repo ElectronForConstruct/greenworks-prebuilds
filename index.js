@@ -76,7 +76,18 @@ const uploadAsset = async (filePath, assetLabel, release) => {
 
 const getRelease = async () => {
     const releases = await listReleases();
-    const release = releases.find(release => release.tag_name === `v${pkg.version}`);
+
+    let branch;
+
+    if (process.env.APPVEYOR_REPO_BRANCH) {
+        branch = process.env.APPVEYOR_REPO_BRANCH;
+    } else if (process.env.TRAVIS_BRANCH) {
+        branch = process.env.TRAVIS_BRANCH;
+    } else {
+        branch = 'unknown';
+    }
+
+    const release = releases.find(release => release.tag_name === `v${pkg.version}-${branch === 'master' ? '' : branch}`);
 
     if (release) {
         console.log('Release exist, skipping');
@@ -215,6 +226,7 @@ async function upload(assetLabel, release, arch) {
 
     try {
         const assetExist = release.assets.find(asset => asset.name === assetLabel);
+        console.log('Assets found:', assetExist);
         if (assetExist) {
             console.log('Asset already exists !\nDeleting');
             await deleteAsset(assetExist.url);
