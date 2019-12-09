@@ -208,42 +208,37 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
   await upload(assetLabel, release, arch);
 };
 
-const build = async (module, release) => {
-  const archs = ['x64', 'ia32'];
+const build = async (module, release, arch) => {
+  const { version, abi, runtime } = module;
 
-  for (let i = 0; i < archs.length; i += 1) {
-    const arch = archs[i];
-
-    const { version, abi, runtime } = module;
-
-    console.log(`
+  console.log(`
 **************
 *
 *   v${version}@${abi} - ${runtime} - ${arch}
 *
 * ---`);
 
-    const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`;
+  const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`;
 
-    switch (runtime) {
-      case 'electron':
-        await electronRebuild(version, arch, assetLabel, release);
-        break;
+  switch (runtime) {
+    case 'electron':
+      await electronRebuild(version, arch, assetLabel, release);
+      break;
 
-      case 'nw.js':
-        await nwjsRebuild(version, arch, assetLabel, release);
-        break;
+    case 'nw.js':
+      await nwjsRebuild(version, arch, assetLabel, release);
+      break;
 
-      case 'node':
-        await nodeRebuild(version, arch, assetLabel, release);
-        break;
+    case 'node':
+      await nodeRebuild(version, arch, assetLabel, release);
+      break;
 
-      default:
-        console.log('Unsupported runtime, use one of electron, node-webkit, node');
-        return;
-    }
+    default:
+      console.log('Unsupported runtime, use one of electron, node-webkit, node');
+      return;
+  }
 
-    console.log(`
+  console.log(`
 * ---
 *
 *   v${version}@${abi} - ${runtime} - ${arch}
@@ -252,7 +247,6 @@ const build = async (module, release) => {
 
 
 `);
-  }
 };
 
 const run = async (release) => {
@@ -285,13 +279,19 @@ const run = async (release) => {
     console.log(`${version.runtime}@v${version.abi}: `);
     console.log('Building...');
 
-    // try {
-    await build(version, release);
-    // } catch (e) {
-    //     console.log('travis_fold:start:error');
-    //     console.log('Unable to build for this version:', e.stdout);
-    //     console.log('travis_fold:end:error');
-    // }
+    const archs = ['x64', 'ia32'];
+
+    for (let j = 0; j < archs.length; j += 1) {
+      const arch = archs[j];
+
+      try {
+        await build(version, release, arch);
+      } catch (e) {
+        console.log('travis_fold:start:error');
+        console.log('Unable to build for this version:', e.stdout);
+        console.log('travis_fold:end:error');
+      }
+    }
 
     console.log();
   }
