@@ -92,5 +92,5 @@ module.exports = async (version, arch) => {
     const libPath = getLibPath();
 
     // Test it
-    return execTemplate(nwjsBinary, libPath, nwjsTemplatePath, ['--enable-logging=stderr']);
+    return execTemplate(nwjsBinary, libPath, nwjsTemplatePath, ['--enable-logging=stderr', '--headless', '--disable-gpu']);
 };

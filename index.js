@@ -5,79 +5,33 @@ const os = require('os');
 const fs = require('fs');
 const got = require('got');
 const pkg = require('./package');
-const gh = require('ghreleases');
 const shelljs = require('shelljs');
 const semver = require('semver');
 const abis = require('modules-abi');
 const electronDownload = require('./electronDownloader');
 const nwjsDownloader = require('./nwjsDownloader');
-
-// const electronDownload = require('./electronDownloader');
+const {uploadAsset, listReleases, createRelease, deleteAsset} = require('./utils/gh');
 
 const greenworks = path.join(__dirname, 'greenworks');
 
 shelljs.rm('-rf', path.resolve(path.join(greenworks, 'bin')));
 shelljs.rm('-rf', path.resolve(path.join(greenworks, 'build')));
 
-const auth = {
-    token: process.env.GH_TOKEN,
-    user: 'armaldio',
-};
-
-function getUnique(arr, comp) {
-
-    const unique = arr
+const getUnique = (arr, comp) => {
+    return arr
         .map(e => e[comp])
         .map((e, i, final) => final.indexOf(e) === i && i)
         .filter(e => arr[e]).map(e => arr[e]);
-
-    return unique;
-}
-
-const createRelease = async (data) => {
-    return new Promise((resolve, reject) => {
-        gh.create(auth, 'ElectronForConstruct', 'greenworks-prebuilds', data, (err, release) => {
-            if (err) reject(err);
-            resolve(release);
-        });
-    });
 };
 
-const listReleases = async () => {
-    return new Promise((resolve, reject) => {
-        gh.list(auth, 'ElectronForConstruct', 'greenworks-prebuilds', (err, list) => {
-            if (err) reject(err);
-            resolve(list);
-        });
-    });
-};
-
-const deleteAsset = async (url) => {
-    const response = await got.delete(url, {
-        headers: {
-            'Authorization': `token ${process.env.GH_TOKEN}`,
-        },
-    });
-    return response;
-};
-
-const uploadAsset = async (filePath, assetLabel, release) => {
-    const stream = fs.readFileSync(filePath);
-
-    await got.post(`https://uploads.github.com/repos/ElectronForConstruct/greenworks-prebuilds/releases/${release.id}/assets?name=${assetLabel}`, {
-        headers: {
-            'Authorization': `token ${process.env.GH_TOKEN}`,
-            'Content-Type': 'application/octet-stream',
-        },
-        body: stream,
-    });
-};
-
+/**
+ * Get release or create one based on the branch and the version from the package.json
+ * @return {Promise<unknown>}
+ */
 const getRelease = async () => {
     const releases = await listReleases();
 
     let branch;
-
     if (process.env.APPVEYOR_REPO_BRANCH) {
         branch = process.env.APPVEYOR_REPO_BRANCH;
     } else if (process.env.TRAVIS_BRANCH) {
@@ -102,11 +56,7 @@ const getRelease = async () => {
         'prerelease': false,
     };
 
-    const newRelease = await createRelease(data);
-
-    console.log(newRelease);
-
-    return newRelease;
+    return createRelease(data);
 };
 
 const electronRebuild = async (target, arch, assetLabel, release) => {
@@ -127,14 +77,14 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
             cwd: greenworks,
         });
 
-    const out = await electronDownload(target, arch);
-    if (!out.stdout.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
-        console.log('Test failed!');
-        console.log(out.stdout);
-    } else {
-        await upload(assetLabel, release, arch);
-    }
-
+    // const out = await electronDownload(target, arch);
+    // if (!out.stdout.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
+    //     console.log('Test failed!');
+    //     console.log(out.stdout);
+    // } else {
+    //     await upload(assetLabel, release, arch);
+    // }
+    await upload(assetLabel, release, arch);
 };
 
 const nodeRebuild = async (target, arch, assetLabel, release) => {
@@ -173,13 +123,14 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
             cwd: greenworks,
         });
 
-    const out = await nwjsDownloader(target, arch);
-    if (!out.stderr.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
-        console.log('Test failed!');
-        console.log(out.stderr);
-    } else {
-        await upload(assetLabel, release, arch);
-    }
+    // const out = await nwjsDownloader(target, arch);
+    // if (!out.stderr.includes('Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')) {
+    //     console.log('Test failed!');
+    //     console.log(out.stderr);
+    // } else {
+    //     await upload(assetLabel, release, arch);
+    // }
+    await upload(assetLabel, release, arch);
 };
 
 function getBinaryName(arch) {
@@ -342,16 +293,18 @@ const run = async (release) => {
     }
 };
 
-console.log('Fetching releases...');
-getRelease().then(async release => {
-    console.log('Started building...');
-    console.log();
+(async () => {
+    let release;
+    try {
+        release = await getRelease();
+    } catch (e) {
+        console.log('Error getting release', e);
+    }
 
-    await run(release);
-}).then(() => {
-    console.log('Done');
-}).catch(e => {
-    console.log('There was an error', e);
-});
-
-
+    try {
+        await run(release);
+        console.log('Done');
+    } catch (e) {
+        console.log('Error during build', e);
+    }
+})();
