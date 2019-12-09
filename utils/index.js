@@ -6,71 +6,65 @@ const execa = require('execa');
 const fs = require('fs');
 const os = require('os');
 
-const getLibPath = () => {
-    return path.join(process.cwd(), 'greenworks', 'lib');
-};
+const getLibPath = () => path.join(process.cwd(), 'greenworks', 'lib');
 
 const extractTar = async (from, to) => {
-    shelljs.mkdir('-p', to);
+  shelljs.mkdir('-p', to);
 
-    console.log('all files with be outputted to ', to);
+  console.log('all files with be outputted to ', to);
 
-    return tar.extract({
-        file: from,
-        cwd: to
-    });
+  return tar.extract({
+    file: from,
+    cwd: to,
+  });
 };
 
-const extractZip = async (from, to) => {
-    return new Promise((resolve, reject) => {
-        shelljs.mkdir('-p', to);
-        fs.createReadStream(from)
-            .pipe(unzipper.Extract({path: to}))
-            .on('close', async () => {
-                return resolve(to);
-            });
-    });
-};
+const extractZip = async (from, to) => new Promise((resolve) => {
+  shelljs.mkdir('-p', to);
+  fs.createReadStream(from)
+    .pipe(unzipper.Extract({ path: to }))
+    .on('close', async () => resolve(to));
+});
 
 const extractArchive = async (from, to) => {
-    const type = path.extname(from);
+  const type = path.extname(from);
 
-    console.log('archive of type', type);
+  console.log('archive of type', type);
 
-    if (type === '.tar.gz' || type === '.gz') {
-        return extractTar(from, to);
-    } else if (type === '.zip') {
-        return extractZip(from, to);
-    } else {
-        console.log('File type not recognized!');
-    }
+  if (type === '.tar.gz' || type === '.gz') {
+    return extractTar(from, to);
+  } if (type === '.zip') {
+    return extractZip(from, to);
+  }
+  console.log('File type not recognized!');
+  return null;
 };
 
 const execTemplate = async (binary, libPath, templatePath, flags = []) => {
-    console.log('Content of binary path parent directory');
-    if (os.platform() === 'darwin') {
-        shelljs.ls('-R', path.dirname(binary)).forEach(function (file) {
-            console.log('file', file);
-        });
-    }
+  console.log('Content of binary path parent directory');
+  if (os.platform() === 'darwin') {
+    shelljs.ls('-R', path.dirname(binary)).forEach((file) => {
+      console.log('file', file);
+    });
+  }
 
-    if (!fs.existsSync(libPath)) {
-        console.log(`Creating ${libPath}`);
-        shelljs.mkdir(libPath);
-    }
-    console.log(`Creating ${libPath} to ${templatePath}`);
-    shelljs.cp('-R', libPath, templatePath);
+  if (!fs.existsSync(libPath)) {
+    console.log(`Creating ${libPath}`);
+    shelljs.mkdir(libPath);
+  }
+  console.log(`Creating ${libPath} to ${templatePath}`);
+  shelljs.cp('-R', libPath, templatePath);
 
-    console.log(`Chmod ${binary}`);
-    shelljs.chmod('+x', binary);
-    console.log(`Executing ${binary} [${templatePath}]`);
-    return execa(binary, [templatePath, ...flags]);
+  console.log(`Chmod ${binary}`);
+  shelljs.chmod('+x', binary);
+  console.log(`Executing ${binary} [${templatePath}]`);
+  return execa(binary, [templatePath, ...flags]);
 };
 
 module.exports = {
-    getLibPath,
-    extractZip,
-    extractTar,
-    extractArchive,
-    execTemplate
+  getLibPath,
+  extractZip,
+  extractTar,
+  extractArchive,
+  execTemplate,
 };

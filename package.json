@@ -16,12 +16,12 @@
     "url": "git@github.com:ElectronForConstruct/greenworks-prebuilds.git"
   },
   "dependencies": {
-    "@electron/get": "^1.7.0",
+    "@electron/get": "^1.7.1",
     "cross-env": "^6.0.3",
     "electron-rebuild": "^1.8.8",
-    "execa": "^3.3.0",
+    "execa": "^3.4.0",
     "ghreleases": "^3.0.2",
-    "got": "^9.6.0",
+    "got": "^10.0.2",
     "install-nw": "^1.1.5",
     "modules-abi": "^0.3.4",
     "node-gyp": "^6.0.1",
@@ -31,5 +31,10 @@
     "shelljs": "^0.8.3",
     "tar": "^5.0.5",
     "unzipper": "^0.10.5"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.19.1"
   }
 }
