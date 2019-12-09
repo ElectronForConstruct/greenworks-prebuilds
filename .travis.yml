@@ -41,7 +41,7 @@ branches:
     - develop
 
 notifications:
-  email: false
+  email: true
 
 addons:
   apt:
@@ -79,7 +79,6 @@ script:
   - echo $MACOSX_DEPLOYMENT_TARGET
   - echo $TRAVIS_TAG
 
-#  - mkdir prebuilds
   - cd greenworks
   - npm install
   - cd ..

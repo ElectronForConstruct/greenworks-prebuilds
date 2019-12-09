@@ -140,7 +140,7 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
       `--target=${target}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
-      // '--dist-url=https://atom.io/download/electron',
+      `-j ${process.env.JOBS}`,
     ], {
       cwd: greenworks,
     },
@@ -170,6 +170,7 @@ const nodeRebuild = async (target, arch, assetLabel, release) => {
       '--release',
       `--target=${target}`,
       `--arch=${arch}`,
+      `-j ${process.env.JOBS}`,
     ], {
       cwd: greenworks,
     },
@@ -190,6 +191,7 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
       '--release',
       `--target=${target}`,
       `--arch=${arch}`,
+      `-j ${process.env.JOBS}`,
     ], {
       cwd: greenworks,
     },
@@ -256,7 +258,7 @@ const run = async (release) => {
   const nwjsTargets = getUnique(everything.filter((entry) => entry && entry.runtime === 'nw.js'), 'abi');
   const nodeTargets = getUnique(everything.filter((entry) => entry.runtime === 'node'), 'abi');
 
-  everything = electronTargets.concat(nodeTargets).concat(nwjsTargets);
+  everything = electronTargets.concat(nwjsTargets).concat(nodeTargets);
 
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i];
@@ -300,6 +302,7 @@ const run = async (release) => {
 (async () => {
   let release;
   try {
+    console.log('Jobs available:', process.env.JOBS);
     release = await getRelease();
   } catch (e) {
     console.log('Error getting release', e);
