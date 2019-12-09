@@ -34,6 +34,7 @@ matrix:
         - C_COMPILER='gcc-7'
         - MACOSX_DEPLOYMENT_TARGET=10.9
     - os: windows
+      env: YARN_GPG=no
 
 branches:
   only:
