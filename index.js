@@ -61,7 +61,7 @@ const getRelease = async () => {
     branch = 'unknown';
   }
 
-  const tagName = `v${pkg.version}-${branch === 'master' ? '' : branch}`;
+  const tagName = `v${pkg.version}${branch === 'master' ? '' : `-${branch}`}`;
   const release = releases.find((r) => r.tag_name === tagName);
 
   if (release) {
