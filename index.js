@@ -140,7 +140,7 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
       `--target=${target}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
-      `-j ${process.env.JOBS}`,
+      '-j',
     ], {
       cwd: greenworks,
     },
@@ -170,7 +170,7 @@ const nodeRebuild = async (target, arch, assetLabel, release) => {
       '--release',
       `--target=${target}`,
       `--arch=${arch}`,
-      `-j ${process.env.JOBS}`,
+      '-j',
     ], {
       cwd: greenworks,
     },
@@ -191,7 +191,7 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
       '--release',
       `--target=${target}`,
       `--arch=${arch}`,
-      `-j ${process.env.JOBS}`,
+      '-j',
     ], {
       cwd: greenworks,
     },
