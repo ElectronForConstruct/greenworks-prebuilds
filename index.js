@@ -268,16 +268,6 @@ const run = async (release) => {
             continue;
     }
 
-    /* -- Filtering -- */
-    // if (version.runtime !== 'nw.js') {
-    //     continue;
-    // }
-    //
-    // if (version.abi !== 77) {
-    //     continue;
-    // }
-    /* -- Filtering -- */
-
     console.log(`${version.runtime}@v${version.abi}: `);
     console.log('Building...');
 
@@ -285,6 +275,22 @@ const run = async (release) => {
 
     for (let j = 0; j < archs.length; j += 1) {
       const arch = archs[j];
+
+      /* -- Filtering -- */
+      if (version.runtime === 'electron' && version.abi > 64 && arch === 'ia32') {
+        console.warn('Electron deprecated 32bits builds for version > 3.1. Skipping');
+        // eslint-disable-next-line
+        continue;
+      }
+
+      // / if (version.runtime !== 'nw.js') {
+      //     continue;
+      // }
+      //
+      // if (version.abi !== 77) {
+      //     continue;
+      // }
+      /* -- Filtering -- */
 
       try {
         await build(version, release, arch);
