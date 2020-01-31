@@ -257,11 +257,12 @@ const build = async (module, release, arch) => {
 const run = async (release) => {
   let everything = await abis.getAll();
 
-  const electronTargets = getUnique(everything.filter((entry) => entry.runtime === 'electron'), 'abi');
+  // const electronTargets = getUnique(everything.filter((entry) => entry.runtime === 'electron'), 'abi');
   const nwjsTargets = getUnique(everything.filter((entry) => entry && entry.runtime === 'nw.js'), 'abi');
-  const nodeTargets = getUnique(everything.filter((entry) => entry.runtime === 'node'), 'abi');
+  // const nodeTargets = getUnique(everything.filter((entry) => entry.runtime === 'node'), 'abi');
 
-  everything = electronTargets.concat(nwjsTargets).concat(nodeTargets);
+  everything = nwjsTargets;
+  // everything = electronTargets.concat(nwjsTargets).concat(nodeTargets);
 
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i];
