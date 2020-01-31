@@ -197,20 +197,22 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
     },
   );
 
+  await upload(assetLabel, release, arch);
 
   const out = await nwjsDownloader(target, arch);
+  console.log('out', out);
+  console.log('out', out.stdout);
+  console.log('out', out.stderr);
   if (
     out.stderr.includes(
       'Error on initializing steam API. Error: Steam initialization failed. Steam is not running.',
     )
-      || out.ok
   ) {
-    await upload(assetLabel, release, arch);
+    console.log('The addon seems to be compatible!');
   } else {
     console.log('Test failed!');
     console.log(out.stderr);
   }
-  // await upload(assetLabel, release, arch);
 };
 
 const build = async (module, release, arch) => {
@@ -301,6 +303,7 @@ const run = async (release) => {
       } catch (e) {
         console.log('travis_fold:start:error');
         console.log('Unable to build for this version:', e.stdout);
+        console.log(e);
         console.log('travis_fold:end:error');
       }
     }

@@ -1,4 +1,5 @@
 const test = () => {
+  process.stderr.write('loading greenworks\n')
   console.log('loading greenworks');
   let greenworks;
 
@@ -6,7 +7,7 @@ const test = () => {
     greenworks = require('./greenworks');
   } catch (e) {
     console.log('Error on requiring greenworks', e);
-    return ;
+    return;
   }
 
   if (!greenworks) {

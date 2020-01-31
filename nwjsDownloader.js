@@ -47,18 +47,17 @@ const download = async (version, arch, os) => {
         return reject(error);
       });
     } catch (e) {
-      reject(e);
+      return reject(e);
     }
   });
 };
 
 module.exports = async (version, arch) => {
-
   console.log('arch', arch);
   console.log('os.arch()', os.arch());
   if (arch !== os.arch()) {
     console.error(`Cannot test ${arch} arch on ${os.arch()} arch!`);
-    return { ok: true };
+    return null;
   }
 
   const assoc = {

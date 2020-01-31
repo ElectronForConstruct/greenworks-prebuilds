@@ -57,7 +57,7 @@ const execTemplate = async (binary, libPath, templatePath, flags = []) => {
 
   console.log(`Chmod ${binary}`);
   shelljs.chmod('+x', binary);
-  console.log(`Executing ${binary} [${templatePath}]`);
+  console.log(`Executing ${binary} [${templatePath}, ${flags}]`);
   return execa(binary, [templatePath, ...flags]);
 };
 
