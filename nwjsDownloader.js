@@ -53,6 +53,14 @@ const download = async (version, arch, os) => {
 };
 
 module.exports = async (version, arch) => {
+
+  console.log('arch', arch);
+  console.log('os.arch()', os.arch());
+  if (arch !== os.arch()) {
+    console.error(`Cannot test ${arch} arch on ${os.arch()} arch!`);
+    return { ok: true };
+  }
+
   const assoc = {
     win32: 'win',
     darwin: 'osx',

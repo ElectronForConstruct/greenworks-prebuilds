@@ -9,7 +9,7 @@ const shelljs = require('shelljs');
 const abis = require('modules-abi');
 const pkg = require('./package');
 // const electronDownload = require('./electronDownloader');
-// const nwjsDownloader = require('./nwjsDownloader');
+const nwjsDownloader = require('./nwjsDownloader');
 const {
   uploadAsset, listReleases, createRelease, deleteAsset,
 } = require('./utils/gh');
@@ -198,16 +198,19 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
   );
 
 
-  // const out = await nwjsDownloader(target, arch);
-  // if (!out.stderr.includes(
-  // 'Error on initializing steam API. Error: Steam initialization failed. Steam is not running.')
-  // ) {
-  //     console.log('Test failed!');
-  //     console.log(out.stderr);
-  // } else {
-  //     await upload(assetLabel, release, arch);
-  // }
-  await upload(assetLabel, release, arch);
+  const out = await nwjsDownloader(target, arch);
+  if (
+    out.stderr.includes(
+      'Error on initializing steam API. Error: Steam initialization failed. Steam is not running.',
+    )
+      || out.ok
+  ) {
+    await upload(assetLabel, release, arch);
+  } else {
+    console.log('Test failed!');
+    console.log(out.stderr);
+  }
+  // await upload(assetLabel, release, arch);
 };
 
 const build = async (module, release, arch) => {
