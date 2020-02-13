@@ -6,20 +6,25 @@ const { promisify } = require('util');
 
 const pipeline = promisify(stream.pipeline);
 
+const getRepoInfos = () => {
+  const [username, repo] = process.env.TRAVIS_REPO_SLUG.split('/');
+  return { username, repo }
+}
+
 const auth = {
   token: process.env.GH_TOKEN,
   user: 'armaldio',
 };
 
 const createRelease = async (data) => new Promise((resolve, reject) => {
-  gh.create(auth, 'ElectronForConstruct', 'greenworks-prebuilds', data, (err, release) => {
+  gh.create(auth, getRepoInfos().username, getRepoInfos().repo, data, (err, release) => {
     if (err) reject(err);
     resolve(release);
   });
 });
 
 const listReleases = async () => new Promise((resolve, reject) => {
-  gh.list(auth, 'ElectronForConstruct', 'greenworks-prebuilds', (err, list) => {
+  gh.list(auth, getRepoInfos().username, getRepoInfos().repo, (err, list) => {
     if (err) reject(err);
     resolve(list);
   });
@@ -32,7 +37,7 @@ const deleteAsset = async (url) => got.delete(url, {
 });
 
 const uploadAsset = async (filePath, assetLabel, release) => {
-  const releaseURL = `https://uploads.github.com/repos/ElectronForConstruct/greenworks-prebuilds/releases/${release.id}/assets?name=${assetLabel}`;
+  const releaseURL = `https://uploads.github.com/repos/${process.env.TRAVIS_REPO_SLUG}/releases/${release.id}/assets?name=${assetLabel}`;
 
   const file = fs.readFileSync(filePath);
 

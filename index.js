@@ -9,7 +9,7 @@ const shelljs = require('shelljs');
 const abis = require('modules-abi');
 const pkg = require('./package');
 // const electronDownload = require('./electronDownloader');
-const nwjsDownloader = require('./nwjsDownloader');
+// const nwjsDownloader = require('./nwjsDownloader');
 const {
   uploadAsset, listReleases, createRelease, deleteAsset,
 } = require('./utils/gh');
@@ -199,20 +199,20 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
 
   await upload(assetLabel, release, arch);
 
-  const out = await nwjsDownloader(target, arch);
-  console.log('out', out);
-  console.log('out', out.stdout);
-  console.log('out', out.stderr);
-  if (
-    out.stderr.includes(
-      'Error on initializing steam API. Error: Steam initialization failed. Steam is not running.',
-    )
-  ) {
-    console.log('The addon seems to be compatible!');
-  } else {
-    console.log('Test failed!');
-    console.log(out.stderr);
-  }
+  // const out = await nwjsDownloader(target, arch);
+  // console.log('out', out);
+  // console.log('out', out.stdout);
+  // console.log('out', out.stderr);
+  // if (
+  //   out.stderr.includes(
+  //  'Error on initializing steam API. Error: Steam initialization failed. Steam is not running.',
+  //   )
+  // ) {
+  //   console.log('The addon seems to be compatible!');
+  // } else {
+  //   console.log('Test failed!');
+  //   console.log(out.stderr);
+  // }
 };
 
 const build = async (module, release, arch) => {
@@ -259,12 +259,11 @@ const build = async (module, release, arch) => {
 const run = async (release) => {
   let everything = await abis.getAll();
 
-  // const electronTargets = getUnique(everything.filter((entry) => entry.runtime === 'electron'), 'abi');
+  const electronTargets = getUnique(everything.filter((entry) => entry.runtime === 'electron'), 'abi');
   const nwjsTargets = getUnique(everything.filter((entry) => entry && entry.runtime === 'nw.js'), 'abi');
-  // const nodeTargets = getUnique(everything.filter((entry) => entry.runtime === 'node'), 'abi');
+  const nodeTargets = getUnique(everything.filter((entry) => entry.runtime === 'node'), 'abi');
 
-  everything = nwjsTargets;
-  // everything = electronTargets.concat(nwjsTargets).concat(nodeTargets);
+  everything = electronTargets.concat(nwjsTargets).concat(nodeTargets);
 
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i];
