@@ -21,7 +21,7 @@
     "electron-rebuild": "^1.8.8",
     "execa": "^3.4.0",
     "ghreleases": "^3.0.2",
-    "got": "^10.0.4",
+    "got": "^10.5.7",
     "install-nw": "^1.1.5",
     "modules-abi": "^0.3.4",
     "node-gyp": "^6.0.1",
