@@ -19,7 +19,7 @@
     "@electron/get": "^1.7.2",
     "cross-env": "^6.0.3",
     "electron-rebuild": "^1.8.8",
-    "execa": "^3.4.0",
+    "execa": "^4.0.0",
     "ghreleases": "^3.0.2",
     "got": "^10.0.4",
     "install-nw": "^1.1.5",
