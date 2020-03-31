@@ -18,15 +18,16 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@electron/get@^1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.7.2.tgz#286436a9fb56ff1a1fcdf0e80131fd65f4d1e0fd"
-  integrity sha512-LSE4LZGMjGS9TloDx0yO44D2UTbaeKRk+QjlhWLiQlikV6J4spgDCjb6z4YIcqmPAwNzlNCnWF4dubytwI+ATA==
+"@electron/get@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.9.0.tgz#7fa6e61d7ff50fb82a8a41f437af7de3b97aa9a5"
+  integrity sha512-OBIKtF6ttIJotDXe4KJMUyTBO4xMii+mFjlA8R4CORuD4HvCUaCK3lPjhdTRCvuEv6gzWNbAvd9DNBv0v780lw==
   dependencies:
     debug "^4.1.1"
     env-paths "^2.2.0"
     fs-extra "^8.1.0"
     got "^9.6.0"
+    progress "^2.0.3"
     sanitize-filename "^1.6.2"
     sumchecker "^3.0.1"
   optionalDependencies:
@@ -2288,7 +2289,7 @@ progress-stream@^1.1.0:
     speedometer "~0.1.2"
     through2 "~0.2.3"
 
-progress@^2.0.0:
+progress@^2.0.0, progress@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
