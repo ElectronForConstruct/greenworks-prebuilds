@@ -16,7 +16,7 @@
     "url": "git@github.com:ElectronForConstruct/greenworks-prebuilds.git"
   },
   "dependencies": {
-    "@electron/get": "^1.7.2",
+    "@electron/get": "^1.9.0",
     "cross-env": "^6.0.3",
     "electron-rebuild": "^1.8.8",
     "execa": "^4.0.0",
