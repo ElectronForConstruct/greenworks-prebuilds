@@ -2,7 +2,7 @@
 name: Bug report (Website)
 about: Create a bug report for the Website
 title: ''
-labels: bug
+labels: bug, website
 assignees: Armaldio
 
 ---
