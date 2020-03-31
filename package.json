@@ -26,7 +26,7 @@
     "modules-abi": "^0.3.4",
     "node-gyp": "^6.0.1",
     "nw-gyp": "^3.6.3",
-    "putasset": "^4.3.2",
+    "putasset": "^5.0.3",
     "semver": "^7.0.0",
     "shelljs": "^0.8.3",
     "tar": "^5.0.5",
