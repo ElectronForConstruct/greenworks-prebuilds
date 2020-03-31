@@ -2,7 +2,7 @@
 name: SDK ZIP password request
 about: Request to get the zip password
 title: ''
-labels: zip
+labels: sdk
 assignees: Armaldio, TheRealDannyyy
 
 ---
