@@ -1,3 +1,4 @@
+require('dotenv').config();
 /* eslint-disable no-await-in-loop */
 const execa = require('execa');
 // const rebuild = require('electron-rebuild').default;

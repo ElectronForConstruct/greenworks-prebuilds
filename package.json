@@ -18,6 +18,7 @@
   "dependencies": {
     "@electron/get": "^1.9.0",
     "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
     "electron-rebuild": "^1.10.1",
     "execa": "^4.0.0",
     "ghreleases": "^3.0.2",
@@ -25,7 +26,7 @@
     "install-nw": "^1.1.5",
     "modules-abi": "^0.3.4",
     "node-gyp": "^6.1.0",
-    "nw-gyp": "^3.6.3",
+    "nw-gyp": "^3.6.5",
     "putasset": "^5.0.3",
     "semver": "^7.2.1",
     "shelljs": "^0.8.3",

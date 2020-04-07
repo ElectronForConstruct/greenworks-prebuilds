@@ -8,8 +8,10 @@ const pipeline = promisify(stream.pipeline);
 
 const getRepoInfos = () => {
   const [username, repo] = process.env.TRAVIS_REPO_SLUG.split('/');
-  return { username, repo }
-}
+  return { username, repo };
+};
+
+console.log('process.env.GH_TOKEN', process.env.GH_TOKEN);
 
 const auth = {
   token: process.env.GH_TOKEN,

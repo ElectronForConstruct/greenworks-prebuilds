@@ -8,3 +8,4 @@ zip/
 template/electron/lib/
 template/nwjs/lib/
 nwjs-sdk*
+.env
