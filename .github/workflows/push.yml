@@ -40,8 +40,9 @@ jobs:
       - run: echo $MACOSX_DEPLOYMENT_TARGET
       - run: echo $TRAVIS_TAG
 
-      - run: cd greenworks
-      - run: npm install
-      - run: cd ..
+      - run: | 
+          cd greenworks
+          npm install
+
       - run: npx tsc
       - run: node dist/index.js
