@@ -1,86 +1,106 @@
+# https://docs.travis-ci.com/user/deployment/releases/
 language: node_js
 
 dist: trusty
 
 matrix:
-  include:
-    - os: linux
-      dist: trusty
-      compiler: gcc
-      addons: &gcc7
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - gcc-7
-            - libc6-dev-i386
-            - g++-multilib
-      env:
-        - CXX_COMPILER='g++-7'
-        - C_COMPILER='gcc-7'
+    include:
+        - os: linux
+          dist: trusty
+          compiler: gcc
+          addons: &gcc7
+              apt:
+                  sources:
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - g++-7
+                      - gcc-7
+                      - libc6-dev-i386
+                      - g++-multilib
+          env:
+              - CXX_COMPILER='g++-7'
+              - C_COMPILER='gcc-7'
 
-    - os: osx
-      compiler: gcc
-      addons: &gcc7
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - gcc-7
-      env:
-        - CXX_COMPILER='g++-7'
-        - C_COMPILER='gcc-7'
-        - MACOSX_DEPLOYMENT_TARGET=10.9
-    - os: windows
-      env: YARN_GPG=no
+        - os: osx
+          compiler: gcc
+          addons: &gcc7
+              apt:
+                  sources:
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - g++-7
+                      - gcc-7
+          env:
+              - CXX_COMPILER='g++-7'
+              - C_COMPILER='gcc-7'
+              - MACOSX_DEPLOYMENT_TARGET=10.9
+        - os: windows
+          env: YARN_GPG=no
 
 branches:
-  only:
-    - master
-    - develop
+    only:
+        - master
+        - develop
 
 notifications:
-  email: true
+    email: true
 
 addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
-      - xvfb
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - g++-4.8
+            - xvfb
 
 install:
-  - export DISPLAY=':99.0'
-  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+    - export DISPLAY=':99.0'
+    - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
 node_js:
-  - '10.15.3'
+    - "10.15.3"
+    - "12.16.2"
+    - "13.12.0"
 
 before_install:
-  - git clone https://github.com/greenheartgames/greenworks greenworks
+    - git clone https://github.com/greenheartgames/greenworks greenworks
 
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install p7zip; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install p7zip; fi
 
-  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y p7zip-full; fi
+    # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y p7zip-full; fi
 
-  - 7z x sdk.zip -p$ZIP_PASSWORD
-  - mv sdk greenworks/deps/steamworks_sdk
-  - npm install
+    - 7z x sdk.zip -p$ZIP_PASSWORD
+    - mv sdk greenworks/deps/steamworks_sdk
+    - npm install
 
 script:
-  - echo $CXX_COMPILER
-  - echo $C_COMPILER
-  - echo $CC
-  - echo $CXX
-  - echo $MACOSX_DEPLOYMENT_TARGET
-  - echo $TRAVIS_TAG
+    - echo $CXX_COMPILER
+    - echo $C_COMPILER
+    - echo $CC
+    - echo $CXX
+    - echo $MACOSX_DEPLOYMENT_TARGET
+    - echo $TRAVIS_TAG
 
-  - cd greenworks
-  - npm install
-  - cd ..
-  - node index.js
+    - cd greenworks
+    - npm install
+    - cd ..
+    - node dist/index.js
+
+before_deploy:
+      # Set up git user name and tag this commit
+      - git config --local user.name "YOUR GIT USER NAME"
+      - git config --local user.email "YOUR GIT USER EMAIL"
+      - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+      - git tag $TRAVIS_TAG
+
+deploy:
+    provider: releases
+    api_key: $GH_TOKEN
+    file: "FILE TO UPLOAD"
+    skip_cleanup: true
+    draft: true
+    overwrite: true
+    on:
+        tags: true

@@ -1,31 +1,28 @@
-require('dotenv').config();
 /* eslint-disable no-await-in-loop */
-const execa = require('execa');
-// const rebuild = require('electron-rebuild').default;
-const path = require('path');
-const os = require('os');
-const fs = require('fs');
-const shelljs = require('shelljs');
-// const semver = require('semver');
-const abis = require('modules-abi');
-const pkg = require('./package');
-// const electronDownload = require('./electronDownloader');
-// const nwjsDownloader = require('./nwjsDownloader');
-const {
-  uploadAsset, listReleases, createRelease, deleteAsset,
-} = require('./utils/gh');
+import execa from 'execa';
+// const rebuild = import 'electron-rebuild').default
+import path from 'path';
+import os from 'os';
+import fs from 'fs-extra';
+// const semver = import 'semver')
+import abis from 'modules-abi';
+// const electronDownload = import './electronDownloader')
+// const nwjsDownloader = import './nwjsDownloader')
 
-const greenworks = path.join(__dirname, 'greenworks');
+require('dotenv').config();
+// eslint-disable-next-line
+require('source-map-support').install()
 
-shelljs.rm('-rf', path.resolve(path.join(greenworks, 'bin')));
-shelljs.rm('-rf', path.resolve(path.join(greenworks, 'build')));
+const GREENWORKS_ROOT = path.join(__dirname, '..', 'greenworks');
+const ARTIFACTS_ROOT = path.join(__dirname, '..', 'artifacts');
 
-const getUnique = (arr, comp) => arr
-  .map((e) => e[comp])
+const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
+  .map((e) => e[key])
   .map((e, i, final) => final.indexOf(e) === i && i)
-  .filter((e) => arr[e]).map((e) => arr[e]);
+  .filter((e) => versions[e])
+  .map((e) => versions[e]);
 
-function getBinaryName(arch) {
+function getBinaryName(arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-';
 
   switch (os.platform()) {
@@ -43,17 +40,16 @@ function getBinaryName(arch) {
   }
 
   name += `${arch === 'ia32' ? '32' : '64'}.node`;
-  return path.resolve(path.join(greenworks, 'build', 'Release', name));
+  return path.resolve(path.join(GREENWORKS_ROOT, 'build', 'Release', name));
 }
 
 /**
  * Get release or create one based on the branch and the version from the package.json
- * @return {Promise<unknown>}
  */
-const getRelease = async () => {
+/* const getRelease = async (): Promise<Release> => {
   const releases = await listReleases();
 
-  let branch;
+  let branch: string;
   if (process.env.APPVEYOR_REPO_BRANCH) {
     branch = process.env.APPVEYOR_REPO_BRANCH;
   } else if (process.env.TRAVIS_BRANCH) {
@@ -70,7 +66,7 @@ const getRelease = async () => {
     return release;
   }
 
-  console.log('Release not found, creating...');
+  console.log(`Release not found, creating ${tagName} ...`);
   const data = {
     tag_name: tagName,
     name: tagName,
@@ -79,9 +75,9 @@ const getRelease = async () => {
   };
 
   return createRelease(data);
-};
+}; */
 
-const upload = async (assetLabel, release, arch) => {
+/* const upload = async (assetLabel, release, arch) => {
   console.log(`Done ${assetLabel}`);
 
   const filePath = getBinaryName(arch);
@@ -126,14 +122,17 @@ const upload = async (assetLabel, release, arch) => {
   }
 
   return true;
-};
+}; */
 
-const electronRebuild = async (target, arch, assetLabel, release) => {
-  await execa(
+const electronRebuild = async (
+  target: string,
+  arch: 'ia32' | 'x64',
+  assetLabel: string,
+/* , release */
+): Promise<void> => {
+  const { stderr, stdout } = await execa(
     path.resolve(
-      path.join(
-        __dirname, 'node_modules', '.bin', `node-gyp${os.platform() === 'win32' ? '.cmd' : ''}`,
-      ),
+      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os.platform() === 'win32' ? '.cmd' : ''}`),
     ),
     [
       'rebuild',
@@ -141,9 +140,9 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
       `--target=${target}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
-      '-j',
-    ], {
-      cwd: greenworks,
+    ],
+    {
+      cwd: GREENWORKS_ROOT,
     },
   );
 
@@ -154,51 +153,45 @@ const electronRebuild = async (target, arch, assetLabel, release) => {
   //     console.log('Test failed!');
   //     console.log(out.stdout);
   // } else {
-  //     await upload(assetLabel, release, arch);
+  //     await upload(assetLabel/* , release */, arch);
   // }
-  await upload(assetLabel, release, arch);
+  // await upload(assetLabel/* , release */, arch);
 };
 
-const nodeRebuild = async (target, arch, assetLabel, release) => {
+const nodeRebuild = async (
+  target: string,
+  arch: string,
+  assetLabel: string,
+  /* release, */
+): Promise<void> => {
   await execa(
     path.resolve(
-      path.join(
-        __dirname, 'node_modules', '.bin', `node-gyp${os.platform() === 'win32' ? '.cmd' : ''}`,
-      ),
+      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os.platform() === 'win32' ? '.cmd' : ''}`),
     ),
-    [
-      'rebuild',
-      '--release',
-      `--target=${target}`,
-      `--arch=${arch}`,
-      '-j',
-    ], {
-      cwd: greenworks,
+    ['rebuild', '--release', `--target=${target}`, `--arch=${arch}`],
+    {
+      cwd: GREENWORKS_ROOT,
     },
   );
 
-  await upload(assetLabel, release, arch);
+  // await upload(assetLabel/* , release */, arch);
 };
 
-const nwjsRebuild = async (target, arch, assetLabel, release) => {
+const nwjsRebuild = async (
+  target: string,
+  arch: string,
+  assetLabel: string,
+  /* release, */
+): Promise<void> => {
   await execa(
-    path.resolve(
-      path.join(
-        __dirname, 'node_modules', '.bin', `nw-gyp${os.platform() === 'win32' ? '.cmd' : ''}`,
-      ),
-    ),
-    [
-      'rebuild',
-      '--release',
-      `--target=${target}`,
-      `--arch=${arch}`,
-      '-j',
-    ], {
-      cwd: greenworks,
+    path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os.platform() === 'win32' ? '.cmd' : ''}`)),
+    ['rebuild', '--release', `--target=${target}`, `--arch=${arch}`],
+    {
+      cwd: GREENWORKS_ROOT,
     },
   );
 
-  await upload(assetLabel, release, arch);
+  // await upload(assetLabel/* , release */, arch);
 
   // const out = await nwjsDownloader(target, arch);
   // console.log('out', out);
@@ -216,7 +209,7 @@ const nwjsRebuild = async (target, arch, assetLabel, release) => {
   // }
 };
 
-const build = async (module, release, arch) => {
+const build = async (module: MbaVersion, /* release, */ arch: 'ia32' | 'x64'): Promise<void> => {
   const { version, abi, runtime } = module;
 
   console.log(`
@@ -230,21 +223,32 @@ const build = async (module, release, arch) => {
 
   switch (runtime) {
     case 'electron':
-      await electronRebuild(version, arch, assetLabel, release);
+      await electronRebuild(version, arch, assetLabel/* , release */);
       break;
 
     case 'nw.js':
-      await nwjsRebuild(version, arch, assetLabel, release);
+      await nwjsRebuild(version, arch, assetLabel/*  , release */);
       break;
 
     case 'node':
-      await nodeRebuild(version, arch, assetLabel, release);
+      await nodeRebuild(version, arch, assetLabel/* , release */);
       break;
 
     default:
       console.log('Unsupported runtime, use one of electron, node-webkit, node');
       return;
   }
+
+  const filePath = getBinaryName(arch);
+
+  if (!fs.existsSync(filePath)) {
+    console.log(`File ${filePath} not found!`);
+    return;
+  }
+
+  const dest = path.join(ARTIFACTS_ROOT, assetLabel);
+
+  fs.copy(filePath, dest);
 
   console.log(`
 * ---
@@ -257,21 +261,30 @@ const build = async (module, release, arch) => {
 `);
 };
 
-const run = async (release) => {
+const run = async (/* release: Release */): Promise<void> => {
   let everything = await abis.getAll();
 
-  const electronTargets = getUnique(everything.filter((entry) => entry.runtime === 'electron'), 'abi');
-  const nwjsTargets = getUnique(everything.filter((entry) => entry && entry.runtime === 'nw.js'), 'abi');
-  const nodeTargets = getUnique(everything.filter((entry) => entry.runtime === 'node'), 'abi');
+  const electronTargets = getUnique(
+    everything.filter((entry) => entry.runtime === 'electron'),
+    'abi',
+  );
+  const nwjsTargets = getUnique(
+    everything.filter((entry) => entry && entry.runtime === 'nw.js'),
+    'abi',
+  );
+  const nodeTargets = getUnique(
+    everything.filter((entry) => entry.runtime === 'node'),
+    'abi',
+  );
 
   everything = electronTargets.concat(nwjsTargets).concat(nodeTargets);
 
-  for (let i = 0; i < everything.length; i += 1) {
+  for (let i = 0; i < 3/* everything.length */; i += 1) {
     const version = everything[i];
 
     if (version.abi < 57) {
       // eslint-disable-next-line
-            continue;
+            continue
     }
 
     console.log(`${version.runtime}@v${version.abi}: `);
@@ -286,7 +299,7 @@ const run = async (release) => {
       if (version.runtime === 'electron' && version.abi > 64 && arch === 'ia32') {
         console.warn('Electron deprecated 32bits builds for version > 3.1. Skipping');
         // eslint-disable-next-line
-        continue;
+                continue
       }
 
       // / if (version.runtime !== 'nw.js') {
@@ -299,7 +312,7 @@ const run = async (release) => {
       /* -- Filtering -- */
 
       try {
-        await build(version, release, arch);
+        await build(version, /* release, */ arch);
       } catch (e) {
         console.log('travis_fold:start:error');
         console.log('Unable to build for this version:', e.stdout);
@@ -311,18 +324,13 @@ const run = async (release) => {
     console.log();
   }
 };
-
-(async () => {
-  let release;
-  try {
-    console.log('Jobs available:', process.env.JOBS);
-    release = await getRelease();
-  } catch (e) {
-    console.log('Error getting release', e);
-  }
+(async (): Promise<void> => {
+  await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'bin')));
+  await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'build')));
+  await fs.ensureDir(ARTIFACTS_ROOT);
 
   try {
-    await run(release);
+    await run(/* release */);
     console.log('Done');
   } catch (e) {
     console.log('Error during build', e);
