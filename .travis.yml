@@ -37,9 +37,9 @@ matrix:
 
 branches:
     only:
-    #     - master
-    #     - develop
-    - /.*/
+        - master
+        - develop
+        - v2
 
 notifications:
     email: true
