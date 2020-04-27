@@ -103,7 +103,4 @@ deploy:
   draft: true
   overwrite: true
   on:
-    tags: false
-    branches:
-      only:
-        - v2
+    branch: v2
