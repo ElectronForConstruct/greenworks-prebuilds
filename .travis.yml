@@ -104,3 +104,6 @@ deploy:
   overwrite: true
   on:
     tags: false
+    branches:
+      only:
+        - v2
