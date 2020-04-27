@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "description": "Prebuild binaries for greenworks",
   "scripts": {
-    "start": "node index.js",
+    "start": "node dist/index.js",
     "watch": "tsc -w"
   },
   "licenses": [
@@ -34,6 +34,7 @@
     "ghreleases": "^3.0.2",
     "got": "^10.7.0",
     "install-nw": "^1.1.5",
+    "microjob": "^0.7.0",
     "modules-abi": "^0.3.4",
     "node-gyp": "^6.1.0",
     "nw-gyp": "^3.6.5",

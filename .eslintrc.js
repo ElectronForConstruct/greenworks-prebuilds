@@ -33,6 +33,7 @@ module.exports = {
     },
     rules: {
         'no-console': 'off',
+        'semi': ['error', 'never'],
         'import/extensions': [
             'error',
             'ignorePackages',
@@ -44,5 +45,6 @@ module.exports = {
                 tsx: 'never',
             },
         ],
+        '@typescript-eslint/ban-ts-ignore': 0
     },
 };

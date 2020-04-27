@@ -10,3 +10,4 @@ template/nwjs/lib/
 nwjs-sdk*
 .env
 dist
+artifacts/

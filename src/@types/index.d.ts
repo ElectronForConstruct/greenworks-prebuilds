@@ -7,3 +7,7 @@ interface MbaVersion {
 declare module 'modules-abi' {
   function getAll(): Promise<MbaVersion[]>;
 }
+
+
+declare module 'unzipper'
+declare module 'tar'

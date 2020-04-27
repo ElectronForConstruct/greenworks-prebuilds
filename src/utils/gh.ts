@@ -1,20 +1,21 @@
-import got from 'got';
-import * as fs from 'fs';
-import stream from 'stream';
-import { promisify } from 'util';
-import { Release } from '../models/github';
+import got from 'got'
+import * as fs from 'fs'
+import stream from 'stream'
+import { promisify } from 'util'
+import { Release } from '../models/github'
 
-const pipeline = promisify(stream.pipeline);
+const pipeline = promisify(stream.pipeline)
 
 const getRepoInfos = () => {
-  const [username, repo] = process.env.TRAVIS_REPO_SLUG.split('/');
-  return { username, repo };
-};
+  // @ts-ignore
+  const [username, repo] = process.env.TRAVIS_REPO_SLUG.split('/')
+  return { username, repo }
+}
 
 const auth = () => ({
   token: process.env.GH_TOKEN,
   user: 'armaldio',
-});
+})
 
 const createRelease = async (data: any): Promise<Release> => {
   // return new Promise((resolve, reject) => {
@@ -23,8 +24,8 @@ const createRelease = async (data: any): Promise<Release> => {
   //         resolve(release)
   //     })
   // })
-  console.log('data', data);
-  const releasesURL = `https://api.github.com/repos/${process.env.TRAVIS_REPO_SLUG}/releases`;
+  console.log('data', data)
+  const releasesURL = `https://api.github.com/repos/${process.env.TRAVIS_REPO_SLUG}/releases`
   return got
     .post(releasesURL, {
       headers: {
@@ -32,13 +33,13 @@ const createRelease = async (data: any): Promise<Release> => {
       },
       body: JSON.stringify(data),
     })
-    .json();
-};
+    .json()
+}
 
 const listReleases = async (): Promise<Release[]> => {
-  const releasesURL = `https://api.github.com/repos/${process.env.TRAVIS_REPO_SLUG}/releases`;
-  return got(releasesURL).json();
-};
+  const releasesURL = `https://api.github.com/repos/${process.env.TRAVIS_REPO_SLUG}/releases`
+  return got(releasesURL).json()
+}
 
 const deleteAsset = async (url: string): Promise<any> => got
   .delete(url, {
@@ -46,23 +47,24 @@ const deleteAsset = async (url: string): Promise<any> => got
       Authorization: `token ${process.env.GH_TOKEN}`,
     },
   })
-  .json();
+  .json()
 
 const uploadAsset = async (filePath: string, assetLabel: string, release: Release) => {
-  const releaseURL = `https://uploads.github.com/repos/${process.env.TRAVIS_REPO_SLUG}/releases/${release.id}/assets?name=${assetLabel}`;
+  const releaseURL = `https://uploads.github.com/repos/${process.env.TRAVIS_REPO_SLUG}/releases/${release.id}/assets?name=${assetLabel}`
 
-  const file = fs.readFileSync(filePath);
+  const file = fs.readFileSync(filePath)
 
   return got.post(releaseURL, {
     headers: {
       Authorization: `token ${process.env.GH_TOKEN}`,
       'Content-Type': 'application/octet-stream',
+      // @ts-ignore
       'Content-Length': Buffer.byteLength(file),
     },
     body: file,
-  });
-};
+  })
+}
 
 export {
   deleteAsset, createRelease, listReleases, uploadAsset,
-};
+}
