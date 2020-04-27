@@ -92,8 +92,8 @@ before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "Runner"
   - git config --local user.email "runner@armaldio.xyz"
-  - export TRAVIS_TAG=TEST
-  - git tag $TRAVIS_TAG
+  # - export TRAVIS_TAG=TEST
+  - TRAVIS_TAG=$(node getRelease.js) && git tag $TRAVIS_TAG
 
 deploy:
   provider: releases
@@ -101,7 +101,7 @@ deploy:
   file_glob: true
   file: artifacts/**/*
   skip_cleanup: true
-  draft: true
+  draft: false
   overwrite: true
   on:
     branch: v2
