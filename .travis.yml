@@ -98,7 +98,8 @@ before_deploy:
 deploy:
   provider: releases
   api_key: $GH_TOKEN
-  file: artifacts/*
+  file_glob: true
+  file: artifacts/**/*
   skip_cleanup: true
   draft: true
   overwrite: true
