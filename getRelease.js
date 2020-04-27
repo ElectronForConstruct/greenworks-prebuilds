@@ -4,4 +4,4 @@ const package =fs.readFileSync('./package.json')
 
 const pkg = JSON.parse(package)
 
-console.log(pkg.version)
+console.log(`v${pkg.version}`)

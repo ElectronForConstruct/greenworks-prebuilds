@@ -1,10 +1,8 @@
 /* eslint-disable no-await-in-loop */
 import execa from 'execa'
-// const rebuild = import 'electron-rebuild').default
 import path from 'path'
 import os from 'os'
 import fs from 'fs-extra'
-// const semver = import 'semver')
 import abis from 'modules-abi'
 // const electronDownload = import './electronDownloader')
 // const nwjsDownloader = import './nwjsDownloader')
@@ -250,7 +248,7 @@ const run = async (/* release: Release */): Promise<void> => {
 
   everything = electronTargets.concat(nwjsTargets).concat(nodeTargets)
 
-  for (let i = 0; i < 3/* everything.length */; i += 1) {
+  for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i]
 
     if (version.abi < 57) {
@@ -262,13 +260,13 @@ const run = async (/* release: Release */): Promise<void> => {
     console.log('Building...')
 
     try {
-      await build(version, /* release, */ Archs.x64)
+      await build(version, Archs.x64)
 
       /* -- Filtering -- */
       if (version.runtime === 'electron' && version.abi > 64 && os.platform() === 'linux') {
         console.warn('Electron deprecated 32bits builds for version > 3.1 on linux. Skipping')
       } else {
-        await build(version, /* release, */ Archs.x86)
+        await build(version, Archs.x86)
       }
     } catch (e) {
       console.log('travis_fold:start:error')
@@ -281,23 +279,13 @@ const run = async (/* release: Release */): Promise<void> => {
   }
 };
 (async (): Promise<void> => {
-  const start = new Date()
-  const hrstart = process.hrtime()
-
-
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'bin')))
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'build')))
   await fs.ensureDir(ARTIFACTS_ROOT)
 
   try {
-    await run(/* release */)
+    await run()
     console.log('Done')
-    // @ts-ignore
-    const end = new Date() - start
-    const hrend = process.hrtime(hrstart)
-
-    console.info('Execution time: %dms', end)
-    console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
   } catch (e) {
     console.log('Error during build', e)
   }
