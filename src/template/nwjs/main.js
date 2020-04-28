@@ -1,23 +1,25 @@
 const test = () => {
-  let greenworks;
+    process.stderr.write('loading greenworks\n')
+    console.log('loading greenworks')
+    let greenworks
 
-  try {
-    greenworks = require('./greenworks');
-  } catch (e) {
-    console.log('Error on requiring greenworks', e);
-    return ;
-  }
-
-  if (!greenworks) {
-    console.log('No greenworks found');
-  } else {
     try {
-      greenworks.init();
-      console.log('Steam API initialized successfully.');
+        greenworks = require('./greenworks')
     } catch (e) {
-      console.log('Error on initializing steam API.', e);
+        console.log('Error on requiring greenworks', e)
+        return
+    }
 
-      /*
+    if (!greenworks) {
+        console.log('No greenworks found')
+    } else {
+        try {
+            greenworks.init()
+            console.log('Steam API initialized successfully.')
+        } catch (e) {
+            console.log('Error on initializing steam API.', e)
+
+            /*
       console.log('Cloud enabled: ' + greenworks.isCloudEnabled());
       console.log('Cloud enabled for user: ' + greenworks.isCloudEnabledForUser());
 
@@ -80,8 +82,8 @@ const test = () => {
         friends_names.push(friends[ i ].getPersonaName());
       console.log('Friends: [' + friends_names.join(',') + ']');
        */
+        }
     }
-  }
-};
+}
 
-module.exports = test;
+export default test

@@ -1,10 +1,9 @@
 language: node_js
 
-dist: trusty
-
 matrix:
   include:
-    - os: linux
+    -
+      os: linux
       dist: trusty
       compiler: gcc
       addons: &gcc7
@@ -20,7 +19,8 @@ matrix:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
 
-    - os: osx
+    -
+      os: osx
       compiler: gcc
       addons: &gcc7
         apt:
@@ -33,13 +33,16 @@ matrix:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
         - MACOSX_DEPLOYMENT_TARGET=10.9
-    - os: windows
+
+    -
+      os: windows
       env: YARN_GPG=no
 
 branches:
   only:
     - master
     - develop
+    - v2
 
 notifications:
   email: true
@@ -56,8 +59,7 @@ install:
   - export DISPLAY=':99.0'
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
-node_js:
-  - '10.15.3'
+node_js: 10.15.3
 
 before_install:
   - git clone https://github.com/greenheartgames/greenworks greenworks
@@ -80,7 +82,28 @@ script:
   - echo $MACOSX_DEPLOYMENT_TARGET
   - echo $TRAVIS_TAG
 
+  - npx tsc
   - cd greenworks
   - npm install
   - cd ..
-  - node index.js
+  - node dist/index.js
+
+before_deploy:
+  # Set up git user name and tag this commit
+  - git config --local user.name "Runner"
+  - git config --local user.email "runner@armaldio.xyz"
+  # - export TRAVIS_TAG=TEST
+  # - TRAVIS_TAG=$(node getRelease.js) && git tag $TRAVIS_TAG
+  - TRAVIS_TAG=$(node getRelease.js)
+
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
+  file_glob: true
+  file: artifacts/**/*
+  skip_cleanup: true
+  draft: false
+  overwrite: true
+  prerelease: true
+  on:
+    branch: v2
