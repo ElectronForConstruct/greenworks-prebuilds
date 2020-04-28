@@ -93,7 +93,8 @@ before_deploy:
   - git config --local user.name "Runner"
   - git config --local user.email "runner@armaldio.xyz"
   # - export TRAVIS_TAG=TEST
-  - TRAVIS_TAG=$(node getRelease.js) && git tag $TRAVIS_TAG
+  # - TRAVIS_TAG=$(node getRelease.js) && git tag $TRAVIS_TAG
+  - TRAVIS_TAG=$(node getRelease.js)
 
 deploy:
   provider: releases
