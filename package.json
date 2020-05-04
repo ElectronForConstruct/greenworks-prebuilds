@@ -41,7 +41,7 @@
     "prettier": "^2.0.4",
     "putasset": "^5.0.3",
     "semver": "^7.2.1",
-    "tar": "^6.0.1",
+    "tar": "^6.0.2",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
