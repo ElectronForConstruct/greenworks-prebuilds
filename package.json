@@ -38,7 +38,7 @@
     "modules-abi": "^0.3.4",
     "node-gyp": "^6.1.0",
     "nw-gyp": "^3.6.5",
-    "prettier": "^2.0.4",
+    "prettier": "^2.0.5",
     "putasset": "^5.0.3",
     "semver": "^7.2.1",
     "tar": "^6.0.1",
