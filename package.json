@@ -32,7 +32,7 @@
     "execa": "^4.0.0",
     "fs-extra": "^9.0.0",
     "ghreleases": "^3.0.2",
-    "got": "^11.0.2",
+    "got": "^11.1.0",
     "install-nw": "^1.1.5",
     "microjob": "^0.7.0",
     "modules-abi": "^0.3.4",
