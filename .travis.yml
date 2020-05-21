@@ -106,4 +106,4 @@ deploy:
   overwrite: true
   prerelease: true
   on:
-    branch: v2
+    branch: master
