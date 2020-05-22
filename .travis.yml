@@ -104,6 +104,6 @@ deploy:
   skip_cleanup: true
   draft: false
   overwrite: true
-  prerelease: true
+  prerelease: false
   on:
     branch: master
