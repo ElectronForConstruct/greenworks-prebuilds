@@ -1,7 +1,6 @@
 import os from 'os'
 import path from 'path'
 import fs from 'fs'
-import shelljs from 'shelljs'
 import got from 'got'
 import { getLibPath, extractArchive, execTemplate } from './utils'
 
