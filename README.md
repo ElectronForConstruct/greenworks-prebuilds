@@ -11,10 +11,10 @@ Most common versions/abi are built.
 ## Infos
 | | |
 | - | - |
-| Steam SDK version | 1.42 |
+| Steam SDK version | 1.43 |
 | OS | Windows, Mac, Linux |
 | Arch | x64, x86 |
 | Engine | NW.js, Electron, Node |
-| Abi | > 57 |
+| Abi | > 70 |
 
 
