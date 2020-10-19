@@ -251,7 +251,7 @@ const run = async (/* release: Release */): Promise<void> => {
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i]
 
-    if (version.abi < 57) {
+    if (version.abi < 70) {
       // eslint-disable-next-line
       continue
     }

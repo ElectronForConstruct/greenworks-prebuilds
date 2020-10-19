@@ -11,3 +11,5 @@ nwjs-sdk*
 .env
 dist
 artifacts/
+
+*.bak

@@ -4,7 +4,9 @@
   "description": "Prebuild binaries for greenworks",
   "scripts": {
     "start": "node dist/index.js",
-    "watch": "tsc -w"
+    "zip-sdk": "node scripts/zipSdk.js",
+    "watch": "tsc -w",
+    "build": "tsc -w"
   },
   "licenses": [
     {
@@ -18,26 +20,26 @@
   },
   "dependencies": {
     "@electron/get": "^1.12.2",
-    "@typescript-eslint/eslint-plugin": "^4.4.0",
-    "@typescript-eslint/parser": "^4.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/parser": "^4.4.1",
     "dotenv": "^8.2.0",
     "execa": "^4.0.3",
     "fs-extra": "^9.0.1",
     "got": "^11.7.0",
     "modules-abi": "^0.3.4",
-    "node-gyp": "^7.1.0",
+    "node-gyp": "^7.1.2",
     "nw-gyp": "^3.6.5",
     "tar": "^6.0.5",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
-    "@types/eslint": "^7.2.3",
-    "@types/fs-extra": "^9.0.1",
-    "@types/node": "^14.11.5",
+    "@types/eslint": "^7.2.4",
+    "@types/fs-extra": "^9.0.2",
+    "@types/node": "^14.11.10",
     "@types/source-map-support": "^0.5.3",
     "@types/tar": "^4.0.3",
     "@types/unzipper": "^0.10.3",
-    "eslint": "^7.10.0",
+    "eslint": "^7.11.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",
     "source-map-support": "^0.5.19",
