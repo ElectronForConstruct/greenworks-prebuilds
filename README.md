@@ -11,7 +11,7 @@ Most common versions/abi are built.
 ## Infos
 | | |
 | - | - |
-| Steam SDK version | 1.43 |
+| Steam SDK version | 1.5 |
 | OS | Windows, Mac, Linux |
 | Arch | x64, x86 |
 | Engine | NW.js, Electron, Node |
