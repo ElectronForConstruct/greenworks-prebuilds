@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@electron/get": "^1.12.2",
-    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.4.1",
     "dotenv": "^8.2.0",
     "execa": "^4.0.3",
