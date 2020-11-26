@@ -43,7 +43,6 @@ const run = async (/* release: Release */): Promise<void> => {
     }
 
     try {
-      // await build(version, Archs.x64)
       matrix.push({
         runtime: version.runtime,
         abi: version.abi,
@@ -52,14 +51,13 @@ const run = async (/* release: Release */): Promise<void> => {
 
       /* -- Filtering -- */
       if (version.runtime === 'electron' && version.abi > 64 && os.platform() === 'linux') {
-        console.warn('Electron deprecated 32bits builds for version > 3.1 on linux. Skipping')
+        //
       } else {
         matrix.push({
           runtime: version.runtime,
           abi: version.abi,
           arch: Archs.x86,
         })
-        // await build(version, Archs.x86)
       }
     } catch (e) {
       console.log('Unable to build for this version:', e.stdout)
@@ -70,9 +68,4 @@ const run = async (/* release: Release */): Promise<void> => {
   console.log(matrix)
 }
 
-try {
-  await run()
-  console.log('Done')
-} catch (e) {
-  console.log('Error during build', e)
-}
+await run()
