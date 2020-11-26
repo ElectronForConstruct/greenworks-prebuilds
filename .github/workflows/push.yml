@@ -8,6 +8,8 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+      - run: npm install
+      - run: npx tsc
       - id: set-matrix
         run: |
           body=$(node ./dist/makeMatrix.js)
