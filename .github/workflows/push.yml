@@ -8,6 +8,14 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "10.19.0"
+
       - run: npm install
       - run: npx tsc
       - id: set-matrix
@@ -22,7 +30,6 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest] # windows-latest,
-        node: ["10.19.0"]
         node_config: ${{fromJson(needs.make_matrix.outputs.matrix)}}
     steps:
       - name: Checkout
@@ -31,7 +38,7 @@ jobs:
       - name: Checkout Node
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: "10.19.0"
 
       - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
