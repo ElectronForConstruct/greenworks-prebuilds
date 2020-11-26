@@ -21,7 +21,12 @@ jobs:
       - id: set-matrix
         run: |
           body=$(node ./dist/makeMatrix.js)
+          echo $body
           echo "::set-output name=matrix::$body"
+          
+          JSON=$(cat ./matrix.json)
+          echo $JSON
+          echo "::set-output name=matrix::$JSON"
 
   build:
     name: Build

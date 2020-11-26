@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import os from 'os'
 import abis from 'modules-abi'
+import fs from 'fs'
 
 enum Archs {
   x86 = 'ia32',
@@ -66,6 +67,7 @@ const run = async (/* release: Release */): Promise<void> => {
   }
 
   console.log(matrix)
+  fs.writeFileSync('../matrix.json', JSON.stringify(matrix), 'utf8')
 }
 
 await run()
