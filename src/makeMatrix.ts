@@ -71,4 +71,7 @@ const run = async (/* release: Release */): Promise<void> => {
   fs.writeFileSync(path.join(__dirname, '..', 'matrix.json'), JSON.stringify(matrix), 'utf8')
 }
 
-await run()
+// eslint-disable-next-line
+(async () => {
+  await run()
+})()
