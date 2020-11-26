@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Node
         uses: actions/setup-node@v1
         with:
-          node-version: "10.19.0"
+          node-version: "14.15.0"
 
       - run: npm install
       - run: npx tsc
