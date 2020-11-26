@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix2: ${{ steps.set-matrix2.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -23,7 +24,8 @@ jobs:
           body=$(node ./dist/makeMatrix.js)
           echo $body
           echo "::set-output name=matrix::$body"
-          
+      - id: set-matrix2
+        run: |
           JSON=$(cat ./matrix.json)
           echo $JSON
           echo "::set-output name=matrix::$JSON"
