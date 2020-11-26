@@ -260,13 +260,13 @@ const run = async (/* release: Release */): Promise<void> => {
     console.log('Building...')
 
     try {
-      await build(version, Archs.x64)
+      // await build(version, Archs.x64)
 
       /* -- Filtering -- */
       if (version.runtime === 'electron' && version.abi > 64 && os.platform() === 'linux') {
         console.warn('Electron deprecated 32bits builds for version > 3.1 on linux. Skipping')
       } else {
-        await build(version, Archs.x86)
+        // await build(version, Archs.x86)
       }
     } catch (e) {
       console.log('travis_fold:start:error')

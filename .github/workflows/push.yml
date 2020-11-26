@@ -2,13 +2,26 @@ name: Build
 on: [push]
 
 jobs:
+  make_matrix:
+    name: Generate Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: |
+          body=$(node ./dist/makeMatrix.js)
+          echo "::set-output name=matrix::$body"
+
   build:
     name: Build
+    needs: job1
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest] # windows-latest,
         node: ["10.19.0"]
+        node_config: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
