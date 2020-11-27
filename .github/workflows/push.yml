@@ -19,6 +19,8 @@ jobs:
 
       - run: npm install
       - run: npx tsc
+      - run: node ./dist/makeMatrix.js
+      - run: ls
       # - id: set-matrix
       #   run: |
       #     body=$(node ./dist/makeMatrix.js)
