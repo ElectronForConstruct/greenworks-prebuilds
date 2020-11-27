@@ -13,3 +13,5 @@ dist
 artifacts/
 
 *.bak
+
+matrix.json

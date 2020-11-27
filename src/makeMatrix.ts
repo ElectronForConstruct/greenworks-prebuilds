@@ -1,13 +1,11 @@
 /* eslint-disable no-await-in-loop */
-import os from 'os'
 import abis from 'modules-abi'
 import fs from 'fs'
 import path from 'path'
 
-enum Archs {
-  x86 = 'ia32',
-  x64 = 'x64',
-}
+const Archs = ['ia32', 'x64']
+
+const OSs = ['macos-latest', 'ubuntu-latest']
 
 const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
   .map((e) => e[key])
@@ -35,7 +33,8 @@ const run = async (/* release: Release */): Promise<void> => {
 
   everything = electronTargets.concat(nwjsTargets).concat(nodeTargets)
 
-  const matrix = []
+  const json: any = {}
+  const matrix: any[] = []
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i]
 
@@ -45,30 +44,33 @@ const run = async (/* release: Release */): Promise<void> => {
     }
 
     try {
-      matrix.push({
-        runtime: version.runtime,
-        abi: version.abi,
-        arch: Archs.x64,
-      })
-
-      /* -- Filtering -- */
-      if (version.runtime === 'electron' && version.abi > 64 && os.platform() === 'linux') {
-        //
-      } else {
-        matrix.push({
-          runtime: version.runtime,
-          abi: version.abi,
-          arch: Archs.x86,
+      OSs.forEach((os) => {
+        Archs.forEach((arch) => {
+          // add unless 64 bit build on linux
+          if (!(version.runtime === 'electron' && version.abi > 64 && os === 'ubuntu-latest')) {
+            matrix.push({
+              runtime: version.runtime,
+              abi: version.abi,
+              python: '2.7',
+              arch,
+              os,
+            })
+          }
         })
-      }
+      })
     } catch (e) {
       console.log('Unable to build for this version:', e.stdout)
       console.log(e)
     }
   }
 
-  console.log(matrix)
-  fs.writeFileSync(path.join(__dirname, '..', 'matrix.json'), JSON.stringify(matrix), 'utf8')
+  // eslint-disable-next-line
+  json.include = matrix
+
+  console.log(json)
+  console.log(matrix.length)
+  // eslint-disable-next-line
+  fs.writeFileSync(path.join(__dirname, '..', 'matrix.json'), JSON.stringify(json), 'utf8')
 }
 
 // eslint-disable-next-line
