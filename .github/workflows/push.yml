@@ -6,7 +6,7 @@ jobs:
     name: Generate Matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      # matrix: ${{ steps.set-matrix.outputs.matrix }}
       matrix2: ${{ steps.set-matrix2.outputs.matrix }}
     steps:
       - name: Checkout
@@ -19,11 +19,13 @@ jobs:
 
       - run: npm install
       - run: npx tsc
-      - id: set-matrix
-        run: |
-          body=$(node ./dist/makeMatrix.js)
-          echo $body
-          echo "::set-output name=matrix::$body"
+      # - id: set-matrix
+      #   run: |
+      #     body=$(node ./dist/makeMatrix.js)
+      #     body="${content//'%'/'%25'}"
+      #     body="${content//$'\n'/'%0A'}"
+      #     body="${content//$'\r'/'%0D'}"
+      #     echo "::set-output name=matrix::$body"
       - id: set-matrix2
         run: |
           JSON=$(cat ./matrix.json)
@@ -36,9 +38,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        python: [2.7]
         os: [macos-latest, ubuntu-latest] # windows-latest,
-        node_config: ${{fromJson(needs.make_matrix.outputs.matrix)}}
+        # node_config: ${{fromJson(needs.make_matrix.outputs.matrix)}}
     steps:
+
+      # - run: echo ${{ needs.make_matrix.outputs.matrix }}
+      - run: echo ${{ needs.make_matrix.outputs.matrix2 }}
+
       - name: Checkout
         uses: actions/checkout@v2
 
