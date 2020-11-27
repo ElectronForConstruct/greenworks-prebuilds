@@ -30,10 +30,7 @@ jobs:
     needs: make_matrix
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix:
-        python: [2.7]
-        os: [macos-latest, ubuntu-latest] # windows-latest,
-        node_config: ${{fromJson(needs.make_matrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.make_matrix.outputs.matrix)}}
     steps:
 
       # - run: echo ${{ needs.make_matrix.outputs.matrix }}
