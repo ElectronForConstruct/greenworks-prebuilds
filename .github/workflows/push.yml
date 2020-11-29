@@ -6,7 +6,7 @@ jobs:
     name: Generate Matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix2: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
