@@ -31,7 +31,7 @@ const run = async (/* release: Release */): Promise<void> => {
   //   'abi',
   // )
 
-  everything = electronTargets.concat(nwjsTargets).concat(nodeTargets)
+  everything = electronTargets/* .concat(nwjsTargets).concat(nodeTargets) */
 
   const json: any = {}
   const matrix: any[] = []
