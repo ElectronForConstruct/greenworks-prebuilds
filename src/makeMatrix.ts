@@ -47,16 +47,16 @@ const run = async (/* release: Release */): Promise<void> => {
       OSs.forEach((os) => {
         Archs.forEach((arch) => {
           // add unless 64 bit build on linux
-          if (!(version.runtime === 'electron' && version.abi > 64 && os === 'ubuntu-latest')) {
-            matrix.push({
-              runtime: version.runtime,
-              abi: version.abi,
-              version: version.version,
-              python: '2.7',
-              arch,
-              os,
-            })
-          }
+          // if (!(version.runtime === 'electron' && version.abi > 64 && os === 'ubuntu-latest')) {
+          matrix.push({
+            runtime: version.runtime,
+            abi: version.abi,
+            version: version.version,
+            python: '2.7',
+            arch,
+            os,
+          })
+          // }
         })
       })
     } catch (e) {
