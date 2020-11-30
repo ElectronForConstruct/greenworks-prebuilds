@@ -171,7 +171,7 @@ const nodeRebuild = async (): Promise<void> => {
 const nwjsRebuild = async (): Promise<void> => {
   await execa(
     path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-latest' ? '.cmd' : ''}`)),
-    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`],
+    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, '--python=2.7'],
     {
       cwd: GREENWORKS_ROOT,
     },
