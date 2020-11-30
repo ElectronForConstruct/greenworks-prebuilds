@@ -22,14 +22,14 @@ const run = async (/* release: Release */): Promise<void> => {
     everything.filter((entry) => entry.runtime === 'electron'),
     'abi',
   )
-  const nwjsTargets = getUnique(
-    everything.filter((entry) => entry && entry.runtime === 'nw.js'),
-    'abi',
-  )
-  const nodeTargets = getUnique(
-    everything.filter((entry) => entry.runtime === 'node'),
-    'abi',
-  )
+  // const nwjsTargets = getUnique(
+  //   everything.filter((entry) => entry && entry.runtime === 'nw.js'),
+  //   'abi',
+  // )
+  // const nodeTargets = getUnique(
+  //   everything.filter((entry) => entry.runtime === 'node'),
+  //   'abi',
+  // )
 
   everything = electronTargets.concat(nwjsTargets).concat(nodeTargets)
 
