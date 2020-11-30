@@ -46,7 +46,9 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '2.7'
+          python-version: '3.8'
+        env:
+          PYTHON_VERSION: '3.8'
 
       - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
@@ -55,7 +57,7 @@ jobs:
         run: brew install p7zip
 
       # - if: matrix.os == 'ubuntu-latest'
-      #   run: pyenv install 2.7.14
+      #   run: pyenv install 3.8
 
       - run: python --version
 
