@@ -204,12 +204,16 @@ const build = async (): Promise<void> => {
 
   const filePath = getBinaryName(arch)
 
+  console.log('filePath', filePath)
+
   if (!fs.existsSync(filePath)) {
     console.log(`File ${filePath} not found!`)
     return
   }
 
   const dest = path.join(ARTIFACTS_ROOT, assetLabel)
+
+  console.log('dest', dest)
 
   await fs.copy(filePath, dest)
 }
