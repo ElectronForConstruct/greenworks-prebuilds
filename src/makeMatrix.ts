@@ -66,7 +66,7 @@ const run = async (/* release: Release */): Promise<void> => {
   }
 
   // eslint-disable-next-line
-  json.include = matrix
+  json.include = matrix.slice(0, 3)
 
   console.log(json)
   console.log(matrix.length)

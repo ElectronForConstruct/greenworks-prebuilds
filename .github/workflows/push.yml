@@ -48,8 +48,6 @@ jobs:
         with:
           python-version: '2.7'
 
-      - run: where python
-
       - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
       # Install dep
