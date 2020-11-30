@@ -180,6 +180,7 @@ const nwjsRebuild = async (): Promise<void> => {
 const build = async (): Promise<void> => {
   console.log(`v${version}@${abi} - ${runtime} - ${arch}`)
 
+  // @ts-ignore
   const assetLabel = `greenworks-${runtime}-v${abi}-${association[os]}-${arch}.node`
 
   switch (runtime) {
