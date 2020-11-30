@@ -52,7 +52,7 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '2.7.14'
+          python-version: '2.7.18'
 
       - run: python --version
       - run: which python
