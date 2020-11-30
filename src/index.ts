@@ -148,6 +148,7 @@ const electronRebuild = async (): Promise<void> => {
       `--target=${version}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
+      '--python=2.7',
     ],
     {
       cwd: GREENWORKS_ROOT,
@@ -160,7 +161,7 @@ const nodeRebuild = async (): Promise<void> => {
     path.resolve(
       path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
     ),
-    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`],
+    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, '--python=2.7'],
     {
       cwd: GREENWORKS_ROOT,
     },

@@ -46,7 +46,9 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '2.7' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          python-version: '2.7'
+
+      - run: where python
 
       - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
