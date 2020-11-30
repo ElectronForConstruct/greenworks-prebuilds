@@ -22,16 +22,16 @@ const run = async (/* release: Release */): Promise<void> => {
     everything.filter((entry) => entry.runtime === 'electron'),
     'abi',
   )
-  // const nwjsTargets = getUnique(
-  //   everything.filter((entry) => entry && entry.runtime === 'nw.js'),
-  //   'abi',
-  // )
-  // const nodeTargets = getUnique(
-  //   everything.filter((entry) => entry.runtime === 'node'),
-  //   'abi',
-  // )
+  const nwjsTargets = getUnique(
+    everything.filter((entry) => entry && entry.runtime === 'nw.js'),
+    'abi',
+  )
+  const nodeTargets = getUnique(
+    everything.filter((entry) => entry.runtime === 'node'),
+    'abi',
+  )
 
-  everything = electronTargets/* .concat(nwjsTargets).concat(nodeTargets) */
+  everything = electronTargets.concat(nwjsTargets).concat(nodeTargets)
 
   const json: any = {}
   const matrix: any[] = []
@@ -66,7 +66,7 @@ const run = async (/* release: Release */): Promise<void> => {
   }
 
   // eslint-disable-next-line
-  json.include = matrix.slice(0, 3)
+  json.include = matrix
 
   console.log(json)
   console.log(matrix.length)

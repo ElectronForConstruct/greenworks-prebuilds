@@ -211,17 +211,7 @@ const build = async (): Promise<void> => {
 
   const dest = path.join(ARTIFACTS_ROOT, assetLabel)
 
-  fs.copy(filePath, dest)
-
-  console.log(`
-* ---
-*
-*   v${version}@${abi} - ${runtime} - ${arch}
-*
-**************
-
-
-`)
+  await fs.copy(filePath, dest)
 }
 
 (async (): Promise<void> => {
