@@ -75,10 +75,13 @@ jobs:
           npm install
 
       - run: npx tsc
+      - run: echo ${{ env.pythonLocation }}
+      - run: ls ${{ env.pythonLocation }}/bin
+      - run: ls ${{ env.pythonLocation }}
       - name: "Build"
         run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}}
         env:
-          PYTHON: 2.7.18
+          PYTHON: ${{ env.pythonLocation }}/bin
 
       - name: get-npm-version
         id: package-version
