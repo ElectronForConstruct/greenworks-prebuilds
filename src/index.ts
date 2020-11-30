@@ -223,11 +223,6 @@ const build = async (): Promise<void> => {
 `)
 }
 
-enum Archs {
-  x86 = 'ia32',
-  x64 = 'x64',
-}
-
 (async (): Promise<void> => {
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'bin')))
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'build')))
