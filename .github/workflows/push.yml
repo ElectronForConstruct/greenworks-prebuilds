@@ -73,4 +73,4 @@ jobs:
           npm install
 
       - run: npx tsc
-      - run: node dist/index.js
+      - run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}

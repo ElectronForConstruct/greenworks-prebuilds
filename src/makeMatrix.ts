@@ -51,6 +51,7 @@ const run = async (/* release: Release */): Promise<void> => {
             matrix.push({
               runtime: version.runtime,
               abi: version.abi,
+              version: version.version,
               python: '2.7',
               arch,
               os,
