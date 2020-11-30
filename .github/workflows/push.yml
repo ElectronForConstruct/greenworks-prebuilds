@@ -52,7 +52,7 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '2.7.18'
+          python-version: 2.7.18
 
       - run: python --version
       - run: which python
@@ -75,7 +75,10 @@ jobs:
           npm install
 
       - run: npx tsc
-      - run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}}
+      - name: "Build"
+        run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}}
+        env:
+          PYTHON: 2.7.18
 
       - name: get-npm-version
         id: package-version
