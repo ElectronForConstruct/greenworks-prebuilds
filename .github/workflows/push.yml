@@ -50,6 +50,8 @@ jobs:
         env:
           PYTHON_VERSION: '3.8'
 
+      - run: apt-get install gcc-multilib
+
       - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
       # Install dep
