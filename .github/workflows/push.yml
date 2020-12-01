@@ -85,6 +85,9 @@ jobs:
         env:
           PYTHON: ${{ env.pythonLocation }}/bin/python
 
+      - run: ls ./
+      - run: ls ./artifacts
+
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
