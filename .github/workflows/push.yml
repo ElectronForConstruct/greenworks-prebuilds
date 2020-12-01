@@ -79,16 +79,28 @@ jobs:
       - run: ls ${{ env.pythonLocation }}/bin
       - run: ls ${{ env.pythonLocation }}
       - name: "Build"
-        run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}}
+        run: |
+          echo $PYTHON
+          node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}}
         env:
-          PYTHON: ${{ env.pythonLocation }}/bin
+          PYTHON: ${{ env.pythonLocation }}/bin/python
 
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
 
+      - uses: mukunku/tag-exists-action@v1.0.0
+        id: checkTag
+        with:
+          tag: 'v${{ steps.package-version.outputs.current-version }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: echo ${{ steps.checkTag.outputs.exists }}
+
       - name: Create Release
         id: create_release
+        if: steps.checkTag.outputs.exists === false
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
