@@ -36,6 +36,8 @@ const {
   abi, os, runtime, arch, version, python,
 }: any = args
 
+const pythonPath = path.join(python, 'bin/python')
+
 function getBinaryName(arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-'
 
@@ -149,7 +151,7 @@ const electronRebuild = async (): Promise<void> => {
       `--target=${version}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
-      `--python=${python}`,
+      `--python=${pythonPath}`,
     ],
     {
       cwd: GREENWORKS_ROOT,
@@ -162,7 +164,7 @@ const nodeRebuild = async (): Promise<void> => {
     path.resolve(
       path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
     ),
-    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${python}`],
+    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${pythonPath}`],
     {
       cwd: GREENWORKS_ROOT,
     },
@@ -172,7 +174,7 @@ const nodeRebuild = async (): Promise<void> => {
 const nwjsRebuild = async (): Promise<void> => {
   await execa(
     path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-latest' ? '.cmd' : ''}`)),
-    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${python}`],
+    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${pythonPath}`],
     {
       cwd: GREENWORKS_ROOT,
     },
