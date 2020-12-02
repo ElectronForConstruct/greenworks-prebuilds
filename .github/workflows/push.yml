@@ -42,7 +42,7 @@ jobs:
       - name: Checkout Node
         uses: actions/setup-node@v1
         with:
-          node-version: "14.15.0"
+          node-version: "10.19.0"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - if: matrix.os == 'ubuntu-latest'
@@ -58,11 +58,12 @@ jobs:
         with:
           python-version: 2.7.18
 
-      - run: python --version
-      - run: which python
+      - run: gcc -v
 
       # Extract
-      - run: 7z x sdk.zip -P${{ secrets.ZIP_PASSWORD }}
+      - run: 7z x sdk.zip -p$ZIP_PASSWORD
+        env:
+          ZIP_PASSWORD: ${{ secrets.ZIP_PASSWORD }}
 
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: npm install
