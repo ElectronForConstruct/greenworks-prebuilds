@@ -33,7 +33,7 @@ const association = {
 }
 
 const {
-  abi, os, runtime, arch, version,
+  abi, os, runtime, arch, version, python,
 }: any = args
 
 function getBinaryName(arch: 'ia32' | 'x64'): string {
