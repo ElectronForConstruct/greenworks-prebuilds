@@ -76,7 +76,7 @@ jobs:
 
       - run: npx tsc
       - name: "Build"
-        run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}} --python=${{env.pythonLocation}}
+        run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}} --python=${{env.pythonLocation}}/bin/python
 
       - run: ls ./
       - run: ls ./artifacts
