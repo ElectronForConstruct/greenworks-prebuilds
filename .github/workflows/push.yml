@@ -75,15 +75,8 @@ jobs:
           npm install
 
       - run: npx tsc
-      - run: echo ${{ env.pythonLocation }}
-      - run: ls ${{ env.pythonLocation }}/bin
-      - run: ls ${{ env.pythonLocation }}
       - name: "Build"
-        run: |
-          echo $PYTHON
-          node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}}
-        env:
-          PYTHON: ${{ env.pythonLocation }}/bin/python
+        run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}} --python=${{env.pythonLocation}}
 
       - run: ls ./
       - run: ls ./artifacts

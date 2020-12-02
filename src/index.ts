@@ -17,6 +17,7 @@ interface Args {
   runtime: string;
   arch: string;
   version: string;
+  python: string;
 }
 
 const GREENWORKS_ROOT = path.join(__dirname, '..', 'greenworks')
@@ -148,7 +149,7 @@ const electronRebuild = async (): Promise<void> => {
       `--target=${version}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
-      '--python=2.7',
+      `--python=${python}`,
     ],
     {
       cwd: GREENWORKS_ROOT,
@@ -161,7 +162,7 @@ const nodeRebuild = async (): Promise<void> => {
     path.resolve(
       path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
     ),
-    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, '--python=2.7'],
+    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${python}`],
     {
       cwd: GREENWORKS_ROOT,
     },
@@ -171,7 +172,7 @@ const nodeRebuild = async (): Promise<void> => {
 const nwjsRebuild = async (): Promise<void> => {
   await execa(
     path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-latest' ? '.cmd' : ''}`)),
-    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, '--python=2.7'],
+    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${python}`],
     {
       cwd: GREENWORKS_ROOT,
     },
