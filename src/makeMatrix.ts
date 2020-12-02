@@ -5,7 +5,7 @@ import path from 'path'
 
 const Archs = ['ia32', 'x64']
 
-const OSs = [/* 'macos-latest',  */'ubuntu-latest']
+const OSs = ['macos-latest', 'ubuntu-latest', 'windows-latest']
 
 const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
   .map((e) => e[key])
