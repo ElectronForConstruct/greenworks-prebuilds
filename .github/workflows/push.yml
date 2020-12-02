@@ -68,13 +68,6 @@ jobs:
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: npm install
 
-      - run: echo $CXX_COMPILER
-      - run: echo $C_COMPILER
-      - run: echo $CC
-      - run: echo $CXX
-      - run: echo $MACOSX_DEPLOYMENT_TARGET
-      - run: echo $TRAVIS_TAG
-
       - run: |
           cd greenworks
           npm install
@@ -83,17 +76,14 @@ jobs:
       - name: "Build"
         run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}} --python=${{env.pythonLocation}}/bin/python
 
-      - run: ls ./
-      - run: ls ./artifacts
-
       - name: get-npm-version
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
+        uses: tyankatsu0105/read-package-version-actions@v1
 
       - uses: mukunku/tag-exists-action@v1.0.0
         id: checkTag
         with:
-          tag: 'v${{ steps.package-version.outputs.current-version }}'
+          tag: 'v${{ steps.package-version.outputs.version  }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -106,8 +96,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.package-version.outputs.current-version }}
-          release_name: v${{ steps.package-version.outputs.current-version }}
+          tag_name: ${{ steps.package-version.outputs.version }}
+          release_name: v${{ steps.package-version.outputs.version }}
           draft: false
           prerelease: true
       - name: Upload binaries to release
