@@ -68,7 +68,8 @@ jobs:
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: npm install
       - run: npm config set python python2.7
-      - run: npm install --global --production windows-build-tools
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild
         if: matrix.os == 'windows-latest'
 
       - run: |
