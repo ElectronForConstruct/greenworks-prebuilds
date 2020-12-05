@@ -79,35 +79,35 @@ jobs:
       - name: "Build"
         run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}} --python=${{env.pythonLocation}}
 
-      - name: get-npm-version
-        id: package-version
-        uses: tyankatsu0105/read-package-version-actions@v1
+      # - name: get-npm-version
+      #   id: package-version
+      #   uses: tyankatsu0105/read-package-version-actions@v1
 
-      - uses: mukunku/tag-exists-action@v1.0.0
-        id: checkTag
-        with:
-          tag: 'v${{ steps.package-version.outputs.version  }}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: mukunku/tag-exists-action@v1.0.0
+      #   id: checkTag
+      #   with:
+      #     tag: 'v${{ steps.package-version.outputs.version  }}'
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: echo ${{ steps.checkTag.outputs.exists }}
+      # - run: echo ${{ steps.checkTag.outputs.exists }}
 
-      - name: Create Release
-        id: create_release
-        if: steps.checkTag.outputs.exists == false
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.package-version.outputs.version }}
-          release_name: v${{ steps.package-version.outputs.version }}
-          draft: false
-          prerelease: true
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./artifacts/*
-          tag: v${{ steps.package-version.outputs.version }}
-          overwrite: true
-          file_glob: true
+      # - name: Create Release
+      #   id: create_release
+      #   if: steps.checkTag.outputs.exists == false
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ steps.package-version.outputs.version }}
+      #     release_name: v${{ steps.package-version.outputs.version }}
+      #     draft: false
+      #     prerelease: true
+      # - name: Upload binaries to release
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: ./artifacts/*
+      #     tag: v${{ steps.package-version.outputs.version }}
+      #     overwrite: true
+      #     file_glob: true
