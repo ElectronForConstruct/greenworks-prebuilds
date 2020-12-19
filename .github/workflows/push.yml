@@ -42,18 +42,14 @@ jobs:
         id: package-version
         uses: tyankatsu0105/read-package-version-actions@v1
 
-      - uses: mukunku/tag-exists-action@v1.0.0
-        id: checkTag
-        with:
-          tag: 'v${{ steps.package-version.outputs.version  }}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: checkTag
+        run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.version }}" && echo "::set-output name=tagged::1" || echo "::set-output name=tagged::0"
 
-      - run: echo ${{ steps.checkTag.outputs.exists }}
+      - run: echo ${{ steps.checkTag.outputs.tagged }}
 
       - name: Create Release
         id: create_release
-        if: steps.checkTag.outputs.exists == false
+        if: steps.checkTag.outputs.tagged == 0
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
