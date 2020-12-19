@@ -62,8 +62,8 @@ jobs:
     needs: [make_matrix, make_release]
     runs-on: ${{ matrix.os }}
     env:
-      CXX_COMPILER: 'g++-10'
-      C_COMPILER: 'gcc-10'
+      CXX: g++-10
+      CC: gcc-10
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.make_matrix.outputs.matrix)}}
