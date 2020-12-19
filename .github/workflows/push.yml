@@ -108,6 +108,7 @@ jobs:
 
       - run: npx tsc
       - name: "Build"
+        shell: bash
         env:
           CXX: g++-10
           CC: gcc-10
