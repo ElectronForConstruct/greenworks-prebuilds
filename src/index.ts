@@ -301,7 +301,6 @@ void (async (): Promise<void> => {
       console.log('Done')
     } catch (e) {
       console.log('Error during build', e)
-      process.exit(1)
     }
   }
 })()
