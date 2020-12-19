@@ -1,8 +1,16 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable no-loop-func */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable no-await-in-loop */
 import execa from 'execa'
 import path from 'path'
 import fs from 'fs-extra'
 import mri from 'mri'
+import abis from 'modules-abi'
 // const electronDownload = import './electronDownloader')
 // const nwjsDownloader = import './nwjsDownloader')
 
@@ -11,12 +19,18 @@ require('dotenv').config()
 // eslint-disable-next-line
 require('source-map-support').install()
 
+const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
+  .map((e) => e[key])
+  .map((e, i, final) => final.indexOf(e) === i && i)
+  // @ts-ignore
+  .filter((e) => versions[e])
+  // @ts-ignore
+  .map((e) => versions[e])
+
 interface Args {
-  abi: string;
-  os: string;
-  runtime: string;
-  arch: string;
-  version: string;
+  os: 'macos-latest' | 'ubuntu-latest' | 'windows-latest';
+  runtime: 'nw.js' | 'electron' | 'node';
+  arch: 'ia32' | 'x64';
   python: string;
 }
 
@@ -33,12 +47,12 @@ const association = {
 }
 
 const {
-  abi, os, runtime, arch, version, python,
-}: any = args
+  os, runtime, arch, python,
+}: Args = args as unknown as Args
 
 const pythonPath = path.join(python, 'bin/python')
 
-function getBinaryName(arch: 'ia32' | 'x64'): string {
+function getBinaryName(_arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-'
 
   switch (os) {
@@ -55,7 +69,7 @@ function getBinaryName(arch: 'ia32' | 'x64'): string {
       break
   }
 
-  name += `${arch === 'ia32' ? '32' : '64'}.node`
+  name += `${_arch === 'ia32' ? '32' : '64'}.node`
   return path.resolve(path.join(GREENWORKS_ROOT, 'build', 'Release', name))
 }
 
@@ -140,7 +154,7 @@ function getBinaryName(arch: 'ia32' | 'x64'): string {
   return true;
 }; */
 
-const electronRebuild = async (): Promise<void> => {
+const electronRebuild = async (version: string): Promise<void> => {
   const { stderr, stdout } = await execa(
     path.resolve(
       path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
@@ -159,7 +173,7 @@ const electronRebuild = async (): Promise<void> => {
   )
 }
 
-const nodeRebuild = async (): Promise<void> => {
+const nodeRebuild = async (version: string): Promise<void> => {
   await execa(
     path.resolve(
       path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
@@ -171,7 +185,7 @@ const nodeRebuild = async (): Promise<void> => {
   )
 }
 
-const nwjsRebuild = async (): Promise<void> => {
+const nwjsRebuild = async (version: string): Promise<void> => {
   await execa(
     path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-latest' ? '.cmd' : ''}`)),
     ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${pythonPath}`],
@@ -181,23 +195,74 @@ const nwjsRebuild = async (): Promise<void> => {
   )
 }
 
-const build = async (): Promise<void> => {
-  console.log(`v${version}@${abi} - ${runtime} - ${arch}`)
+const getVersions = async (): Promise<any> => {
+  let everything = await abis.getAll()
+
+  if (runtime === 'electron') {
+    everything = getUnique(
+      everything.filter((entry) => entry.runtime === 'electron'),
+      'abi',
+    )
+  }
+
+  if (runtime === 'nw.js') {
+    everything = getUnique(
+      everything.filter((entry) => entry && entry.runtime === 'nw.js'),
+      'abi',
+    )
+  }
+  if (runtime === 'node') {
+    everything = getUnique(
+      everything.filter((entry) => entry.runtime === 'node'),
+      'abi',
+    )
+  }
+
+  const matrix: any[] = []
+  for (let i = 0; i < everything.length; i += 1) {
+    const version = everything[i]
+
+    if (version.abi < 70) {
+      // eslint-disable-next-line
+      continue
+    }
+
+    if (
+      runtime === 'electron' && os === 'macos-latest' && arch === 'ia32'
+    ) {
+      // eslint-disable-next-line
+      continue
+    }
+
+    matrix.push({
+      runtime,
+      abi: version.abi,
+      version: version.version,
+      arch,
+      os,
+    })
+  }
+
+  return matrix
+}
+
+const build = async (matrix: any): Promise<void> => {
+  console.log(`v${matrix.version}@${matrix.abi} - ${matrix.runtime} - ${matrix.arch}`)
 
   // @ts-ignore
-  const assetLabel = `greenworks-${runtime}-v${abi}-${association[os]}-${arch}.node`
+  const assetLabel = `greenworks-${matrix.runtime}-v${matrix.abi}-${association[matrix.os]}-${matrix.arch}.node`
 
   switch (runtime) {
     case 'electron':
-      await electronRebuild()
+      await electronRebuild(matrix.version)
       break
 
     case 'nw.js':
-      await nwjsRebuild()
+      await nwjsRebuild(matrix.version)
       break
 
     case 'node':
-      await nodeRebuild()
+      await nodeRebuild(matrix.version)
       break
 
     default:
@@ -205,7 +270,7 @@ const build = async (): Promise<void> => {
       return
   }
 
-  const filePath = getBinaryName(arch)
+  const filePath = getBinaryName(matrix.arch)
 
   console.log('filePath', filePath)
 
@@ -221,16 +286,22 @@ const build = async (): Promise<void> => {
   await fs.copy(filePath, dest)
 }
 
-(async (): Promise<void> => {
+// eslint-disable-next-line no-void
+void (async (): Promise<void> => {
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'bin')))
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'build')))
   await fs.ensureDir(ARTIFACTS_ROOT)
 
-  try {
-    await build()
-    console.log('Done')
-  } catch (e) {
-    console.log('Error during build', e)
-    process.exit(1)
+  const versions = await getVersions()
+
+  for (let index = 0; index < versions.length; index += 1) {
+    const version = versions[index]
+    try {
+      await build(version)
+      console.log('Done')
+    } catch (e) {
+      console.log('Error during build', e)
+      process.exit(1)
+    }
   }
 })()

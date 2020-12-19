@@ -1,5 +1,4 @@
 /* eslint-disable no-await-in-loop */
-import abis from 'modules-abi'
 import fs from 'fs'
 import path from 'path'
 //
