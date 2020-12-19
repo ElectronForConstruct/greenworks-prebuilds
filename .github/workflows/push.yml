@@ -109,9 +109,9 @@ jobs:
       - run: npx tsc
       - name: "Build"
         shell: bash
-        env:
-          CXX: g++-10
-          CC: gcc-10
+        # env:
+        #   CXX: g++-10
+        #   CC: gcc-10
         run: node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python=${{env.pythonLocation}}
 
       - name: get-npm-version
