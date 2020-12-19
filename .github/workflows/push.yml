@@ -113,6 +113,10 @@ jobs:
       - name: "Build"
         run: node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python=${{env.pythonLocation}}
 
+      - name: get-npm-version
+        id: package-version
+        uses: tyankatsu0105/read-package-version-actions@v1
+
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
