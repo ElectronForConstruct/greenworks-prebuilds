@@ -76,8 +76,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout Node
         uses: actions/setup-node@v2-beta
@@ -121,11 +119,11 @@ jobs:
       - name: "Build"
         run: node dist/index.js --abi=${{matrix.abi}} --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --version=${{matrix.version}} --python=${{env.pythonLocation}}
 
-      # - name: Upload binaries to release
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: ./artifacts/*
-      #     tag: v${{ steps.package-version.outputs.version }}
-      #     overwrite: true
-      #     file_glob: true
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./artifacts/*
+          tag: v${{ steps.package-version.outputs.version }}
+          overwrite: true
+          file_glob: true
