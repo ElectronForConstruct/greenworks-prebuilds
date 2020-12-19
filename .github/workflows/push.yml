@@ -33,11 +33,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Checkout Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: "14.15.0"
-
       - name: get-npm-version
         id: package-version
         uses: tyankatsu0105/read-package-version-actions@v1
@@ -63,6 +58,7 @@ jobs:
           prerelease: true
 
   build:
+    if: 'false'
     continue-on-error: true
     name: Build
     needs: [make_matrix, make_release]

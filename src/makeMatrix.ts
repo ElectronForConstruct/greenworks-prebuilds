@@ -5,18 +5,12 @@ import path from 'path'
 //
 const Archs = ['ia32', 'x64']
 
+const Runtimes = ['nw.js', 'electron', 'node']
+
 const OSs = ['macos-latest', 'ubuntu-latest', 'windows-latest']
 
-const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
-  .map((e) => e[key])
-  .map((e, i, final) => final.indexOf(e) === i && i)
-  // @ts-ignore
-  .filter((e) => versions[e])
-  // @ts-ignore
-  .map((e) => versions[e])
-
 const run = async (/* release: Release */): Promise<void> => {
-  let everything = await abis.getAll()
+  /* let everything = await abis.getAll()
 
   const electronTargets = getUnique(
     everything.filter((entry) => entry.runtime === 'electron'),
@@ -66,7 +60,22 @@ const run = async (/* release: Release */): Promise<void> => {
       console.log('Unable to build for this version:', e.stdout)
       console.log(e)
     }
-  }
+  } */
+
+  const json: any = {}
+  const matrix: any[] = []
+
+  OSs.forEach((os) => {
+    Runtimes.forEach((runtime) => {
+      Archs.forEach((arch) => {
+        matrix.push({
+          runtime,
+          arch,
+          os,
+        })
+      })
+    })
+  })
 
   // eslint-disable-next-line
   json.include = matrix
