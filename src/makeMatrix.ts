@@ -48,8 +48,10 @@ const run = async (/* release: Release */): Promise<void> => {
         Archs.forEach((arch) => {
           // add unless 64 bit build on linux
           if (
-            !(version.runtime === 'electron' && (os === 'ubuntu-latest' || os === 'macos-latest'))
+            (version.runtime === 'electron' && os === 'macos-latest' && arch === 'ia32')
           ) {
+            // console.log('pass')
+          } else {
             matrix.push({
               runtime: version.runtime,
               abi: version.abi,

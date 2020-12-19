@@ -42,6 +42,9 @@ jobs:
         id: package-version
         uses: tyankatsu0105/read-package-version-actions@v1
 
+      - name: Fetch tags
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
       - id: checkTag
         run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.version }}" && echo "::set-output name=tagged::1" || echo "::set-output name=tagged::0"
 
@@ -54,7 +57,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.package-version.outputs.version }}
+          tag_name: v${{ steps.package-version.outputs.version }}
           release_name: v${{ steps.package-version.outputs.version }}
           draft: false
           prerelease: true
