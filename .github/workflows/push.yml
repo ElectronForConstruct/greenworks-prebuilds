@@ -61,9 +61,6 @@ jobs:
     name: Build
     needs: [make_matrix, make_release]
     runs-on: ${{ matrix.os }}
-    env:
-      CXX: g++-10
-      CC: gcc-10
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.make_matrix.outputs.matrix)}}
@@ -111,6 +108,9 @@ jobs:
 
       - run: npx tsc
       - name: "Build"
+        env:
+          CXX: g++-10
+          CC: gcc-10
         run: node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python=${{env.pythonLocation}}
 
       - name: get-npm-version
