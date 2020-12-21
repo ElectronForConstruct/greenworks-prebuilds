@@ -39,7 +39,7 @@
     "@types/source-map-support": "^0.5.3",
     "@types/tar": "^4.0.3",
     "@types/unzipper": "^0.10.3",
-    "eslint": "^7.11.0",
+    "eslint": "^7.16.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",
     "source-map-support": "^0.5.19",
