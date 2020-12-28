@@ -1,9 +1,6 @@
 name: Build
 # This workflow is triggered on pushes to the repository.
-on:
-  push:
-  schedule:
-    - cron: '0 0 * * *'
+on: [push]
 
 jobs:
   build:
