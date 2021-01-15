@@ -1,5 +1,8 @@
 name: Build
-on: [push]
+on:	
+  push:	jobs:
+  schedule:	  make_matrix:
+    - cron: '0 0 * * *'
 
 jobs:
   make_matrix:
