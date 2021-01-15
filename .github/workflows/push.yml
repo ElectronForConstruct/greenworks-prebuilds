@@ -94,9 +94,7 @@ jobs:
       - run: gcc -v
 
       # Extract
-      - run: 7z x sdk.zip -p$ZIP_PASSWORD
-        env:
-          ZIP_PASSWORD: ${{ secrets.ZIP_PASSWORD }}
+      - run: 7z x sdk.zip -p ${{ secrets.ZIP_PASSWORD }}
 
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: npm install
