@@ -29,9 +29,7 @@ jobs:
         run: brew install p7zip
 
       # Extract
-      - run: 7z x sdk.zip -p$ZIP_PASSWORD
-        env:
-          ZIP_PASSWORD: ${{ secrets.ZIP_PASSWORD }}
+      - run: 7z x sdk.zip -P${{ secrets.ZIP_PASSWORD }}
 
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: npm install
