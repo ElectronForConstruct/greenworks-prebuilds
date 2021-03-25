@@ -1,5 +1,5 @@
 name: Build
-on:	
+on:
   push:
   schedule:
     - cron: '0 0 * * *'
@@ -94,7 +94,7 @@ jobs:
       - run: gcc -v
 
       # Extract
-      - run: 7z x sdk.zip -p ${{ secrets.ZIP_PASSWORD }}
+      - run: 7z e sdk.zip -y -o./sdk -p${{ secrets.ZIP_PASSWORD }}
 
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: npm install
