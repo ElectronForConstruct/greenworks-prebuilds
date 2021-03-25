@@ -1,18 +1,23 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable no-loop-func */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable no-await-in-loop */
 import execa from 'execa'
 import path from 'path'
-import os from 'os'
 import fs from 'fs-extra'
+import mri from 'mri'
 import abis from 'modules-abi'
 // const electronDownload = import './electronDownloader')
 // const nwjsDownloader = import './nwjsDownloader')
 
+// eslint-disable-next-line
 require('dotenv').config()
 // eslint-disable-next-line
 require('source-map-support').install()
-
-const GREENWORKS_ROOT = path.join(__dirname, '..', 'greenworks')
-const ARTIFACTS_ROOT = path.join(__dirname, '..', 'artifacts')
 
 const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
   .map((e) => e[key])
@@ -22,24 +27,49 @@ const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] 
   // @ts-ignore
   .map((e) => versions[e])
 
-function getBinaryName(arch: 'ia32' | 'x64'): string {
+interface Args {
+  os: 'macos-latest' | 'ubuntu-latest' | 'windows-latest';
+  runtime: 'nw.js' | 'electron' | 'node';
+  arch: 'ia32' | 'x64';
+  python: string;
+}
+
+const GREENWORKS_ROOT = path.join(__dirname, '..', 'greenworks')
+const ARTIFACTS_ROOT = path.join(__dirname, '..', 'artifacts')
+
+const argv = process.argv.slice(2)
+const args = mri(argv)
+
+const association = {
+  'ubuntu-latest': 'linux',
+  'windows-latest': 'win32',
+  'macos-latest': 'darwin',
+}
+
+const {
+  os, runtime, arch, python,
+}: Args = args as unknown as Args
+
+const pythonPath = python
+
+function getBinaryName(_arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-'
 
-  switch (os.platform()) {
-    case 'win32':
+  switch (os) {
+    case 'windows-latest':
       name += 'win'
       break
-    case 'darwin':
+    case 'macos-latest':
       name += 'osx'
       break
-    case 'linux':
+    case 'ubuntu-latest':
       name += 'linux'
       break
     default:
       break
   }
 
-  name += `${arch === 'ia32' ? '32' : '64'}.node`
+  name += `${_arch === 'ia32' ? '32' : '64'}.node`
   return path.resolve(path.join(GREENWORKS_ROOT, 'build', 'Release', name))
 }
 
@@ -124,20 +154,18 @@ function getBinaryName(arch: 'ia32' | 'x64'): string {
   return true;
 }; */
 
-const electronRebuild = async (
-  target: string,
-  arch: Archs,
-): Promise<void> => {
+const electronRebuild = async (version: string): Promise<void> => {
   const { stderr, stdout } = await execa(
     path.resolve(
-      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os.platform() === 'win32' ? '.cmd' : ''}`),
+      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
     ),
     [
       'rebuild',
       '--release',
-      `--target=${target}`,
+      `--target=${version}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
+      `--python=${pythonPath}`,
     ],
     {
       cwd: GREENWORKS_ROOT,
@@ -145,109 +173,52 @@ const electronRebuild = async (
   )
 }
 
-const nodeRebuild = async (
-  target: string,
-  arch: Archs,
-): Promise<void> => {
+const nodeRebuild = async (version: string): Promise<void> => {
   await execa(
     path.resolve(
-      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os.platform() === 'win32' ? '.cmd' : ''}`),
+      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
     ),
-    ['rebuild', '--release', `--target=${target}`, `--arch=${arch}`],
+    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${pythonPath}`, '--build_v8_with_gn=false'],
     {
       cwd: GREENWORKS_ROOT,
     },
   )
 }
 
-const nwjsRebuild = async (
-  target: string,
-  arch: Archs,
-): Promise<void> => {
+const nwjsRebuild = async (version: string): Promise<void> => {
   await execa(
-    path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os.platform() === 'win32' ? '.cmd' : ''}`)),
-    ['rebuild', '--release', `--target=${target}`, `--arch=${arch}`],
+    path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-latest' ? '.cmd' : ''}`)),
+    ['rebuild', '--release', `--target=${version}`, `--arch=${arch}`, `--python=${pythonPath}`],
     {
       cwd: GREENWORKS_ROOT,
     },
   )
 }
 
-const build = async (module: MbaVersion, arch: Archs): Promise<void> => {
-  const { version, abi, runtime } = module
-
-  console.log(`
-**************
-*
-*   v${version}@${abi} - ${runtime} - ${arch}
-*
-* ---`)
-
-  const assetLabel = `greenworks-${runtime}-v${abi}-${os.platform()}-${arch}.node`
-
-  switch (runtime) {
-    case 'electron':
-      await electronRebuild(version, arch)
-      break
-
-    case 'nw.js':
-      await nwjsRebuild(version, arch)
-      break
-
-    case 'node':
-      await nodeRebuild(version, arch)
-      break
-
-    default:
-      console.log('Unsupported runtime, use one of electron, node-webkit, node')
-      return
-  }
-
-  const filePath = getBinaryName(arch)
-
-  if (!fs.existsSync(filePath)) {
-    console.log(`File ${filePath} not found!`)
-    return
-  }
-
-  const dest = path.join(ARTIFACTS_ROOT, assetLabel)
-
-  fs.copy(filePath, dest)
-
-  console.log(`
-* ---
-*
-*   v${version}@${abi} - ${runtime} - ${arch}
-*
-**************
-
-
-`)
-}
-
-enum Archs {
-  x86 = 'ia32',
-  x64 = 'x64',
-}
-
-const run = async (/* release: Release */): Promise<void> => {
+const getVersions = async (): Promise<any> => {
   let everything = await abis.getAll()
 
-  const electronTargets = getUnique(
-    everything.filter((entry) => entry.runtime === 'electron'),
-    'abi',
-  )
-  const nwjsTargets = getUnique(
-    everything.filter((entry) => entry && entry.runtime === 'nw.js'),
-    'abi',
-  )
-  const nodeTargets = getUnique(
-    everything.filter((entry) => entry.runtime === 'node'),
-    'abi',
-  )
+  if (runtime === 'electron') {
+    everything = getUnique(
+      everything.filter((entry) => entry.runtime === 'electron'),
+      'abi',
+    )
+  }
 
-  everything = electronTargets.concat(nwjsTargets).concat(nodeTargets)
+  if (runtime === 'nw.js') {
+    everything = getUnique(
+      everything.filter((entry) => entry && entry.runtime === 'nw.js'),
+      'abi',
+    )
+  }
+  if (runtime === 'node') {
+    everything = getUnique(
+      everything.filter((entry) => entry.runtime === 'node'),
+      'abi',
+    )
+  }
 
+  const matrix: any[] = []
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i]
 
@@ -256,37 +227,80 @@ const run = async (/* release: Release */): Promise<void> => {
       continue
     }
 
-    console.log(`${version.runtime}@v${version.abi}: `)
-    console.log('Building...')
-
-    try {
-      await build(version, Archs.x64)
-
-      /* -- Filtering -- */
-      if (version.runtime === 'electron' && version.abi > 64 && os.platform() === 'linux') {
-        console.warn('Electron deprecated 32bits builds for version > 3.1 on linux. Skipping')
-      } else {
-        await build(version, Archs.x86)
-      }
-    } catch (e) {
-      console.log('travis_fold:start:error')
-      console.log('Unable to build for this version:', e.stdout)
-      console.log(e)
-      console.log('travis_fold:end:error')
+    if (
+      runtime === 'electron' && os === 'macos-latest' && arch === 'ia32'
+    ) {
+      // eslint-disable-next-line
+      continue
     }
 
-    console.log()
+    matrix.push({
+      runtime,
+      abi: version.abi,
+      version: version.version,
+      arch,
+      os,
+    })
   }
-};
-(async (): Promise<void> => {
+
+  return matrix
+}
+
+const build = async (matrix: any): Promise<void> => {
+  console.log(`v${matrix.version}@${matrix.abi} - ${matrix.runtime} - ${matrix.arch}`)
+
+  // @ts-ignore
+  const assetLabel = `greenworks-${matrix.runtime}-v${matrix.abi}-${association[matrix.os]}-${matrix.arch}.node`
+
+  switch (runtime) {
+    case 'electron':
+      await electronRebuild(matrix.version)
+      break
+
+    case 'nw.js':
+      await nwjsRebuild(matrix.version)
+      break
+
+    case 'node':
+      await nodeRebuild(matrix.version)
+      break
+
+    default:
+      console.log('Unsupported runtime, use one of electron, node-webkit, node')
+      return
+  }
+
+  const filePath = getBinaryName(matrix.arch)
+
+  console.log('filePath', filePath)
+
+  if (!fs.existsSync(filePath)) {
+    console.log(`File ${filePath} not found!`)
+    return
+  }
+
+  const dest = path.join(ARTIFACTS_ROOT, assetLabel)
+
+  console.log('dest', dest)
+
+  await fs.copy(filePath, dest)
+}
+
+// eslint-disable-next-line no-void
+void (async (): Promise<void> => {
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'bin')))
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'build')))
   await fs.ensureDir(ARTIFACTS_ROOT)
 
-  try {
-    await run()
-    console.log('Done')
-  } catch (e) {
-    console.log('Error during build', e)
+  const versions = await getVersions()
+
+  for (let index = 0; index < versions.length; index += 1) {
+    const version = versions[index]
+    try {
+      await build(version)
+      console.log('Done')
+    } catch (e) {
+      console.log('Error during build', e)
+    }
   }
 })()
