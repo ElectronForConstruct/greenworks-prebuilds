@@ -42,8 +42,8 @@ const args = mri(argv)
 
 const association = {
   'ubuntu-latest': 'linux',
-  'windows-latest': 'windows',
-  'macos-latest': 'macos',
+  'windows-latest': 'win32',
+  'macos-latest': 'darwin',
 }
 
 const {
