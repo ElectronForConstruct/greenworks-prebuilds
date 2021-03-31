@@ -106,6 +106,8 @@ jobs:
       - run: |
           cd greenworks
           npm install
+          npm install nan@2.14.2
+          cat package.json
 
       - run: npx tsc
       - name: "Build"
