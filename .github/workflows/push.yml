@@ -81,7 +81,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install gcc-multilib g++-multilib
 
-      - run: git clone https://github.com/Armaldio/greenworks greenworks
+      - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
       # Install dep
       - if: matrix.os == 'macos-latest'
