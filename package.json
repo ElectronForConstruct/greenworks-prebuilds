@@ -22,7 +22,7 @@
     "@electron/get": "^1.12.4",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "execa": "^5.0.0",
     "fs-extra": "^9.1.0",
     "got": "^11.8.2",
