@@ -114,7 +114,7 @@ jobs:
         shell: bash
         run: |
           ls "${{env.pythonLocation}}"
-          tree "${{env.pythonLocation}}"
+          ls "${{env.pythonLocation}}/bin"
 
       - run: npx tsc
       - name: "Build"
