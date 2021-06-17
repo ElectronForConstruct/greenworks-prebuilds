@@ -11,7 +11,6 @@ import path from 'path'
 import fs from 'fs-extra'
 import mri from 'mri'
 import ABIs from 'modules-abi'
-import slash from 'slash'
 // const electronDownload = import './electronDownloader')
 // const nwjsDownloader = import './nwjsDownloader')
 
@@ -19,6 +18,18 @@ import slash from 'slash'
 require('dotenv').config()
 // eslint-disable-next-line
 require('source-map-support').install()
+
+// https://www.npmjs.com/package/slash
+function slash(slashPath: string) {
+  const isExtendedLengthPath = /^\\\\\?\\/.test(slashPath)
+  const hasNonAscii = /[^\u0000-\u0080]+/.test(slashPath) // eslint-disable-line no-control-regex
+
+  if (isExtendedLengthPath || hasNonAscii) {
+    return slashPath
+  }
+
+  return slashPath.replace(/\\/g, '/')
+}
 
 const abis = new ABIs()
 
