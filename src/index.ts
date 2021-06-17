@@ -64,7 +64,11 @@ const {
   os, runtime, arch, python,
 }: Args = args as unknown as Args
 
+console.log('python', python)
+
 const pythonPath = slash(python)
+
+console.log('pythonPath', pythonPath)
 
 function getBinaryName(_arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-'
