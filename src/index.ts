@@ -183,7 +183,7 @@ const electronRebuild = async (version: string): Promise<void> => {
       `--target=${version}`,
       `--arch=${arch}`,
       '--dist-url=https://electronjs.org/headers',
-      `--python=${pythonPath}`,
+      `--python="${pythonPath}"`,
     ],
     {
       cwd: GREENWORKS_ROOT,
@@ -201,7 +201,7 @@ const nodeRebuild = async (version: string): Promise<void> => {
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
-      `--python=${pythonPath}`,
+      `--python="${pythonPath}"`,
       // '--build_v8_with_gn=false'
     ],
     {
@@ -218,7 +218,7 @@ const nwjsRebuild = async (version: string): Promise<void> => {
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
-      `--python=${pythonPath}`,
+      `--python="${pythonPath}"`,
     ],
     {
       cwd: GREENWORKS_ROOT,
