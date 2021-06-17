@@ -115,7 +115,11 @@ jobs:
         # env:
         #   CXX: g++-10
         #   CC: gcc-10
-        run: node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python="${{env.pythonLocation}}/bin/python"
+        #  --python="${{env.pythonLocation}}/bin/python
+        run: |
+          ls ${{env.pythonLocation}}
+          tree ${{env.pythonLocation}}
+          node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}"
 
       - name: get-npm-version
         id: package-version
