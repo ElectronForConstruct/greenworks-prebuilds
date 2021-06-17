@@ -4,10 +4,5 @@ interface MbaVersion {
   runtime: string;
 }
 
-declare module 'modules-abi' {
-  function getAll(): Promise<MbaVersion[]>;
-}
-
-
 declare module 'unzipper'
 declare module 'tar'

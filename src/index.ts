@@ -10,7 +10,7 @@ import execa from 'execa'
 import path from 'path'
 import fs from 'fs-extra'
 import mri from 'mri'
-import abis from 'modules-abi'
+import ABIs from 'modules-abi'
 // const electronDownload = import './electronDownloader')
 // const nwjsDownloader = import './nwjsDownloader')
 
@@ -18,6 +18,8 @@ import abis from 'modules-abi'
 require('dotenv').config()
 // eslint-disable-next-line
 require('source-map-support').install()
+
+const abis = new ABIs()
 
 const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
   .map((e) => e[key])
@@ -199,6 +201,7 @@ const getVersions = async (): Promise<any> => {
   let everything = await abis.getAll()
 
   if (runtime === 'electron') {
+    // @ts-ignore
     everything = getUnique(
       everything.filter((entry) => entry.runtime === 'electron'),
       'abi',
@@ -206,12 +209,14 @@ const getVersions = async (): Promise<any> => {
   }
 
   if (runtime === 'nw.js') {
+    // @ts-ignore
     everything = getUnique(
       everything.filter((entry) => entry && entry.runtime === 'nw.js'),
       'abi',
     )
   }
   if (runtime === 'node') {
+    // @ts-ignore
     everything = getUnique(
       everything.filter((entry) => entry.runtime === 'node'),
       'abi',
