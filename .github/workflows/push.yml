@@ -109,6 +109,13 @@ jobs:
           npm install nan@2.14.2
           cat package.json
 
+      - run: ls
+      - name: "ls"
+        shell: bash
+        run: |
+          ls "${{env.pythonLocation}}"
+          tree "${{env.pythonLocation}}"
+
       - run: npx tsc
       - name: "Build"
         shell: bash
