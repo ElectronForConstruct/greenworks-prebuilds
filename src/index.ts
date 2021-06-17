@@ -11,6 +11,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import mri from 'mri'
 import ABIs from 'modules-abi'
+import slash from 'slash'
 // const electronDownload = import './electronDownloader')
 // const nwjsDownloader = import './nwjsDownloader')
 
@@ -52,7 +53,7 @@ const {
   os, runtime, arch, python,
 }: Args = args as unknown as Args
 
-const pythonPath = python
+const pythonPath = slash(python)
 
 function getBinaryName(_arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-'
