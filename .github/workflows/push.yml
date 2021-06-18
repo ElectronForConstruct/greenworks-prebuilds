@@ -119,10 +119,13 @@ jobs:
 
       - name: "Build"
         shell: bash
+        env:
+          PYTHON: ${{ secrets.GITHUB_TOKEN }}
+        #  --python="${{env.pythonLocation}}"
         run: |
           npm config set python python2.7
           npm config set msvs_version 2015
-          node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python="${{env.pythonLocation}}"
+          node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
 
       - name: get-npm-version
         id: package-version
