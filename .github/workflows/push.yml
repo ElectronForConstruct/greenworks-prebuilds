@@ -114,7 +114,6 @@ jobs:
         shell: bash
         run: |
           ls "${{env.pythonLocation}}"
-          ls "${{env.pythonLocation}}/bin"
 
       - run: npx tsc
 
@@ -123,7 +122,7 @@ jobs:
         run: |
           npm config set python python2.7
           npm config set msvs_version 2015
-          node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python="${{env.pythonLocation}}/bin/python"
+          node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python="${{env.pythonLocation}}"
 
       - name: get-npm-version
         id: package-version
