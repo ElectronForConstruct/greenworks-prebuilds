@@ -117,13 +117,13 @@ jobs:
           ls "${{env.pythonLocation}}/bin"
 
       - run: npx tsc
+
       - name: "Build"
         shell: bash
-        # env:
-        #   CXX: g++-10
-        #   CC: gcc-10
-        #  --python="${{env.pythonLocation}}/bin/python"
-        run: node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python="${{env.pythonLocation}}/bin/python"
+        run: |
+          npm config set python python2.7
+          npm config set msvs_version 2015
+          node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}} --python="${{env.pythonLocation}}/bin/python"
 
       - name: get-npm-version
         id: package-version
