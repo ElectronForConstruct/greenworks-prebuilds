@@ -30,7 +30,7 @@
     "mri": "^1.1.6",
     "node-gyp": "^7.1.2",
     "nw-gyp": "^3.6.5",
-    "tar": "^6.1.0",
+    "tar": "^6.1.8",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
