@@ -42,7 +42,7 @@ const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] 
   .map((e) => versions[e])
 
 interface Args {
-  os: 'macos-latest' | 'ubuntu-latest' | 'windows-latest';
+  os: 'macos-latest' | 'ubuntu-latest' | 'windows-2022';
   runtime: 'nw.js' | 'electron' | 'node';
   arch: 'ia32' | 'x64';
   python: string;
@@ -56,7 +56,7 @@ const args = mri(argv)
 
 const association = {
   'ubuntu-latest': 'linux',
-  'windows-latest': 'win32',
+  'windows-2022': 'win32',
   'macos-latest': 'darwin',
 }
 
@@ -74,7 +74,7 @@ function getBinaryName(_arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-'
 
   switch (os) {
-    case 'windows-latest':
+    case 'windows-2022':
       name += 'win'
       break
     case 'macos-latest':
@@ -175,7 +175,7 @@ function getBinaryName(_arch: 'ia32' | 'x64'): string {
 const electronRebuild = async (version: string): Promise<void> => {
   const { stderr, stdout } = await execa(
     path.resolve(
-      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
+      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-2022' ? '.cmd' : ''}`),
     ),
     [
       'rebuild',
@@ -194,7 +194,7 @@ const electronRebuild = async (version: string): Promise<void> => {
 const nodeRebuild = async (version: string): Promise<void> => {
   await execa(
     path.resolve(
-      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-latest' ? '.cmd' : ''}`),
+      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-2022' ? '.cmd' : ''}`),
     ),
     [
       'rebuild',
@@ -212,7 +212,7 @@ const nodeRebuild = async (version: string): Promise<void> => {
 
 const nwjsRebuild = async (version: string): Promise<void> => {
   await execa(
-    path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-latest' ? '.cmd' : ''}`)),
+    path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-2022' ? '.cmd' : ''}`)),
     [
       'rebuild',
       '--release',
@@ -281,8 +281,6 @@ const getVersions = async (): Promise<any> => {
 }
 
 const build = async (matrix: any): Promise<void> => {
-  console.log(`v${matrix.version}@${matrix.abi} - ${matrix.runtime} - ${matrix.arch}`)
-
   // @ts-ignore
   const assetLabel = `greenworks-${matrix.runtime}-v${matrix.abi}-${association[matrix.os]}-${matrix.arch}.node`
 
@@ -330,11 +328,16 @@ void (async (): Promise<void> => {
 
   for (let index = 0; index < versions.length; index += 1) {
     const version = versions[index]
+
+    const msg = `v${version.version}@${version.abi} - ${version.runtime} - ${version.arch}`
+
+    console.log(`::group::${msg}`)
     try {
       await build(version)
       console.log('Done')
     } catch (e) {
       console.log('Error during build', e)
     }
+    console.log('::endgroup::')
   }
 })()
