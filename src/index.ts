@@ -66,7 +66,7 @@ const {
 
 console.log('python', python)
 
-const pythonPath = slash(python)
+const pythonPath = python ? slash(python) : undefined
 
 console.log('pythonPath', pythonPath)
 
