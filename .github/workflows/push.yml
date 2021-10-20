@@ -100,7 +100,7 @@ jobs:
 
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: yarn install
-      # - run: npm config set python python2.7
+      - run: yarn config set python python2.7
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
         if: matrix.os == 'windows-latest'
@@ -124,9 +124,9 @@ jobs:
           # PYTHON: ${{ secrets.GITHUB_TOKEN }}
         #  --python="${{env.pythonLocation}}"
 
-        # npm config set python python2.7
-        # npm config set msvs_version 2017
         run: |
+          yarn config set python python2.7
+          yarn config set msvs_version 2015
           node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
 
       - name: get-npm-version
