@@ -211,18 +211,22 @@ const nodeRebuild = async (version: string): Promise<void> => {
 }
 
 const nwjsRebuild = async (version: string): Promise<void> => {
+  const nwgypArgs = [
+    'rebuild',
+    '--release',
+    `--target=${version}`,
+    `--arch=${arch}`,
+    '--verbose',
+    '--thin=yes',
+  ]
+  if (os.includes('windows')) {
+    nwgypArgs.push('--make=g++')
+  }
+
+  // `--python="${pythonPath}"`,
   await execa(
     path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-2016' ? '.cmd' : ''}`)),
-    [
-      'rebuild',
-      '--release',
-      `--target=${version}`,
-      `--arch=${arch}`,
-      '--silly',
-      '--thin=yes',
-      '--make=g++',
-      // `--python="${pythonPath}"`,
-    ],
+    nwgypArgs,
     {
       cwd: GREENWORKS_ROOT,
     },
