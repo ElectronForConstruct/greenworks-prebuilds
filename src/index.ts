@@ -42,7 +42,7 @@ const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] 
   .map((e) => versions[e])
 
 interface Args {
-  os: 'macos-latest' | 'ubuntu-latest' | 'windows-2022';
+  os: 'macos-latest' | 'ubuntu-latest' | 'windows-2016';
   runtime: 'nw.js' | 'electron' | 'node';
   arch: 'ia32' | 'x64';
   python: string;
@@ -56,7 +56,7 @@ const args = mri(argv)
 
 const association = {
   'ubuntu-latest': 'linux',
-  'windows-2022': 'win32',
+  'windows-2016': 'win32',
   'macos-latest': 'darwin',
 }
 
@@ -74,7 +74,7 @@ function getBinaryName(_arch: 'ia32' | 'x64'): string {
   let name = 'greenworks-'
 
   switch (os) {
-    case 'windows-2022':
+    case 'windows-2016':
       name += 'win'
       break
     case 'macos-latest':
@@ -175,7 +175,7 @@ function getBinaryName(_arch: 'ia32' | 'x64'): string {
 const electronRebuild = async (version: string): Promise<void> => {
   const { stderr, stdout } = await execa(
     path.resolve(
-      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-2022' ? '.cmd' : ''}`),
+      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-2016' ? '.cmd' : ''}`),
     ),
     [
       'rebuild',
@@ -194,7 +194,7 @@ const electronRebuild = async (version: string): Promise<void> => {
 const nodeRebuild = async (version: string): Promise<void> => {
   await execa(
     path.resolve(
-      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-2022' ? '.cmd' : ''}`),
+      path.join(__dirname, '..', 'node_modules', '.bin', `node-gyp${os === 'windows-2016' ? '.cmd' : ''}`),
     ),
     [
       'rebuild',
@@ -212,12 +212,15 @@ const nodeRebuild = async (version: string): Promise<void> => {
 
 const nwjsRebuild = async (version: string): Promise<void> => {
   await execa(
-    path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-2022' ? '.cmd' : ''}`)),
+    path.resolve(path.join(__dirname, '..', 'node_modules', '.bin', `nw-gyp${os === 'windows-2016' ? '.cmd' : ''}`)),
     [
       'rebuild',
       '--release',
       `--target=${version}`,
       `--arch=${arch}`,
+      '--silly',
+      '--thin=yes',
+      '--make=g++',
       // `--python="${pythonPath}"`,
     ],
     {
