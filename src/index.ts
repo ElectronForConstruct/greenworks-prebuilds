@@ -216,7 +216,7 @@ const nwjsRebuild = async (version: string): Promise<void> => {
     '--release',
     `--target=${version}`,
     `--arch=${arch}`,
-    '--verbose',
+    // '--verbose',
   ]
   if (os.includes('windows')) {
     // nwgypArgs.push('--make=g++')
