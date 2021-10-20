@@ -217,10 +217,9 @@ const nwjsRebuild = async (version: string): Promise<void> => {
     `--target=${version}`,
     `--arch=${arch}`,
     '--verbose',
-    '--thin=yes',
   ]
   if (os.includes('windows')) {
-    nwgypArgs.push('--make=g++')
+    // nwgypArgs.push('--make=g++')
   }
 
   // `--python="${pythonPath}"`,
