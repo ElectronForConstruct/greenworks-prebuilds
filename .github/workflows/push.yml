@@ -15,9 +15,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Checkout Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
-          node-version: "14.16.0"
+          node-version: "16"
+          cache: 'yarn'
 
       - run: npm install
       - run: npx tsc
@@ -72,9 +73,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Checkout Node
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v2
         with:
-          node-version: "14.16.0"
+          node-version: "16"
+          cache: 'yarn'
 
       - if: matrix.os == 'ubuntu-latest'
         run: |
@@ -88,8 +90,8 @@ jobs:
         run: brew install p7zip
 
       - uses: actions/setup-python@v2
-        with:
-          python-version: 2.7.18
+        # with:
+          # python-version: 2.7.18
 
       - run: gcc -v
 
@@ -98,7 +100,7 @@ jobs:
 
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: npm install
-      - run: npm config set python python2.7
+      # - run: npm config set python python2.7
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
         if: matrix.os == 'windows-latest'
@@ -119,12 +121,13 @@ jobs:
 
       - name: "Build"
         shell: bash
-        env:
-          PYTHON: ${{ secrets.GITHUB_TOKEN }}
+        # env:
+          # PYTHON: ${{ secrets.GITHUB_TOKEN }}
         #  --python="${{env.pythonLocation}}"
+
+        # npm config set python python2.7
         run: |
-          npm config set python python2.7
-          npm config set msvs_version 2015
+          npm config set msvs_version 2017
           node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
 
       - name: get-npm-version
