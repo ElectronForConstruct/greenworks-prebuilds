@@ -106,8 +106,6 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.3
         if: matrix.os == 'windows-2016'
-        with:
-          vs-version: '[14.0,14.0]'
 
       - run: |
           cd greenworks
