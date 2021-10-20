@@ -17,7 +17,7 @@ jobs:
       - name: Checkout Node
         uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: "14"
           cache: 'yarn'
 
       - run: yarn install
@@ -75,7 +75,7 @@ jobs:
       - name: Checkout Node
         uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: "14"
           cache: 'yarn'
 
       - if: matrix.os == 'ubuntu-latest'
@@ -90,8 +90,8 @@ jobs:
         run: brew install p7zip
 
       - uses: actions/setup-python@v2
-        # with:
-          # python-version: 2.7.18
+        with:
+          python-version: 2.7.18
 
       - run: gcc -v
 
