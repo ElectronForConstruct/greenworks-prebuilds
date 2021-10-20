@@ -104,7 +104,8 @@ jobs:
       - run: yarn config set python python2.7
 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.3
+        run: yarn global add --production windows-build-tools --vs2015
+        # uses: microsoft/setup-msbuild@v1.0.3
         if: matrix.os == 'windows-2016'
 
       - run: |
