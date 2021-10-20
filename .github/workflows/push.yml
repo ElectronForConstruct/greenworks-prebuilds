@@ -20,7 +20,7 @@ jobs:
           node-version: "16"
           cache: 'yarn'
 
-      - run: npm install
+      - run: yarn install
       - run: npx tsc
       - run: node ./dist/makeMatrix.js
       - id: set-matrix
@@ -99,7 +99,7 @@ jobs:
       - run: 7z x sdk.zip -y -p${{ secrets.ZIP_PASSWORD }}
 
       - run: mv sdk greenworks/deps/steamworks_sdk
-      - run: npm install
+      - run: yarn install
       # - run: npm config set python python2.7
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
@@ -107,8 +107,7 @@ jobs:
 
       - run: |
           cd greenworks
-          npm install
-          npm install nan@2.14.2
+          yarn install
           cat package.json
 
       - run: ls
@@ -126,8 +125,8 @@ jobs:
         #  --python="${{env.pythonLocation}}"
 
         # npm config set python python2.7
+        # npm config set msvs_version 2017
         run: |
-          npm config set msvs_version 2017
           node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
 
       - name: get-npm-version
