@@ -2,7 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 //
-const Archs = ['ia32', 'x64']
+const Archs = ['ia32', 'x64', 'arm64']
 
 const Runtimes = ['nw.js', 'electron', 'node']
 
