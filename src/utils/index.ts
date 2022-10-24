@@ -1,7 +1,7 @@
 import path from 'path'
 import unzipper from 'unzipper'
 import tar from 'tar'
-import execa from 'execa'
+import { execa } from 'execa'
 import fs from 'fs-extra'
 import os from 'os'
 
@@ -46,7 +46,7 @@ const execTemplate = async (
   binary: string,
   libPath: string,
   templatePath: string,
-  flags = [],
+  flags: string[] = [],
 ): Promise<any> => {
   console.log('Content of binary path parent directory')
   //   if (os.platform() === 'darwin') {
@@ -57,16 +57,16 @@ const execTemplate = async (
 
   if (!fs.existsSync(libPath)) {
     console.log(`Creating ${libPath}`)
-    fs.ensureDirSync(libPath)
+    await fs.ensureDir(libPath)
   }
   console.log(`Creating ${libPath} to ${templatePath}`)
-  fs.copy(libPath, templatePath, {
+  await fs.copy(libPath, templatePath, {
     recursive: true,
   })
 
   console.log(`Chmod ${binary}`)
-  fs.chmodSync(binary, '755')
-  console.log(`Executing ${binary} [${templatePath}, ${flags}]`)
+  await fs.chmod(binary, '755')
+  console.log(`Executing ${binary} [${templatePath}, ${flags.join(', ')}]`)
   return execa(binary, [templatePath, ...flags])
 }
 

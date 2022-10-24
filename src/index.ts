@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable no-await-in-loop */
-import execa from 'execa'
+import { execa } from 'execa'
 import path from 'path'
 import fs from 'fs-extra'
 import mri from 'mri'
