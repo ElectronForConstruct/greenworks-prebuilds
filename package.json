@@ -2,6 +2,7 @@
   "name": "greenworks-prebuilds",
   "version": "0.7.0",
   "description": "Prebuild binaries for greenworks",
+  "type": "module",
   "scripts": {
     "start": "node dist/index.js",
     "zip-sdk": "node scripts/zipSdk.js",

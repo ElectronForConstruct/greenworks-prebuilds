@@ -7,17 +7,26 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable no-await-in-loop */
 import { execa } from 'execa'
-import path from 'path'
+import path, { dirname } from 'path'
 import fs from 'fs-extra'
 import mri from 'mri'
-import ABIs from 'modules-abi'
+import ABIsModule from 'modules-abi'
+
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+const ABIs = ABIsModule.default
+
+console.log('ABIs', ABIs)
 // const electronDownload = import './electronDownloader')
 // const nwjsDownloader = import './nwjsDownloader')
 
 // eslint-disable-next-line
-require('dotenv').config()
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config()
 // eslint-disable-next-line
-require('source-map-support').install()
+import 'source-map-support/register.js'
 
 // https://www.npmjs.com/package/slash
 function slash(slashPath: string) {
