@@ -106,7 +106,7 @@ jobs:
       - name: Add msbuild to PATH
         run: yarn global add --production windows-build-tools --vs2015
         # uses: microsoft/setup-msbuild@v1.0.3
-        if: matrix.os == 'windows-2016'
+        if: matrix.os == 'windows-latest'
 
       - run: |
           cd greenworks
