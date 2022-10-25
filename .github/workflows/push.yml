@@ -119,7 +119,7 @@ jobs:
       - run: |
           cd greenworks
           yarn install
-          yarn install nan@2.17
+          yarn add nan@2.17
           cat package.json
 
       - run: ls
