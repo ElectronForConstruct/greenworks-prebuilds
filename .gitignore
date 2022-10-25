@@ -11,7 +11,7 @@ nwjs-sdk*
 .env
 dist
 artifacts/
-
 *.bak
-
 matrix.json
+.python-version
+versions.json

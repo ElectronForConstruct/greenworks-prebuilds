@@ -17,17 +17,18 @@ jobs:
       - name: Checkout Node
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "16"
           cache: 'yarn'
 
       - run: yarn install
       - run: npx tsc
       - run: node ./dist/makeMatrix.js
       - id: set-matrix
+        # echo "::set-output name=matrix::${JSON//'%'/'%25'}"
         run: |
           JSON=$(cat ./matrix.json)
           echo $JSON
-          echo "::set-output name=matrix::${JSON//'%'/'%25'}"
+          echo "matrix=${JSON//'%'/'%25'}" >> $GITHUB_OUTPUT
 
   make_release:
     name: Generate Release
@@ -75,23 +76,36 @@ jobs:
       - name: Checkout Node
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "16"
           cache: 'yarn'
 
+        # linux
       - if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install gcc-multilib g++-multilib
 
-      - run: git clone https://github.com/greenheartgames/greenworks greenworks
-
-      # Install dep
+        # mac
       - if: matrix.os == 'macos-latest'
         run: brew install p7zip
 
-      - uses: actions/setup-python@v2
+        # windows
+      - name: Add msbuild to PATH
+        run: yarn global add --production windows-build-tools --vs2017
+        # uses: microsoft/setup-msbuild@v1.0.3
+        if: matrix.os == 'windows-latest'
+
+        # nw.js
+      - if: matrix.runtime == 'nw.js'
+        uses: actions/setup-python@v2
         with:
           python-version: 2.7.18
+      - if: matrix.runtime == 'nw.js'
+        run: |
+          yarn config set python python2.7
+          yarn config set msvs_version 2017
+
+      - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
       - run: gcc -v
       - run: g++ -v
@@ -101,35 +115,25 @@ jobs:
 
       - run: mv sdk greenworks/deps/steamworks_sdk
       - run: yarn install
-      - run: yarn config set python python2.7
-
-      - name: Add msbuild to PATH
-        run: yarn global add --production windows-build-tools --vs2015
-        # uses: microsoft/setup-msbuild@v1.0.3
-        if: matrix.os == 'windows-latest'
 
       - run: |
           cd greenworks
           yarn install
+          yarn install nan@2.17
           cat package.json
 
       - run: ls
+
       - name: "ls"
         shell: bash
-        run: |
+        run:
           ls "${{env.pythonLocation}}"
 
       - run: npx tsc
 
       - name: "Build"
         shell: bash
-        # env:
-          # PYTHON: ${{ secrets.GITHUB_TOKEN }}
-        #  --python="${{env.pythonLocation}}"
-
         run: |
-          yarn config set python python2.7
-          yarn config set msvs_version 2015
           node dist/index.js --os=${{matrix.os}} --runtime=${{matrix.runtime}} --arch=${{matrix.arch}}
 
       - name: get-npm-version

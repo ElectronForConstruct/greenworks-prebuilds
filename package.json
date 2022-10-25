@@ -7,7 +7,11 @@
     "start": "node dist/index.js",
     "zip-sdk": "node scripts/zipSdk.js",
     "watch": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "yarn run dev:node",
+    "dev:node": "node dist/index.js --os=ubuntu-latest --runtime=node --arch=x64",
+    "dev:nwjs": "node dist/index.js --os=ubuntu-latest --runtime=nw.js --arch=x64",
+    "dev:electron": "node dist/index.js --os=ubuntu-latest --runtime=electron --arch=x64"
   },
   "licenses": [
     {
@@ -29,6 +33,7 @@
     "got": "^12.5.2",
     "modules-abi": "^0.4.0-0",
     "mri": "^1.2.0",
+    "node-abi": "^3.28.0",
     "node-gyp": "^9.3.0",
     "nw-gyp": "^3.6.6",
     "tar": "^6.1.11",

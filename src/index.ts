@@ -11,11 +11,13 @@ import path, { dirname } from 'path'
 import fs from 'fs-extra'
 import mri from 'mri'
 import ABIsModule from 'modules-abi'
+import dns from 'dns'
 
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+// @ts-expect-error
 const ABIs = ABIsModule.default
 
 console.log('ABIs', ABIs)
@@ -23,7 +25,7 @@ console.log('ABIs', ABIs)
 // const nwjsDownloader = import './nwjsDownloader')
 
 // eslint-disable-next-line
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import * as dotenv from 'dotenv'
 dotenv.config()
 // eslint-disable-next-line
 import 'source-map-support/register.js'
@@ -37,7 +39,7 @@ function slash(slashPath: string) {
     return slashPath
   }
 
-  return slashPath.replace(/\\/g, '/')
+  return slashPath.replace(/\\/g, '/');
 }
 
 const abis = new ABIs()
@@ -45,9 +47,9 @@ const abis = new ABIs()
 const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
   .map((e) => e[key])
   .map((e, i, final) => final.indexOf(e) === i && i)
-  // @ts-ignore
+  // @ts-expect-error
   .filter((e) => versions[e])
-  // @ts-ignore
+  // @ts-expect-error
   .map((e) => versions[e])
 
 interface Args {
@@ -242,27 +244,43 @@ const nwjsRebuild = async (version: string): Promise<void> => {
 }
 
 const getVersions = async (): Promise<any> => {
-  let everything = await abis.getAll()
+  /* --- cache --- */
+  const isOnline = await checkInternet()
+
+  let everything: Record<string, any> = {}
+  if (isOnline) {
+    console.log("is online")
+    everything = await abis.getAll()
+    await fs.writeFile(versionFile, JSON.stringify(everything))
+  } else {
+    console.log("is offline")
+    const fileExist = await fs.pathExists(versionFile)
+
+    if (fileExist) {
+      const file = await fs.readFile(versionFile, 'utf8')
+      everything = JSON.parse(file)
+    } else {
+      throw new Error('Unable to find offline versions')
+    }
+  }
+  /* --- cache --- */
 
   if (runtime === 'electron') {
-    // @ts-ignore
     everything = getUnique(
-      everything.filter((entry) => entry.runtime === 'electron'),
+      everything.filter((entry: any) => entry.runtime === 'electron'),
       'abi',
     )
   }
 
   if (runtime === 'nw.js') {
-    // @ts-ignore
     everything = getUnique(
-      everything.filter((entry) => entry && entry.runtime === 'nw.js'),
+      everything.filter((entry: any) => entry && entry.runtime === 'nw.js'),
       'abi',
     )
   }
   if (runtime === 'node') {
-    // @ts-ignore
     everything = getUnique(
-      everything.filter((entry) => entry.runtime === 'node'),
+      everything.filter((entry: any) => entry.runtime === 'node'),
       'abi',
     )
   }
@@ -296,7 +314,7 @@ const getVersions = async (): Promise<any> => {
 }
 
 const build = async (matrix: any): Promise<void> => {
-  // @ts-ignore
+  // @ts-expect-error
   const assetLabel = `greenworks-${matrix.runtime}-v${matrix.abi}-${association[matrix.os]}-${matrix.arch}.node`
 
   switch (runtime) {
@@ -333,6 +351,20 @@ const build = async (matrix: any): Promise<void> => {
   await fs.copy(filePath, dest)
 }
 
+const checkInternet = () => {
+  return new Promise((resolve, reject) => {
+    dns.lookup('google.com', function(err) {
+      if (err && (err.code === "ENOTFOUND" || err.code === "EAI_AGAIN")) {
+        return resolve(false);
+      } else {
+        return resolve(true);
+      }
+    })
+  })
+};
+
+const versionFile = './versions.json'
+
 // eslint-disable-next-line no-void
 void (async (): Promise<void> => {
   await fs.remove(path.resolve(path.join(GREENWORKS_ROOT, 'bin')))
@@ -343,6 +375,8 @@ void (async (): Promise<void> => {
 
   for (let index = 0; index < versions.length; index += 1) {
     const version = versions[index]
+
+    console.log('version', version)
 
     const msg = `v${version.version}@${version.abi} - ${version.runtime} - ${version.arch}`
 
