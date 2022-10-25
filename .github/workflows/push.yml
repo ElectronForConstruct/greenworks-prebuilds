@@ -91,7 +91,7 @@ jobs:
 
         # windows
       - name: Add msbuild to PATH
-        run: yarn global add --production windows-build-tools --vs2017
+        run: yarn global add --production windows-build-tools --vs2022
         # uses: microsoft/setup-msbuild@v1.0.3
         if: matrix.os == 'windows-latest'
 
@@ -103,7 +103,7 @@ jobs:
       - if: matrix.runtime == 'nw.js'
         run: |
           yarn config set python python2.7
-          yarn config set msvs_version 2017
+          yarn config set msvs_version 2022
 
       - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
@@ -118,8 +118,8 @@ jobs:
 
       - run: |
           cd greenworks
+          git apply ../diff.patch
           yarn install
-          yarn add nan@2.17
           cat package.json
 
       - run: ls

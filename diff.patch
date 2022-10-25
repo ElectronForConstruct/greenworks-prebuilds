@@ -1,0 +1,41 @@
+diff --git a/binding.gyp b/binding.gyp
+index cb24382..dc9eeef 100644
+--- a/binding.gyp
++++ b/binding.gyp
+@@ -132,7 +132,8 @@
+           }],
+         ],
+       },
+-      'cflags': [ '-std=c++14' ],
++      'cflags': [ '-std=c++17' ],
++      'cflags_cc': [ '-std=c++17' ],
+       'conditions': [
+         ['OS== "linux"',
+           {
+@@ -164,11 +165,12 @@
+         }],
+       ],
+       'xcode_settings': {
++        'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
+         'WARNING_CFLAGS':  [
+           '-Wno-deprecated-declarations',
+         ],
+         'OTHER_CPLUSPLUSFLAGS' : [
+-          '-std=c++14',
++          '-std=c++17',
+           '-stdlib=libc++'
+         ],
+         'OTHER_LDFLAGS': [
+diff --git a/package.json b/package.json
+index f23d17d..a1e9f5a 100644
+--- a/package.json
++++ b/package.json
+@@ -13,7 +13,7 @@
+     "compdb": "node-gyp configure -- -f ninja && ninja -C build/Release -t compdb cxx > compile_commands.json"
+   },
+   "dependencies": {
+-    "nan": "^2.14.0"
++    "nan": "2.17"
+   },
+   "devDependencies": {
+     "mocha": "1.21.4"
