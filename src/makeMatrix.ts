@@ -1,6 +1,9 @@
 /* eslint-disable no-await-in-loop */
 import fs from 'fs'
-import path from 'path'
+import path, { dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 //
 const Archs = ['ia32', 'x64']
 
