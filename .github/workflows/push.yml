@@ -12,10 +12,10 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16"
           cache: 'yarn'
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: get-npm-version
         id: package-version
@@ -71,10 +71,10 @@ jobs:
       matrix: ${{fromJson(needs.make_matrix.outputs.matrix)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16"
           cache: 'yarn'
@@ -97,7 +97,7 @@ jobs:
 
         # nw.js
       - if: matrix.runtime == 'nw.js'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 2.7.18
       - if: matrix.runtime == 'nw.js'
@@ -124,10 +124,10 @@ jobs:
 
       - run: ls
 
-      - name: "ls"
-        shell: bash
-        run:
-          ls "${{env.pythonLocation}}"
+      # - name: "ls"
+      #   shell: bash
+      #   run:
+      #     ls "${{env.pythonLocation}}"
 
       - run: npx tsc
 
