@@ -25,32 +25,32 @@
   },
   "dependencies": {
     "@electron/get": "^2.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.40.1",
-    "@typescript-eslint/parser": "^5.40.1",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
     "dotenv": "^16.0.3",
     "execa": "^6.1.0",
     "fs-extra": "^10.1.0",
-    "got": "^12.5.2",
-    "modules-abi": "^0.4.0-0",
+    "got": "^12.5.3",
+    "modules-abi": "^1.1.0",
     "mri": "^1.2.0",
     "node-abi": "^3.28.0",
     "node-gyp": "^9.3.0",
     "nw-gyp": "^3.6.6",
-    "tar": "^6.1.11",
+    "tar": "^6.1.12",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
-    "@types/eslint": "^8.4.7",
+    "@types/eslint": "^8.4.10",
     "@types/fs-extra": "^9.0.13",
     "@types/mri": "^1.1.1",
-    "@types/node": "^18.11.4",
+    "@types/node": "^18.11.9",
     "@types/source-map-support": "^0.5.6",
     "@types/tar": "^6.1.3",
     "@types/unzipper": "^0.10.5",
-    "eslint": "^8.26.0",
+    "eslint": "^8.27.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "source-map-support": "^0.5.21",
-    "typescript": "^4.8.4"
+    "typescript": "^4.9.3"
   }
 }

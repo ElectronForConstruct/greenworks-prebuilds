@@ -24,7 +24,6 @@ jobs:
       - run: npx tsc
       - run: node ./dist/makeMatrix.js
       - id: set-matrix
-        # echo "::set-output name=matrix::${JSON//'%'/'%25'}"
         run: |
           JSON=$(cat ./matrix.json)
           echo $JSON
@@ -45,7 +44,7 @@ jobs:
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
       - id: checkTag
-        run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.version }}" && echo "::set-output name=tagged::1" || echo "::set-output name=tagged::0"
+        run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.version }}" && echo "tagged=1" >> $GITHUB_OUTPUT || echo "tagged=0" >> $GITHUB_OUTPUT
 
       - run: echo ${{ steps.checkTag.outputs.tagged }}
 

@@ -10,17 +10,13 @@ import { execa } from 'execa'
 import path, { dirname } from 'path'
 import fs from 'fs-extra'
 import mri from 'mri'
-import ABIsModule from 'modules-abi'
+import { getAll } from 'modules-abi'
 import dns from 'dns'
 
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-// @ts-expect-error
-const ABIs = ABIsModule.default
-
-console.log('ABIs', ABIs)
 // const electronDownload = import './electronDownloader')
 // const nwjsDownloader = import './nwjsDownloader')
 
@@ -41,8 +37,6 @@ function slash(slashPath: string) {
 
   return slashPath.replace(/\\/g, '/');
 }
-
-const abis = new ABIs()
 
 const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] => versions
   .map((e) => e[key])
@@ -250,7 +244,7 @@ const getVersions = async (): Promise<any> => {
   let everything: Record<string, any> = {}
   if (isOnline) {
     console.log("is online")
-    everything = await abis.getAll()
+    everything = await getAll()
     await fs.writeFile(versionFile, JSON.stringify(everything))
   } else {
     console.log("is offline")
