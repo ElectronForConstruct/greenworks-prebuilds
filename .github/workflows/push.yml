@@ -39,13 +39,13 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        uses: tyankatsu0105/read-package-version-actions@v1
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: Fetch tags
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
       - id: checkTag
-        run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.version }}" && echo "tagged=1" >> $GITHUB_OUTPUT || echo "tagged=0" >> $GITHUB_OUTPUT
+        run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ steps.package-version.outputs.current-version }}" && echo "tagged=1" >> $GITHUB_OUTPUT || echo "tagged=0" >> $GITHUB_OUTPUT
 
       - run: echo ${{ steps.checkTag.outputs.tagged }}
 
