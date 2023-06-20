@@ -97,9 +97,12 @@ jobs:
 
         # nw.js
       - if: matrix.runtime == 'nw.js'
-        uses: actions/setup-python@v4
+        uses: MatteoH2O1999/setup-python@v1
         with:
           python-version: 2.7.18
+          allow-build: info
+          cache-build: true
+          cache: pip
       - if: matrix.runtime == 'nw.js'
         run: |
           yarn config set python python2.7
