@@ -96,13 +96,17 @@ jobs:
         if: matrix.os == 'windows-latest'
 
         # nw.js
+      # - if: matrix.runtime == 'nw.js'
+      #   uses: MatteoH2O1999/setup-python@v1
+      #   with:
+      #     python-version: 2.7.18
+      #     allow-build: info
+      #     cache-build: true
+      #     cache: pip
       - if: matrix.runtime == 'nw.js'
-        uses: MatteoH2O1999/setup-python@v1
+        uses: actions/setup-python@v4
         with:
-          python-version: 2.7.18
-          allow-build: info
-          cache-build: true
-          cache: pip
+          python-version: 'pypy2.7-v7.3.12'
       - if: matrix.runtime == 'nw.js'
         run: |
           yarn config set python python2.7
@@ -141,14 +145,14 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        uses: tyankatsu0105/read-package-version-actions@v1
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GH_TOKEN }}
           file: ./artifacts/*
-          tag: v${{ steps.package-version.outputs.version }}
+          tag: v${{ steps.package-version.outputs.current-version }}
           overwrite: true
           file_glob: true
 
