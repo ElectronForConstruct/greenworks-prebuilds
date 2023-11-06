@@ -19,7 +19,7 @@ const run = async (/* release: Release */): Promise<void> => {
     Runtimes.forEach((runtime) => {
       Archs.forEach((arch) => {
         if (
-          !(os === 'macos-latest' && arch === 'ia32')
+          !((os === 'macos-latest') && arch === 'ia32')
         ) {
           matrix.push({
             runtime,

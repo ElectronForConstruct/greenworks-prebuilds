@@ -59,7 +59,7 @@ const ARTIFACTS_ROOT = path.join(__dirname, '..', 'artifacts')
 const argv = process.argv.slice(2)
 const args = mri(argv)
 
-const association = {
+const association: Record<Args['os'], string> = {
   'ubuntu-latest': 'linux',
   'windows-latest': 'win32',
   'macos-latest': 'darwin',
@@ -283,13 +283,13 @@ const getVersions = async (): Promise<any> => {
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i]
 
-    if (version.abi < 70) {
+    if (version.abi < 108) {
       // eslint-disable-next-line
       continue
     }
 
     if (
-      runtime === 'electron' && os === 'macos-latest' && arch === 'ia32'
+      runtime === 'electron' && (os === 'macos-latest') && arch === 'ia32'
     ) {
       // eslint-disable-next-line
       continue
