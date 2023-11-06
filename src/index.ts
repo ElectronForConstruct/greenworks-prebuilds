@@ -47,7 +47,7 @@ const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] 
   .map((e) => versions[e])
 
 interface Args {
-  os: 'macos-latest' | 'ubuntu-latest' | 'windows-latest';
+  os: 'macos-latest' | 'macos-latest-xlarge' | 'ubuntu-latest' | 'windows-latest';
   runtime: 'nw.js' | 'electron' | 'node';
   arch: 'ia32' | 'x64';
   python: string;
@@ -59,10 +59,11 @@ const ARTIFACTS_ROOT = path.join(__dirname, '..', 'artifacts')
 const argv = process.argv.slice(2)
 const args = mri(argv)
 
-const association = {
+const association: Record<Args['os'], string> = {
   'ubuntu-latest': 'linux',
   'windows-latest': 'win32',
   'macos-latest': 'darwin',
+  'macos-latest-xlarge': 'darwin-arm64',
 }
 
 const {
@@ -83,7 +84,10 @@ function getBinaryName(_arch: 'ia32' | 'x64'): string {
       name += 'win'
       break
     case 'macos-latest':
-      name += 'osx'
+      name += 'osx64'
+      break
+    case 'macos-latest-xlarge':
+      name += 'osx64-arm'
       break
     case 'ubuntu-latest':
       name += 'linux'
@@ -289,7 +293,7 @@ const getVersions = async (): Promise<any> => {
     }
 
     if (
-      runtime === 'electron' && os === 'macos-latest' && arch === 'ia32'
+      runtime === 'electron' && (os === 'macos-latest' || os === 'macos-latest-xlarge') && arch === 'ia32'
     ) {
       // eslint-disable-next-line
       continue

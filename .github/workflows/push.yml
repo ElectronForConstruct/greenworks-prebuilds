@@ -86,7 +86,9 @@ jobs:
           sudo apt-get install gcc-multilib g++-multilib
 
         # mac
-      - if: matrix.os == 'macos-latest'
+      - if:
+          matrix.os == 'macos-latest' ||
+          matrix.os == 'macos-latest-xlarge'
         run: brew install p7zip
 
         # windows
@@ -125,7 +127,7 @@ jobs:
 
       - run: |
           cd greenworks
-          git apply ../diff.patch
+          # git apply ../diff.patch
           yarn install
           cat package.json
 
