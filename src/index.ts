@@ -287,7 +287,7 @@ const getVersions = async (): Promise<any> => {
   for (let i = 0; i < everything.length; i += 1) {
     const version = everything[i]
 
-    if (version.abi < 70) {
+    if (version.abi < 108) {
       // eslint-disable-next-line
       continue
     }

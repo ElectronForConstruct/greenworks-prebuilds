@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 //
-const Archs = ['ia32', 'x64']
+const Archs = ['ia32', 'x64', 'arm64']
 
 const Runtimes = ['nw.js', 'electron', 'node']
 
