@@ -148,6 +148,11 @@ jobs:
         id: package-version
         uses: Saionaro/extract-package-version@v1.2.1
 
+      - name: "ls"
+        shell: bash
+        run:
+          ls ./artifacts/
+
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
