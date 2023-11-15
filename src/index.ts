@@ -92,7 +92,12 @@ function getBinaryName(_arch: 'ia32' | 'x64'): string {
       break
   }
 
-  name += `${_arch === 'ia32' ? '32' : '64'}.node`
+  // osx doesn't have arch in the name
+  if (os !== 'macos-latest') {
+    name += _arch === 'ia32' ? '32' : '64'
+  }
+  name += '.node'
+
   return path.resolve(path.join(GREENWORKS_ROOT, 'build', 'Release', name))
 }
 
