@@ -9,7 +9,7 @@ const Archs = ['ia32', 'x64']
 
 const Runtimes = ['nw.js', 'electron', 'node']
 
-const OSs = ['macos-latest', 'ubuntu-latest', 'windows-latest']
+const OSs = ['macos-latest', 'ubuntu-latest', 'windows-2019']
 
 const run = async (/* release: Release */): Promise<void> => {
   const json: any = {}
@@ -19,7 +19,7 @@ const run = async (/* release: Release */): Promise<void> => {
     Runtimes.forEach((runtime) => {
       Archs.forEach((arch) => {
         if (
-          !(os === 'macos-latest' && arch === 'ia32')
+          !((os === 'macos-latest') && arch === 'ia32')
         ) {
           matrix.push({
             runtime,
