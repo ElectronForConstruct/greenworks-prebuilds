@@ -88,9 +88,9 @@ function getBinaryName(_arch: Arch): string {
   .with({ os: 'windows-2019', arch: 'ia32' }, () => 'win32')
   .with({ os: 'windows-2019', arch: 'arm64' }, () => 'winarm64')
 
-  .with({ os: 'macos-14', arch: 'x64' }, () => 'osx64')
-  .with({ os: 'macos-14', arch: 'ia32' }, () => 'osx32')
-  .with({ os: 'macos-14', arch: 'arm64' }, () => 'osxarm64')
+  .with({ os: 'macos-14', arch: 'x64' }, () => 'osx')
+  .with({ os: 'macos-14', arch: 'ia32' }, () => 'osx')
+  .with({ os: 'macos-14', arch: 'arm64' }, () => 'osx')
 
   .with({ os: 'ubuntu-latest', arch: 'x64' }, () => 'linux64')
   .with({ os: 'ubuntu-latest', arch: 'ia32' }, () => 'linux32')
