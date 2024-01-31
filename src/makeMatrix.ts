@@ -20,7 +20,10 @@ const run = async (/* release: Release */): Promise<void> => {
     Runtimes.forEach((runtime) => {
       Archs.forEach((arch) => {
         if (
+          // no 32bits build on mac
           !((os === 'macos-14') && arch === 'ia32')
+          // no arm build on linux and windows
+          && !((os !== 'macos-14') && arch === 'arm64')
         ) {
           matrix.push({
             runtime,
