@@ -93,9 +93,9 @@ jobs:
 
         # windows
       - name: Add msbuild to PATH
-        run: yarn global add --production windows-build-tools --vs2022
+        run: yarn global add --production windows-build-tools --vs2019
         # uses: microsoft/setup-msbuild@v1.0.3
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2019'
 
         # nw.js
       # - if: matrix.runtime == 'nw.js'
@@ -112,7 +112,7 @@ jobs:
       - if: matrix.runtime == 'nw.js'
         run: |
           yarn config set python python2.7
-          yarn config set msvs_version 2022
+          yarn config set msvs_version 2019
 
       - run: git clone https://github.com/greenheartgames/greenworks greenworks
 
@@ -148,6 +148,11 @@ jobs:
       - name: get-npm-version
         id: package-version
         uses: Saionaro/extract-package-version@v1.2.1
+
+      - name: "ls"
+        shell: bash
+        run:
+          ls greenworks/build/Release/
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
