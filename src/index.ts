@@ -12,6 +12,7 @@ import fs from 'fs-extra'
 import mri from 'mri'
 import { getAll } from 'modules-abi'
 import dns from 'dns'
+import { match, P } from 'ts-pattern';
 
 import { fileURLToPath } from 'url'
 
@@ -79,33 +80,25 @@ console.log('pythonPath', pythonPath)
 function getBinaryName(_arch: Arch): string {
   let name = 'greenworks-'
 
-  switch (os) {
-    case 'windows-2019':
-      name += 'win'
-      break
-    case 'macos-14':
-      name += 'osx64'
-      break
-    case 'ubuntu-latest':
-      name += 'linux'
-      break
-    default:
-      break
-  }
+  const suffix = match({
+    os,
+    arch: _arch
+  })
+  .with({ os: 'windows-2019', arch: 'x64' }, () => 'win64')
+  .with({ os: 'windows-2019', arch: 'ia32' }, () => 'win32')
+  .with({ os: 'windows-2019', arch: 'arm64' }, () => 'winarm64')
 
-  // osx doesn't have arch in the name
-  // if (os !== 'macos-14') {
-  //   name += _arch === 'ia32' ? '32' : '64'
-  // }
-  if (_arch === 'ia32') {
-    name += '32'
-  }
-  else if (_arch === 'x64') {
-    name += '64'
-  }
-  else if (_arch === 'arm64') {
-    name += 'arm64'
-  }
+  .with({ os: 'macos-14', arch: 'x64' }, () => 'osx64')
+  .with({ os: 'macos-14', arch: 'ia32' }, () => 'osx32')
+  .with({ os: 'macos-14', arch: 'arm64' }, () => 'osxarm64')
+
+  .with({ os: 'ubuntu-latest', arch: 'x64' }, () => 'linux64')
+  .with({ os: 'ubuntu-latest', arch: 'ia32' }, () => 'linux32')
+  .with({ os: 'ubuntu-latest', arch: 'arm64' }, () => 'linuxarm64')
+  .exhaustive();
+
+  name += suffix
+
   name += '.node'
 
   return path.resolve(path.join(GREENWORKS_ROOT, 'build', 'Release', name))
@@ -343,6 +336,11 @@ const build = async (matrix: any): Promise<void> => {
       console.log('Unsupported runtime, use one of electron, node-webkit, node')
       return
   }
+
+  const { stdout } = await execa('ls', [
+    path.join(GREENWORKS_ROOT, 'build', 'Release')
+  ])
+  console.log('stdout', stdout)
 
   const filePath = getBinaryName(matrix.arch)
 
