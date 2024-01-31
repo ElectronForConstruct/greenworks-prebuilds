@@ -1,7 +1,7 @@
 import os from 'os'
 import path from 'path'
 import fs from 'fs'
-import got from 'got'
+// import got from 'got'
 import { getLibPath, extractArchive, execTemplate } from './utils'
 
 const download = async (version, arch, os) => {

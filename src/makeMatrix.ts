@@ -2,14 +2,15 @@
 import fs from 'fs'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { Arch, Os, Runtime } from './models'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 //
-const Archs = ['ia32', 'x64', 'arm64']
+const Archs: Array<Arch> = ['ia32', 'x64', 'arm64']
 
-const Runtimes = ['nw.js', 'electron', 'node']
+const Runtimes: Array<Runtime> = ['nw.js', 'electron', 'node']
 
-const OSs = ['macos-latest', 'macos-latest-xlarge', 'ubuntu-latest', 'windows-2019']
+const OSs: Array<Os> = ['macos-14', 'ubuntu-latest', 'windows-2019']
 
 const run = async (/* release: Release */): Promise<void> => {
   const json: any = {}
@@ -19,7 +20,10 @@ const run = async (/* release: Release */): Promise<void> => {
     Runtimes.forEach((runtime) => {
       Archs.forEach((arch) => {
         if (
-          !((os === 'macos-latest' || os === 'macos-latest-xlarge') && arch === 'ia32')
+          // no 32bits build on mac
+          !((os === 'macos-14') && arch === 'ia32')
+          // no arm build on linux and windows
+          && !((os !== 'macos-14') && arch === 'arm64')
         ) {
           matrix.push({
             runtime,

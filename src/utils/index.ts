@@ -60,9 +60,7 @@ const execTemplate = async (
     await fs.ensureDir(libPath)
   }
   console.log(`Creating ${libPath} to ${templatePath}`)
-  await fs.copy(libPath, templatePath, {
-    recursive: true,
-  })
+  await fs.copy(libPath, templatePath)
 
   console.log(`Chmod ${binary}`)
   await fs.chmod(binary, '755')
