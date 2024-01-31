@@ -87,8 +87,7 @@ jobs:
 
         # mac
       - if:
-          matrix.os == 'macos-latest' ||
-          matrix.os == 'macos-latest-xlarge'
+          matrix.os == 'macos-14'
         run: brew install p7zip
 
         # windows

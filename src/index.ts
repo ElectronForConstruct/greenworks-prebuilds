@@ -25,6 +25,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 // eslint-disable-next-line
 import 'source-map-support/register.js'
+import { Arch, Os, Runtime } from './models'
 
 // https://www.npmjs.com/package/slash
 function slash(slashPath: string) {
@@ -47,9 +48,9 @@ const getUnique = (versions: MbaVersion[], key: keyof MbaVersion): MbaVersion[] 
   .map((e) => versions[e])
 
 interface Args {
-  os: 'macos-latest' | 'macos-latest-xlarge' | 'ubuntu-latest' | 'windows-2019';
-  runtime: 'nw.js' | 'electron' | 'node';
-  arch: 'ia32' | 'x64';
+  os: Os;
+  runtime: Runtime;
+  arch: Arch;
   python: string;
 }
 
@@ -62,8 +63,7 @@ const args = mri(argv)
 const association: Record<Args['os'], string> = {
   'ubuntu-latest': 'linux',
   'windows-2019': 'win32',
-  'macos-latest': 'darwin',
-  'macos-latest-xlarge': 'darwin-arm64',
+  'macos-14': 'darwin',
 }
 
 const {
@@ -76,18 +76,15 @@ const pythonPath = python ? slash(python) : undefined
 
 console.log('pythonPath', pythonPath)
 
-function getBinaryName(_arch: 'ia32' | 'x64'): string {
+function getBinaryName(_arch: Arch): string {
   let name = 'greenworks-'
 
   switch (os) {
     case 'windows-2019':
       name += 'win'
       break
-    case 'macos-latest':
+    case 'macos-14':
       name += 'osx64'
-      break
-    case 'macos-latest-xlarge':
-      name += 'osx64-arm'
       break
     case 'ubuntu-latest':
       name += 'linux'
@@ -97,8 +94,17 @@ function getBinaryName(_arch: 'ia32' | 'x64'): string {
   }
 
   // osx doesn't have arch in the name
-  if (os !== 'macos-latest') {
-    name += _arch === 'ia32' ? '32' : '64'
+  // if (os !== 'macos-14') {
+  //   name += _arch === 'ia32' ? '32' : '64'
+  // }
+  if (_arch === 'ia32') {
+    name += '32'
+  }
+  else if (_arch === 'x64') {
+    name += '64'
+  }
+  else if (_arch === 'arm64') {
+    name += 'arm64'
   }
   name += '.node'
 
@@ -298,7 +304,7 @@ const getVersions = async (): Promise<any> => {
     }
 
     if (
-      runtime === 'electron' && (os === 'macos-latest' || os === 'macos-latest-xlarge') && arch === 'ia32'
+      runtime === 'electron' && (os === 'macos-14') && arch === 'ia32'
     ) {
       // eslint-disable-next-line
       continue
