@@ -1,3 +1,7 @@
+# Greenworks prebuilds are **deprecated** - Switch to [Pipelab](https://pipelab.app) - [Github](https://github.com/CynToolkit/pipelab)
+Pipelab has built-in support for steamworks
+[![Pipelab Logo](https://raw.githubusercontent.com/CynToolkit/pipelab/refs/heads/develop/readme/full_white_bg_black_text.png)](https://pipelab.app)
+
 # Greenworks prebuilds
 
 ![](https://badgen.net/github/release/electronforconstruct/greenworks-prebuilds)
