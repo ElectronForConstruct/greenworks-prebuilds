@@ -2,15 +2,6 @@ diff --git a/src/api/steam_api_matchmaking.cc b/src/api/steam_api_matchmaking.cc
 index 739277d..eba089f 100644
 --- a/src/api/steam_api_matchmaking.cc
 +++ b/src/api/steam_api_matchmaking.cc
-@@ -389,7 +389,7 @@ NAN_METHOD(SetLobbyType) {
-     THROW_BAD_ARGS("Steam ID is invalid");
-   }
-   auto lobby_type = static_cast<ELobbyType>(Nan::To<int32>(info[0]).FromJust());
--  
-+
-   info.GetReturnValue().Set(
-     SteamMatchmaking()->SetLobbyType(steam_id, lobby_type)
-   );
 @@ -566,11 +566,11 @@ NAN_METHOD(GetLobbyChatEntry) {
      return;
    }

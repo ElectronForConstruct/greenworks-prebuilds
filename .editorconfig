@@ -6,8 +6,6 @@ insert_final_newline = true
 
 [*.cc]
 end_of_line = crlf
-[*.patch]
-end_of_line = crlf
 
 indent_style = space
 indent_size = 2
