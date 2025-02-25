@@ -128,6 +128,7 @@ jobs:
       - run: |
           cd greenworks
           # git apply ../diff.patch
+          yarn add nan@2.22.1
           yarn install
           cat package.json
 
