@@ -1,6 +1,10 @@
 # Greenworks prebuilds are **deprecated** - Switch to [Pipelab](https://pipelab.app) - [Github](https://github.com/CynToolkit/pipelab)
-Pipelab has built-in support for steamworks
+## Pipelab has built-in support for steamworks
+<br>
+
 [![Pipelab Logo](https://raw.githubusercontent.com/CynToolkit/pipelab/refs/heads/develop/readme/full_white_bg_black_text.png)](https://pipelab.app)
+
+### Some prebuilt versions are available on the [official greenworks repository (nw.js)](https://github.com/greenheartgames/greenworks/releases). Alternatively, you can download some other version on [Dysnomia's fork of this repository](https://github.com/Dysnomia-Studio/greenworks-prebuilds).
 
 # Greenworks prebuilds
 
@@ -20,5 +24,6 @@ Most common versions/abi are built.
 | Arch | x64, x86 |
 | Engine | NW.js, Electron, Node |
 | Abi | > 70 |
+
 
 
